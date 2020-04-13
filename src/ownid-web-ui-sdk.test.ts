@@ -1,15 +1,16 @@
-import DummyClass  from "./ownid-web-ui-sdk";
+import OwnIDUiSdk from "./ownid-web-ui-sdk";
+import RegisterComponent from "./components/register.component";
 
-/**
- * Dummy test
- */
-describe("Dummy test", () => {
-  it("works if true is truthy", () => {
-    expect(true).toBeTruthy()
-  });
+describe("OwnIDUiSdk instances test", () => {
+
+  const sdk = new OwnIDUiSdk();
 
   it("DummyClass is instantiable", () => {
-    expect(new DummyClass()).toBeInstanceOf(DummyClass)
+    expect(sdk).toBeInstanceOf(OwnIDUiSdk)
+  });
+
+  it("addRegisterWidget should return RegisterComponent", ()=>{
+    expect(sdk.addRegisterWidget(document.createElement('div'))).toBeInstanceOf(RegisterComponent);
   })
 });
 

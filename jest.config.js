@@ -1,15 +1,14 @@
 module.exports = {
-  setupFilesAfterEnv: [
-      "<rootDir>/src/test/setup-jest.ts"
-  ],
   moduleDirectories: ['node_modules'],
   transform: {
     ".(ts|tsx)": "ts-jest"
   },
   globals: {
-    "window": {}
+    "window": {
+      "ownid": null
+    }
   },
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   testRegex: "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx)$",
   collectCoverageFrom: [
     'src/*.{js,ts}',

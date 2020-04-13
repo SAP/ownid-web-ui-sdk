@@ -1,6 +1,7 @@
-// Import here Polyfills if needed. Recommended core-js (npm i -D core-js)
-  // import "core-js/fn/array.find"
-  // ...
-export default class DummyClass {
+import RegisterComponent from "./components/register.component";
 
+export default class OwnIDUiSdk {
+  addRegisterWidget(parent: Element): RegisterComponent{
+    return new RegisterComponent(parent as HTMLElement);
+  }
 }
