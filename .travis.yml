@@ -1,22 +1,23 @@
 dist: trusty
 sudo: false
-
 language: node_js
 node_js:
-  - '12'
-
+- '12'
 cache:
   directories:
-    - ./node_modules
-
+  - "./node_modules"
 before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.22.4
-  - export PATH="$HOME/.yarn/bin:$PATH"
-
+- curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.22.4
+- export PATH="$HOME/.yarn/bin:$PATH"
 install:
-  - yarn
-
+- yarn
 script:
-  - yarn lint
-  - yarn test:ci
-  - yarn build
+- yarn lint
+- yarn test:ci
+- yarn build
+notifications:
+  slack:
+    on_success: change
+    on_failure: always
+    rooms:
+      secure: NnuinN7bqGpjYZTBGbOwu/3DgZKFU5BipLftMbSwX1UsBRz+YM6zwRBBwuCSil4WBBk7tPDubVV0KHr4Mlti6OYaeCjRlJ5IKLJI8M1z64W5guVnMzeIfPjor+kElURVlMqyTGm2GQZaIQbvoj7AMRddbHQ2MH7F3jbxJRMGtW5p1cMoBUWtOrYkDKlSclJ5cVlMuZJIOfF+owOyQYXCnKX3Fg3yTRzAn7IczvVxVx2tXudUgFd3ZkuOiv3UhaIaJn/DPvZ7Daj+MQegIUbH+Rj+HKFRwUNr8l/YKBra7q/HInxr1cxgYG3Aiwwy412LPv0XscePYj4FYPB6m2X/Q/UBR+rHWVMjRApzdZND5xjZsVvWvdysB8xtUXzz2M2mIFjcV53CNgtMOHjzBFXbB6YOcr2kdWaqXuVWyGXL6iV40jgHJcCJ7S5DmpVzjw/eBsq4Lj6+lYeFyI8srMOywrXhwAbLLfZVtcUH2fas2YRrG1Svy4vEzUwaQeuBh+8V/bMM24qBWG0a4n2OAw47DXi2VpzroFkiOVxUSSvgo+XxH8dEhGfss3zdsEegWUIt/uKJSRHlCBFlJhKun/1VoT1kKab0ln1mz97yAp7ZmilEs23ev4qjXF173puVY+/j/slUHviUARCGAWRpHXGjsKsZZK9Bqb8vjGrAOHq81T0=
