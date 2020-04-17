@@ -1,0 +1,15 @@
+{
+    "search.exclude": {
+      "**/dist": true,
+      "**/node_modules": true
+    },
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    // Show eslint warnings and errors in typescript files
+    "eslint.validate": ["javascript", "typescript"],
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "files.autoSave": "afterDelay"
+  }
