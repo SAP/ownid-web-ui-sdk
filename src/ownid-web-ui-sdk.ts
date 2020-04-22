@@ -1,12 +1,14 @@
-import RegisterComponent from "./components/register.component";
-import LoginComponent from "./components/login.component";
+import WidgetComponent from "./components/widget.component";
+import RequestService from "./services/request.service";
+import {IWidgetConfig} from "./interfaces/i-widget.interfeces";
 
 export default class OwnIDUiSdk {
-  addRegisterWidget(parent: Element): RegisterComponent{
-    return new RegisterComponent(parent as HTMLElement);
-  }
+  init(config: IWidgetConfig): WidgetComponent | null {
+    if (!config.element) {
+      console.error(`Parent element wasn't found on the page`);
+      return null
+    }
 
-  addLoginWidget(parent: Element): LoginComponent{
-    return new LoginComponent(parent as HTMLElement);
+    return new WidgetComponent(config, new RequestService());
   }
 }

@@ -5,23 +5,27 @@ document.body.append(parent);
 
 describe('ctor -> Render', () => {
   it('should create qr(button) element with options', () => {
-    const options = {id: 'btn', className: 'test-class-name'};
-    const buttonComponent = new Qr(options);
+    const options = {href: 'test-url'};
+    const sut = new Qr(options);
 
-    buttonComponent.appendToParent(parent);
-    const button = document.querySelector(`#${options.id}`);
-    expect(button).not.toBeNull();
-    expect(button?.id).toEqual(options.id);
-    expect(button?.className).toEqual(options.className);
+    sut.appendToParent(parent);
+
+    const qrCode = document.querySelector(`.own-id-qr-code`);
+    expect(qrCode).not.toBeNull();
+
+    const qrCodeImg = qrCode!.querySelector(`img`);
+    expect(qrCodeImg).not.toBeNull();
+
+    sut.destroy();
   });
 });
 
 describe('Destroy()', () => {
   it('should remove qr(button) element from document', ()=> {
-    const options = {id: 'btn-remove'};
-    const linkButton = new Qr(options);
-    linkButton.appendToParent(parent);
-    linkButton.destroy();
-    expect(document.querySelector(`#${options.id}`)).toBeNull();
+    const options = {href: 'test-url'};
+    const qr = new Qr(options);
+    qr.appendToParent(parent);
+    qr.destroy();
+    expect(document.querySelector(`.own-id-qr-code`)).toBeNull();
   });
 });

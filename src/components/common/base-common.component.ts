@@ -1,6 +1,7 @@
 export  declare type Options = {
   className?: string;
   id?: string;
+  href: string;
   // events
 };
 

@@ -18,7 +18,7 @@
     "prebuild": "rimraf dist",
     "build2": "tsc && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
     "build": "tsc --module commonjs && rollup -c rollup.config.ts",
-    "start": "rollup -c rollup.config.js -w",
+    "start": "rollup -c rollup.config.ts -w",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "test:prod": "yarn lint && yarn test -- --no-cache",
@@ -82,5 +82,8 @@
     "hooks": {
       "pre-commit": "pretty-quick"
     }
+  },
+  "dependencies": {
+    "qrcode-generator-ts": "^0.0.4"
   }
 }

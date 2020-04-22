@@ -41,7 +41,10 @@ module.exports = {
     ],
     "no-useless-constructor": "off",
     "@typescript-eslint/no-useless-constructor": "off",
-    "@typescript-eslint/explicit-function-return-type": "off"
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/ban-ts-ignore" : "off",
+    "promise/catch-or-return" : "off",
+    "promise/always-return" : "off"
   },
   "settings": {
     "import/parsers": {

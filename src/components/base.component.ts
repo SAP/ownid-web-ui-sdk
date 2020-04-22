@@ -1,16 +1,21 @@
 import {ICommonComponent} from "./common/base-common.component";
+import {IWidgetConfig} from "../interfaces/i-widget.interfeces";
 
 
 export abstract class BaseComponent {
-  protected constructor(parentElement: HTMLElement) {
-    this.parent = parentElement;
+  protected constructor(config: IWidgetConfig) {
+    this.parent = config.element;
   }
 
   private readonly parent: HTMLElement;
 
   protected elements: Array<ICommonComponent> = [];
 
-  protected addChild(child: ICommonComponent){
+  protected context: string | null = null;
+
+  protected challengeUrl: string | null = null;
+
+  protected addChild(child: ICommonComponent) {
     child.appendToParent(this.parent);
     this.elements.push(child);
   }

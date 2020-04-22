@@ -1,6 +1,6 @@
 import OwnIDUiSdk from "./ownid-web-ui-sdk";
-import RegisterComponent from "./components/register.component";
-import LoginComponent from "./components/login.component";
+import WidgetComponent from "./components/widget.component";
+import {IWidgetConfig, WidgetType} from "./interfaces/i-widget.interfeces";
 
 describe("OwnIDUiSdk instances test", () => {
 
@@ -10,12 +10,25 @@ describe("OwnIDUiSdk instances test", () => {
     expect(sdk).toBeInstanceOf(OwnIDUiSdk)
   });
 
-  it("addRegisterWidget should return RegisterComponent", ()=>{
-    expect(sdk.addRegisterWidget(document.createElement('div'))).toBeInstanceOf(RegisterComponent);
-  })
+  it("init should call WidgetComponent", () => {
+    const params = {
+      element: document.createElement('div'),
+      type: WidgetType.Login,
+    };
+    const sut = sdk.init(params);
 
-  it("addLoginWidget should return LoginComponent", ()=>{
-    expect(sdk.addLoginWidget(document.createElement('div'))).toBeInstanceOf(LoginComponent);
+    expect(sut).toBeInstanceOf(WidgetComponent);
+  });
+
+  it("init should return null", () => {
+    const params: IWidgetConfig = {
+      // @ts-ignore
+      element: null,
+      type: WidgetType.Login,
+    };
+    const sut = sdk.init(params);
+
+    expect(sut).toBe(null);
   })
 });
 

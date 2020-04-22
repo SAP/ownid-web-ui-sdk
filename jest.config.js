@@ -22,7 +22,7 @@ module.exports = {
   resolver: "jest-resolver-tsconfig-paths",
   collectCoverage: true,
   coverageDirectory: './dist/coverage',
-  coverageReporters: ['cobertura', 'text'],
+  coverageReporters: ['cobertura', 'text', 'html'],
   reporters: [
     "default",
     [
