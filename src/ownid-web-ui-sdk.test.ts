@@ -6,6 +6,9 @@ describe("OwnIDUiSdk instances test", () => {
 
   const sdk = new OwnIDUiSdk();
 
+  // eslint-disable-next-line no-console
+  console.error = jest.fn();
+
   it("DummyClass is instantiable", () => {
     expect(sdk).toBeInstanceOf(OwnIDUiSdk)
   });

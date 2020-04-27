@@ -2,69 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Register Page Example</title>
+  <title>OWNID Page Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <script src="../dist/ownid-web-ui-sdk.umd.js"></script>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <script>
     window.onload = () => {
       ownid.init({
         type: 'register',
         element: document.querySelector('#ownid'),
         getContextURL: 'url', // optional. default path is /ownId/
+        mobileTitle: '', // optional
+        desktopTitle: '', // optional
+        desktopSubtitle: '', // optional
+      });
+
+      ownid.init({
+        type: 'login',
+        element: document.querySelector('#ownid-login'),
+        getContextURL: 'url', // optional. default path is /ownId/
+        mobileTitle: '', // optional
+        desktopTitle: '', // optional
+        desktopSubtitle: '', // optional
       });
     };
   </script>
   <style>
+    body {
+      background: #ccc;
+      font-family: sans-serif, serif;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
     #main {
       margin-top: 50px;
     }
 
-    #ownid {
+    .ownid {
       margin: 30px 0;
     }
   </style>
 </head>
 <body>
-<div id="main" class="container col-md-4 justify-content-center  jumbotron">
-  <h4 class="col-md-12 text-center w-100">Become a new user!</h4>
+<div id="main" class="container">
+  <h4 class="">Registration</h4>
 
-  <div id="ownid" class="row justify-content-center col-md-12">
-  </div>
-  <hr class="my-2">
-  <div id="form" class="col-md-12">
-    <form>
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <input class="form-control" type="text" id="name">
-      </div>
-      <div class="form-group">
-        <label for="surname">Surname:</label>
-        <input class="form-control" type="text" id="surname">
-      </div>
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input class="form-control" type="email" id="email">
-      </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input class="form-control" type="password" id="password">
-      </div>
-      <div class="form-group">
-        <label for="password-confirm">Confirm Password:</label>
-        <input class="form-control" type="password" id="password-confirm">
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-        <label class="form-check-label" for="defaultCheck1">
-          I acknowledge that I have read the <a
-          href="/legal/SAP%20UID%20Privacy%20Statement_31072019.pdf" target="_blank"
-          rel="noopener noreferrer">Privacy Statement</a>
-        </label>
-      </div>
-      <button type="submit" class="btn btn-primary btn-lg btn-block">Register</button>
-    </form>
-  </div>
+  <div id="ownid" class="ownid"></div>
+
+  <h4 class="">Login</h4>
+
+  <div id="ownid-login" class="ownid"></div>
 </div>
 </body>
 </html>

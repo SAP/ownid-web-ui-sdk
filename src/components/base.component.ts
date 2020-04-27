@@ -1,7 +1,6 @@
 import {ICommonComponent} from "./common/base-common.component";
 import {IWidgetConfig} from "../interfaces/i-widget.interfeces";
 
-
 export abstract class BaseComponent {
   protected constructor(config: IWidgetConfig) {
     this.parent = config.element;
@@ -12,8 +11,6 @@ export abstract class BaseComponent {
   protected elements: Array<ICommonComponent> = [];
 
   protected context: string | null = null;
-
-  protected challengeUrl: string | null = null;
 
   protected addChild(child: ICommonComponent) {
     child.appendToParent(this.parent);

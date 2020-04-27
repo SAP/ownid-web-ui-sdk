@@ -5,7 +5,7 @@ document.body.append(parent);
 
 describe('ctor -> Render', () => {
   it('should create anchor element with options', () => {
-    const options = {href: 'test-href', textContent: 'My test button'};
+    const options = {href: 'test-href', title: 'My test button'};
     const linkButton = new LinkButton(options);
 
     linkButton.appendToParent(parent);
@@ -13,7 +13,7 @@ describe('ctor -> Render', () => {
     expect(button).not.toBeNull();
     expect(button!.hasAttribute('href')).toEqual(true);
     expect(button!.getAttribute('href')).toEqual(options.href);
-    expect(button!.querySelector('span')?.textContent).toEqual(options.textContent);
+    expect(button!.querySelector('span')?.textContent).toEqual(options.title);
     // check if we have logo in anchor element
     expect(button!.querySelector('svg')).not.toBeNull();
   });
@@ -21,7 +21,7 @@ describe('ctor -> Render', () => {
 
 describe('Destroy()', () => {
   it('should remove LinkButton element from document', ()=> {
-    const options = { href: 'test-href2', textContent: 'My test button'};
+    const options = { href: 'test-href2', title: 'My test button'};
     const linkButton = new LinkButton(options);
     linkButton.appendToParent(parent);
     linkButton.destroy();
@@ -31,7 +31,7 @@ describe('Destroy()', () => {
 
 describe('AttachHandler()', ()=> {
   it('should attach handler LinkButton element and drigger when event pops up', ()=> {
-    const options = {href: 'test-href2', textContent: 'My test button'};
+    const options = {href: 'test-href2', title: 'My test button'};
     const linkButton = new LinkButton(options);
     linkButton.appendToParent(parent);
     const spyFn = jest.fn();

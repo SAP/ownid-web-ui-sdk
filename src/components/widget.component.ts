@@ -10,7 +10,7 @@ import {IWidgetConfig} from "../interfaces/i-widget.interfeces";
 export default class WidgetComponent extends BaseComponent{
   widgetReady: Promise<void>;
 
-  constructor(config: IWidgetConfig, private requestService: RequestService) {
+  constructor(private config: IWidgetConfig, private requestService: RequestService) {
     super(config);
     this.widgetReady = this.getContext(config.getContextURL || ConfigurationService.contextUrl);
   }
@@ -19,23 +19,24 @@ export default class WidgetComponent extends BaseComponent{
     const data: IContextRS | null = await this.requestService.post(contextUrl);
 
     if (!data) {
+      // eslint-disable-next-line no-console
       console.error('No context data received');
       return;
     }
 
     this.context = data.context;
-    this.challengeUrl = data.url;
 
-    this.render();
+    this.render(data.url);
   }
 
-  private render(): void {
-    const href = `${ConfigurationService.webApplicationUrl}/sign?q=${this.challengeUrl}`;
-
+  private render(href: string): void {
     if (this.isMobile()) {
-      this.addChild(new LinkButton({href, textContent: 'Instant Sign In'}));
+      const mobileTitle = this.config.mobileTitle || ConfigurationService.defaultTexts[this.config.type].mobileTitle;
+      this.addChild(new LinkButton({href, title: mobileTitle}));
     } else {
-      this.addChild(new Qr({href}));
+      const desktopTitle = this.config.desktopTitle || ConfigurationService.defaultTexts[this.config.type].desktopTitle;
+      const desktopSubtitle = this.config.desktopTitle || ConfigurationService.defaultTexts[this.config.type].desktopSubtitle;
+      this.addChild(new Qr({href, title: desktopTitle, subtitle: desktopSubtitle}));
     }
   }
 

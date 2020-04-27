@@ -17,10 +17,6 @@ export default class RequestService {
       return response.json();
     }
 
-    // return null;
-    return {
-      context: Math.random().toString(),
-      url: 'challengeUrl'
-    }
+    return null;
   }
 }

@@ -48,9 +48,7 @@ describe('RequestService', () => {
 
       const res = await sut.post('url');
 
-
-      // expect(res).toEqual(null);
-      expect(res.url).toEqual('challengeUrl');
+      expect(res).toEqual(null);
     });
   });
 });

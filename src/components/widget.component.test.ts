@@ -20,6 +20,8 @@ Object.defineProperty(navigator, "userAgent", ((value) => ({
 
 describe('ctor-> render', () => {
   let requestService: RequestService;
+  // eslint-disable-next-line no-console
+  console.error = jest.fn();
 
   beforeEach(() => {
     requestService = {} as RequestService;

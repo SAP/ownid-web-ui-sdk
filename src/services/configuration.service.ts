@@ -1,6 +1,28 @@
 // todo: implement in correct way
-export default class ConfigurationService {
-  static readonly webApplicationUrl =  'http://a52b6bdc8e3954bdf8b129e49fc4fa0f-1986585172.us-east-2.elb.amazonaws.com';
+import {WidgetType} from "../interfaces/i-widget.interfeces";
 
-  static readonly contextUrl =  '/ownId/';
+interface IDefaultTexts {
+  [key: string]: {
+    mobileTitle: string;
+    desktopTitle: string;
+    desktopSubtitle: string;
+  }
+}
+
+export default class ConfigurationService {
+  static readonly contextUrl = '/ownid/';
+
+  static readonly defaultTexts: IDefaultTexts = {
+    [WidgetType.Login]: {
+      mobileTitle: 'Instant Sign In',
+      desktopTitle: 'Instant Sign In',
+      desktopSubtitle: 'Use your phone to scan for passwordless sign in.',
+    },
+    [WidgetType.Register]: {
+      mobileTitle: 'Register without a password',
+      desktopTitle: 'Skip the password with OwnID',
+      desktopSubtitle: 'Use your phone to scan and complete a passwordless registration.',
+    }
+  }
+
 }
