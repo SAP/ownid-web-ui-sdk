@@ -28,6 +28,7 @@ describe('ctor-> render', () => {
     requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => {
       resolve({
         context: '123',
+        nonce: '234',
         url: 'url'
       })
     }));
@@ -87,7 +88,7 @@ describe('ctor-> render', () => {
 
   it('should not render', () => {
     return new Promise((resolve) => {
-       // eslint-disable-next-line no-shadow
+      // eslint-disable-next-line no-shadow
       requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve(null)));
 
       const parent = document.createElement('div');
@@ -102,6 +103,101 @@ describe('ctor-> render', () => {
       );
       sut.widgetReady.then(() => {
         expect(parent.children.length).toBe(0);
+        resolve();
+      });
+    })
+  });
+});
+
+describe('callStatus', () => {
+  let requestService: RequestService;
+  // eslint-disable-next-line no-console
+  console.error = jest.fn();
+
+  beforeEach(() => {
+    requestService = {} as RequestService;
+    requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => {
+      resolve({
+        context: '123',
+        nonce: '234',
+        url: 'url'
+      })
+    }));
+  });
+
+  it('should call onLogin', () => {
+    return new Promise((resolve) => {
+      const parent = document.createElement('div');
+
+      const onLogin = jest.fn();
+
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const sut: any = new WidgetComponent(
+        {
+          element: parent,
+          type: WidgetType.Login,
+          getContextURL: 'url',
+          onLogin
+        },
+        requestService,
+      );
+      // eslint-disable-next-line no-shadow
+      requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({status: true})));
+
+      sut.callStatus('url').then(() => {
+        expect(onLogin).toBeCalledWith({status: true});
+        resolve();
+      });
+    })
+  });
+
+  it('should call onRegister', () => {
+    return new Promise((resolve) => {
+      const parent = document.createElement('div');
+
+      const onRegister = jest.fn();
+
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const sut: any = new WidgetComponent(
+        {
+          element: parent,
+          getContextURL: 'url',
+          onRegister
+          // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+        } as any,
+        requestService,
+      );
+
+      // eslint-disable-next-line no-shadow
+      requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({status: true})));
+
+      sut.callStatus('url').then(() => {
+        expect(onRegister).toBeCalledWith({status: true});
+        resolve();
+      });
+    })
+  });
+
+  it('should call setCallStatus', () => {
+    return new Promise((resolve) => {
+      const parent = document.createElement('div');
+
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const sut: any = new WidgetComponent(
+        {
+          element: parent,
+          type: WidgetType.Login,
+          getContextURL: 'url',
+        },
+        requestService,
+      );
+
+      sut.setCallStatus = jest.fn();
+      // eslint-disable-next-line no-shadow
+      requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({status: false})));
+
+      sut.callStatus('url').then(() => {
+        expect(sut.setCallStatus).toBeCalledWith('url');
         resolve();
       });
     })

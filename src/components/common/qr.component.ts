@@ -20,7 +20,8 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
     const img = document.createElement('img');
     const qr = new QRCode();
     qr.setErrorCorrectLevel(ErrorCorrectLevel.L);
-    qr.setTypeNumber(10);
+    // TODO: Add support for auto setup of qr code size
+    qr.setTypeNumber(11);
     qr.addData(options.href);
     qr.make();
     img.src = qr.toDataURL(3, 7);

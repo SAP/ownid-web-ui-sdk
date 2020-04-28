@@ -14,6 +14,9 @@ export default class LinkButton extends BaseCommonComponent<LinkButtonOptions>{
     const anchorElement = document.createElement('a');
 
     anchorElement.href = options.href;
+
+    anchorElement.setAttribute('target', '_blank');
+
     anchorElement.style.cssText = `width: 288px; height: 40px;
       display: flex; align-items: center; justify-content: center; border-radius: 20px;
       font-family: SF Pro Text, sans-serif; font-style: normal; font-weight: 500; font-size: 14px; color: #030303;

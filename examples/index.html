@@ -11,7 +11,8 @@
       ownid.init({
         type: 'register',
         element: document.querySelector('#ownid'),
-        getContextURL: 'url', // optional. default path is /ownId/
+        getContextURL: 'http://localhost:5000/ownid/', // optional. default path is /ownId/
+        getStatusURL: 'http://localhost:5000/ownid/:context/status', // optional. default path is /ownId/:context/status
         mobileTitle: '', // optional
         desktopTitle: '', // optional
         desktopSubtitle: '', // optional
@@ -20,7 +21,8 @@
       ownid.init({
         type: 'login',
         element: document.querySelector('#ownid-login'),
-        getContextURL: 'url', // optional. default path is /ownId/
+        getContextURL: 'http://localhost:5000/ownid/', // optional. default path is /ownId/
+        getStatusURL: 'http://localhost:5000/ownid/:context/status', // optional. default path is /ownId/:context/status
         mobileTitle: '', // optional
         desktopTitle: '', // optional
         desktopSubtitle: '', // optional

@@ -12,6 +12,8 @@ export abstract class BaseComponent {
 
   protected context: string | null = null;
 
+  protected nonce: string | null = null;
+
   protected addChild(child: ICommonComponent) {
     child.appendToParent(this.parent);
     this.elements.push(child);
