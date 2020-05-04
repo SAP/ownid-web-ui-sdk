@@ -47,7 +47,7 @@ deploy:
   on:
     branch: develop
 - provider: script
-  script: scripts/publish.sh staging
+  script: sh scripts/publish.sh staging
   skip_cleanup: true
   on:
     branch: master
