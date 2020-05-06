@@ -84,6 +84,6 @@
     }
   },
   "dependencies": {
-    "qrcode-generator-ts": "^0.0.4"
+    "qrcode-generator": "^1.4.4"
   }
 }
