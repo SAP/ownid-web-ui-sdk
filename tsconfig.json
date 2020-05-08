@@ -4,9 +4,10 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "strict": true,
-    "outDir": "./dist/out-tsc",
+    "outDir": "./out-tsc",
     "sourceMap": true,
-    "declaration": false,
+    "declaration": true,
+    "declarationDir": "./dist",
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "module": "ES2015",
@@ -25,7 +26,8 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "noImplicitAny": true
   },
   "include": [
     "src"
