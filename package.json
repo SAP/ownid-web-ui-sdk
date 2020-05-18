@@ -15,7 +15,7 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf dist && rimraf out",
     "build2": "tsc && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
     "build": "tsc --module commonjs && rollup -c rollup.config.ts",
     "start": "rollup -c rollup.config.ts -w",
@@ -84,6 +84,6 @@
     }
   },
   "dependencies": {
-    "qrcode-generator-ts": "^0.0.4"
+    "qrcode-generator": "^1.4.4"
   }
 }

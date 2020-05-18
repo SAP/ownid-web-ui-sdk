@@ -5,4 +5,5 @@ dist
 # don't lint nyc coverage output
 coverage
 rollup.config.ts
-src/test
+src/**/*.test.ts
+out

@@ -6,7 +6,6 @@ import {IContextRS} from "../interfaces/i-context.interfaces";
 import RequestService from "../services/request.service";
 import {IWidgetConfig, WidgetType} from "../interfaces/i-widget.interfeces";
 
-
 export default class WidgetComponent extends BaseComponent {
   widgetReady: Promise<void>;
 
