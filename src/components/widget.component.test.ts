@@ -45,7 +45,7 @@ describe('ctor-> render', () => {
         {
           element: parent,
           type: WidgetType.Login,
-          getContextURL: 'url'
+          URLPrefix: 'url'
         },
         requestService,
       );
@@ -71,7 +71,7 @@ describe('ctor-> render', () => {
         {
           element: parent,
           type: WidgetType.Login,
-          getContextURL: 'url'
+          URLPrefix: 'url'
         },
         requestService,
       );
@@ -97,7 +97,7 @@ describe('ctor-> render', () => {
         {
           element: parent,
           type: WidgetType.Login,
-          getContextURL: 'url'
+          URLPrefix: 'url'
         },
         requestService,
       );
@@ -136,7 +136,7 @@ describe('callStatus', () => {
         {
           element: parent,
           type: WidgetType.Login,
-          getContextURL: 'url',
+          URLPrefix: 'url',
           onLogin
         },
         requestService,
@@ -161,7 +161,7 @@ describe('callStatus', () => {
       const sut: any = new WidgetComponent(
         {
           element: parent,
-          getContextURL: 'url',
+          URLPrefix: 'url',
           onRegister
           // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         } as any,
@@ -187,7 +187,7 @@ describe('callStatus', () => {
         {
           element: parent,
           type: WidgetType.Login,
-          getContextURL: 'url',
+          URLPrefix: 'url',
         },
         requestService,
       );

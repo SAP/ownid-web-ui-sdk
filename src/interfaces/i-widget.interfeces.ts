@@ -6,8 +6,7 @@ export enum WidgetType {
 export interface IWidgetConfig {
   element: HTMLElement;
   type: WidgetType
-  getContextURL?: string;
-  getStatusURL?: string;
+  URLPrefix?: string;
   mobileTitle?: string;
   desktopTitle?: string;
   desktopSubtitle?: string;

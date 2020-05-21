@@ -13,7 +13,7 @@ export default class WidgetComponent extends BaseComponent {
 
   constructor(private config: IWidgetConfig, private requestService: RequestService) {
     super(config);
-    this.widgetReady = this.getContext(config.getContextURL || ConfigurationService.contextUrl);
+    this.widgetReady = this.getContext(config.URLPrefix || ConfigurationService.URLPrefix);
   }
 
   private async getContext(contextUrl: string) {
@@ -29,7 +29,10 @@ export default class WidgetComponent extends BaseComponent {
     this.context = data.context;
     this.nonce = data.nonce;
 
-    const statusUrl = (this.config.getStatusURL || ConfigurationService.statusUrl).replace(':context', this.context);
+    const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
+
+    const statusUrl = `${prefix}${ConfigurationService.statusUrl}`
+      .replace(':context', this.context);
 
     this.setCallStatus(statusUrl);
 
