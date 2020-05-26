@@ -4,12 +4,15 @@ import Qr from "./common/qr.component";
 import ConfigurationService from "../services/configuration.service";
 import {IContextRS} from "../interfaces/i-context.interfaces";
 import RequestService from "../services/request.service";
-import {IWidgetConfig, WidgetType} from "../interfaces/i-widget.interfeces";
+import { IPartialConfig, IWidgetConfig, WidgetType } from "../interfaces/i-widget.interfeces";
+import TranslationService from '../services/translation.service';
 
 export default class WidgetComponent extends BaseComponent {
   widgetReady: Promise<void>;
 
   private statusTimeout: NodeJS.Timeout | null = null;
+
+  private data: IContextRS | null = null;
 
   constructor(private config: IWidgetConfig, private requestService: RequestService) {
     super(config);
@@ -18,16 +21,16 @@ export default class WidgetComponent extends BaseComponent {
 
   private async getContext(contextUrl: string) {
     const contextData = {type: this.config.type || WidgetType.Register};
-    const data: IContextRS | null = await this.requestService.post(contextUrl, contextData);
+    this.data = await this.requestService.post(contextUrl, contextData);
 
-    if (!data) {
+    if (!this.data) {
       // eslint-disable-next-line no-console
       console.error('No context data received');
       return;
     }
 
-    this.context = data.context;
-    this.nonce = data.nonce;
+    this.context = this.data.context;
+    this.nonce = this.data.nonce;
 
     const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
@@ -36,17 +39,18 @@ export default class WidgetComponent extends BaseComponent {
 
     this.setCallStatus(statusUrl);
 
-    this.render(data.url);
+    this.render();
   }
 
-  private render(href: string): void {
+  private render() {
+    const lang = this.config.language || ConfigurationService.defaultLanguage
     if (this.isMobile()) {
-      const mobileTitle = this.config.mobileTitle || ConfigurationService.defaultTexts[this.config.type].mobileTitle;
-      this.addChild(new LinkButton({href, title: mobileTitle}));
+      const mobileTitle = this.config.mobileTitle || TranslationService.texts[lang][this.config.type].mobileTitle;
+      this.addChild(new LinkButton({href: this.data!.url, title: mobileTitle}));
     } else {
-      const desktopTitle = this.config.desktopTitle || ConfigurationService.defaultTexts[this.config.type].desktopTitle;
-      const desktopSubtitle = this.config.desktopTitle || ConfigurationService.defaultTexts[this.config.type].desktopSubtitle;
-      this.addChild(new Qr({href, title: desktopTitle, subtitle: desktopSubtitle}));
+      const desktopTitle = this.config.desktopTitle || TranslationService.texts[lang][this.config.type].desktopTitle;
+      const desktopSubtitle = this.config.desktopTitle || TranslationService.texts[lang][this.config.type].desktopSubtitle;
+      this.addChild(new Qr({href: this.data!.url, title: desktopTitle, subtitle: desktopSubtitle}));
     }
   }
 
@@ -67,4 +71,14 @@ export default class WidgetComponent extends BaseComponent {
     return this.setCallStatus(statusUrl);
   }
 
+  public destroy() {
+    clearTimeout(this.statusTimeout as NodeJS.Timeout);
+    this.elements.forEach((element) => element.destroy());
+  }
+
+  public update(config: IPartialConfig) {
+    this.elements.forEach((element) => element.destroy());
+    this.config = { ...this.config, ...config };
+    this.render();
+  }
 }

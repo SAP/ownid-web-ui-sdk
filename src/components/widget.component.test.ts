@@ -1,6 +1,6 @@
 import WidgetComponent from "./widget.component";
 import RequestService from "../services/request.service";
-import {WidgetType} from "../interfaces/i-widget.interfeces";
+import { Languages, WidgetType } from "../interfaces/i-widget.interfeces";
 
 interface IMyNavigator extends Navigator {
   userAgent: string;
@@ -18,7 +18,7 @@ Object.defineProperty(navigator, "userAgent", ((value) => ({
   }
 }))(navigator.userAgent));
 
-describe('ctor-> render', () => {
+describe('widget component', () => {
   let requestService: RequestService;
   // eslint-disable-next-line no-console
   console.error = jest.fn();
@@ -142,10 +142,10 @@ describe('callStatus', () => {
         requestService,
       );
       // eslint-disable-next-line no-shadow
-      requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({status: true})));
+      requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({ status: true })));
 
       sut.callStatus('url').then(() => {
-        expect(onLogin).toBeCalledWith({status: true});
+        expect(onLogin).toBeCalledWith({ status: true });
         resolve();
       });
     })
@@ -169,10 +169,10 @@ describe('callStatus', () => {
       );
 
       // eslint-disable-next-line no-shadow
-      requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({status: true})));
+      requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({ status: true })));
 
       sut.callStatus('url').then(() => {
-        expect(onRegister).toBeCalledWith({status: true});
+        expect(onRegister).toBeCalledWith({ status: true });
         resolve();
       });
     })
@@ -194,7 +194,7 @@ describe('callStatus', () => {
 
       sut.setCallStatus = jest.fn();
       // eslint-disable-next-line no-shadow
-      requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({status: false})));
+      requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({ status: false })));
 
       sut.callStatus('url').then(() => {
         expect(sut.setCallStatus).toBeCalledWith('url');
@@ -202,4 +202,55 @@ describe('callStatus', () => {
       });
     })
   });
+
+  it('should remove elements', () => {
+    const parent = document.createElement('div');
+
+    const onRegister = jest.fn();
+
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    const sut: any = new WidgetComponent(
+      {
+        element: parent,
+        URLPrefix: 'url',
+        onRegister
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      } as any,
+      requestService,
+    );
+
+    // eslint-disable-next-line no-shadow
+    requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({ status: true })));
+
+    sut.destroy();
+
+    expect(sut.elements).toEqual([]);
+  })
+
+  it('should update config', () => {
+    const parent = document.createElement('div');
+
+    const onRegister = jest.fn();
+
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    const sut: any = new WidgetComponent(
+      {
+        element: parent,
+        URLPrefix: 'url',
+        type: WidgetType.Login,
+        onRegister
+      },
+      requestService,
+    );
+
+    sut.data = { url: 'url' };
+
+    // eslint-disable-next-line no-shadow
+    requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({ status: true })));
+
+    sut.update({language: Languages.ru});
+
+    expect(sut.config.language).toEqual(Languages.ru);
+  })
+
 });
