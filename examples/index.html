@@ -5,9 +5,8 @@
   <title>OWNID Page Example</title>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-  <script src="../dist/ownid-web-ui-sdk.umd.js"></script>
   <script>
-    window.onload = () => {
+    window.ownidAsyncInit = function() {
       ownid.init({
         URLPrefix: 'http://localhost:5002/ownid/', // optional. default path is /ownId/
       });
@@ -41,6 +40,8 @@
         });
     };
   </script>
+  <script async defer src="../dist/ownid-web-ui-sdk.umd.js"></script>
+
   <style>
     body {
       background: #ccc;
