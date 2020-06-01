@@ -3,32 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <title>OWNID Page Example</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-  <script src="../dist/ownid-web-ui-sdk.umd.js"></script>
   <script>
-    window.onload = () => {
+    window.ownidAsyncInit = function() {
       ownid.init({
+        URLPrefix: 'http://localhost:5002/ownid/', // optional. default path is /ownId/
+      });
+
+      var ownIdElem1 = ownid.render({
         type: 'register',
         element: document.querySelector('#ownid'),
-        getContextURL: 'http://localhost:5000/ownid/', // optional. default path is /ownId/
-        getStatusURL: 'http://localhost:5000/ownid/:context/status', // optional. default path is /ownId/:context/status
         mobileTitle: '', // optional
         desktopTitle: '', // optional
         desktopSubtitle: '', // optional
       });
 
-      ownid.init({
+      ownid.render({
         type: 'login',
         element: document.querySelector('#ownid-login'),
-        getContextURL: 'http://localhost:5000/ownid/', // optional. default path is /ownId/
-        getStatusURL: 'http://localhost:5000/ownid/:context/status', // optional. default path is /ownId/:context/status
+        language: 'ru',
         mobileTitle: '', // optional
         desktopTitle: '', // optional
         desktopSubtitle: '', // optional
       });
+
+      let lang = 'en';
+
+      document.getElementById('destroy')
+        .addEventListener('click', () => ownIdElem1.destroy());
+
+      document.getElementById('lang-change')
+        .addEventListener('click', () => {
+          lang = lang === 'ru' ? 'en': 'ru';
+          ownIdElem1.update({language: lang});
+        });
     };
   </script>
+  <script async defer src="../dist/ownid-web-ui-sdk.umd.js"></script>
+
   <style>
     body {
       background: #ccc;
@@ -47,6 +60,12 @@
     .ownid {
       margin: 30px 0;
     }
+
+    #destroy,
+    #lang-change {
+      border: 1px solid #cccccc;
+    }
+
   </style>
 </head>
 <body>
@@ -58,6 +77,9 @@
   <h4 class="">Login</h4>
 
   <div id="ownid-login" class="ownid"></div>
+
+  <button id="lang-change">Set Next lang</button>
+  <button id="destroy">Destroy widget</button>
 </div>
 </body>
 </html>
