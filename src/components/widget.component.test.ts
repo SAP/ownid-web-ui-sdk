@@ -1,6 +1,6 @@
-import WidgetComponent from "./widget.component";
-import RequestService from "../services/request.service";
-import { Languages, WidgetType } from "../interfaces/i-widget.interfeces";
+import WidgetComponent from './widget.component';
+import RequestService from '../services/request.service';
+import { Languages, WidgetType } from '../interfaces/i-widget.interfeces';
 
 interface IMyNavigator extends Navigator {
   userAgent: string;
@@ -8,15 +8,19 @@ interface IMyNavigator extends Navigator {
 
 declare let navigator: IMyNavigator;
 
-Object.defineProperty(navigator, "userAgent", ((value) => ({
-  bValue: value,
-  get() {
-    return this.bValue;
-  },
-  set(v: string) {
-    this.bValue = v;
-  }
-}))(navigator.userAgent));
+Object.defineProperty(
+  navigator,
+  'userAgent',
+  (value => ({
+    bValue: value,
+    get() {
+      return this.bValue;
+    },
+    set(v: string) {
+      this.bValue = v;
+    },
+  }))(navigator.userAgent),
+);
 
 describe('widget component', () => {
   let requestService: RequestService;
@@ -25,18 +29,21 @@ describe('widget component', () => {
 
   beforeEach(() => {
     requestService = {} as RequestService;
-    requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => {
-      resolve({
-        context: '123',
-        nonce: '234',
-        url: 'url'
-      })
-    }));
+    requestService.post = jest.fn().mockReturnValue(
+      new Promise(resolve => {
+        resolve({
+          context: '123',
+          nonce: '234',
+          url: 'url',
+        });
+      }),
+    );
   });
 
   it('should render and add chile in mobile mode', () => {
-    return new Promise((resolve) => {
-      navigator.userAgent = 'Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36';
+    return new Promise(resolve => {
+      navigator.userAgent =
+        'Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36';
 
       const parent = document.createElement('div');
       document.body.append(parent);
@@ -45,7 +52,7 @@ describe('widget component', () => {
         {
           element: parent,
           type: WidgetType.Login,
-          URLPrefix: 'url'
+          URLPrefix: 'url',
         },
         requestService,
       );
@@ -57,12 +64,13 @@ describe('widget component', () => {
 
         resolve(true);
       });
-    })
+    });
   });
 
   it('should render and add chile in desktop mode', () => {
-    return new Promise((resolve) => {
-      navigator.userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
+    return new Promise(resolve => {
+      navigator.userAgent =
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
 
       const parent = document.createElement('div');
       document.body.append(parent);
@@ -71,7 +79,7 @@ describe('widget component', () => {
         {
           element: parent,
           type: WidgetType.Login,
-          URLPrefix: 'url'
+          URLPrefix: 'url',
         },
         requestService,
       );
@@ -83,13 +91,15 @@ describe('widget component', () => {
 
         resolve(true);
       });
-    })
+    });
   });
 
   it('should not render', () => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       // eslint-disable-next-line no-shadow
-      requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve(null)));
+      requestService.post = jest
+        .fn()
+        .mockReturnValue(new Promise(resolve => resolve(null)));
 
       const parent = document.createElement('div');
 
@@ -97,7 +107,7 @@ describe('widget component', () => {
         {
           element: parent,
           type: WidgetType.Login,
-          URLPrefix: 'url'
+          URLPrefix: 'url',
         },
         requestService,
       );
@@ -105,7 +115,7 @@ describe('widget component', () => {
         expect(parent.children.length).toBe(0);
         resolve();
       });
-    })
+    });
   });
 });
 
@@ -116,17 +126,19 @@ describe('callStatus', () => {
 
   beforeEach(() => {
     requestService = {} as RequestService;
-    requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => {
-      resolve({
-        context: '123',
-        nonce: '234',
-        url: 'url'
-      })
-    }));
+    requestService.post = jest.fn().mockReturnValue(
+      new Promise(resolve => {
+        resolve({
+          context: '123',
+          nonce: '234',
+          url: 'url',
+        });
+      }),
+    );
   });
 
   it('should call onLogin', () => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const parent = document.createElement('div');
 
       const onLogin = jest.fn();
@@ -137,22 +149,24 @@ describe('callStatus', () => {
           element: parent,
           type: WidgetType.Login,
           URLPrefix: 'url',
-          onLogin
+          onLogin,
         },
         requestService,
       );
       // eslint-disable-next-line no-shadow
-      requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({ status: true })));
+      requestService.post = jest
+        .fn()
+        .mockReturnValue(new Promise(resolve => resolve({ status: true })));
 
       sut.callStatus('url').then(() => {
         expect(onLogin).toBeCalledWith({ status: true });
         resolve();
       });
-    })
+    });
   });
 
   it('should call onRegister', () => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const parent = document.createElement('div');
 
       const onRegister = jest.fn();
@@ -162,24 +176,26 @@ describe('callStatus', () => {
         {
           element: parent,
           URLPrefix: 'url',
-          onRegister
+          onRegister,
           // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         } as any,
         requestService,
       );
 
       // eslint-disable-next-line no-shadow
-      requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({ status: true })));
+      requestService.post = jest
+        .fn()
+        .mockReturnValue(new Promise(resolve => resolve({ status: true })));
 
       sut.callStatus('url').then(() => {
         expect(onRegister).toBeCalledWith({ status: true });
         resolve();
       });
-    })
+    });
   });
 
   it('should call setCallStatus', () => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const parent = document.createElement('div');
 
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -194,13 +210,15 @@ describe('callStatus', () => {
 
       sut.setCallStatus = jest.fn();
       // eslint-disable-next-line no-shadow
-      requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({ status: false })));
+      requestService.post = jest
+        .fn()
+        .mockReturnValue(new Promise(resolve => resolve({ status: false })));
 
       sut.callStatus('url').then(() => {
         expect(sut.setCallStatus).toBeCalledWith('url');
         resolve();
       });
-    })
+    });
   });
 
   it('should remove elements', () => {
@@ -213,19 +231,21 @@ describe('callStatus', () => {
       {
         element: parent,
         URLPrefix: 'url',
-        onRegister
+        onRegister,
         // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       } as any,
       requestService,
     );
 
     // eslint-disable-next-line no-shadow
-    requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({ status: true })));
+    requestService.post = jest
+      .fn()
+      .mockReturnValue(new Promise(resolve => resolve({ status: true })));
 
     sut.destroy();
 
     expect(sut.elements).toEqual([]);
-  })
+  });
 
   it('should update config', () => {
     const parent = document.createElement('div');
@@ -238,7 +258,7 @@ describe('callStatus', () => {
         element: parent,
         URLPrefix: 'url',
         type: WidgetType.Login,
-        onRegister
+        onRegister,
       },
       requestService,
     );
@@ -246,11 +266,12 @@ describe('callStatus', () => {
     sut.data = { url: 'url' };
 
     // eslint-disable-next-line no-shadow
-    requestService.post = jest.fn().mockReturnValue(new Promise((resolve) => resolve({ status: true })));
+    requestService.post = jest
+      .fn()
+      .mockReturnValue(new Promise(resolve => resolve({ status: true })));
 
-    sut.update({language: Languages.ru});
+    sut.update({ language: Languages.ru });
 
     expect(sut.config.language).toEqual(Languages.ru);
-  })
-
+  });
 });

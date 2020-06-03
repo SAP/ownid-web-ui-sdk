@@ -2,10 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
-    "types": [
-      "jest",
-      "node"
-    ],
+    "types": ["jest", "node"],
     "strict": false,
     "noEmitOnError": false,
     "noErrorTruncation": false,
@@ -15,8 +12,5 @@
     "noUnusedParameters": false,
     "emitDecoratorMetadata": true
   },
-  "include": [
-    "src/**/*.test.ts",
-    "src/**/*.d.ts"
-  ]
+  "include": ["src/**/*.test.ts", "src/**/*.d.ts"]
 }

@@ -1,11 +1,11 @@
-import BaseCommonComponent from "./base-common.component";
+import BaseCommonComponent from './base-common.component';
 
 declare type LinkButtonOptions = {
   title: string;
   href: string;
 };
 
-export default class LinkButton extends BaseCommonComponent<LinkButtonOptions>{
+export default class LinkButton extends BaseCommonComponent<LinkButtonOptions> {
   constructor(options: LinkButtonOptions) {
     super(options);
   }

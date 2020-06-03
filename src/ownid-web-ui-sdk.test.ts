@@ -1,19 +1,18 @@
-import OwnIDUiSdk from "./ownid-web-ui-sdk";
-import WidgetComponent from "./components/widget.component";
-import { IWidgetConfig, WidgetType } from "./interfaces/i-widget.interfeces";
+import OwnIDUiSdk from './ownid-web-ui-sdk';
+import WidgetComponent from './components/widget.component';
+import { IWidgetConfig, WidgetType } from './interfaces/i-widget.interfeces';
 
-describe("OwnIDUiSdk instances test", () => {
-
+describe('OwnIDUiSdk instances test', () => {
   const sdk = new OwnIDUiSdk();
 
   // eslint-disable-next-line no-console
   console.error = jest.fn();
 
-  it("DummyClass is instantiable", () => {
-    expect(sdk).toBeInstanceOf(OwnIDUiSdk)
+  it('DummyClass is instantiable', () => {
+    expect(sdk).toBeInstanceOf(OwnIDUiSdk);
   });
 
-  it("init should set config", () => {
+  it('init should set config', () => {
     const params = {
       URLPrefix: 'url',
     };
@@ -24,13 +23,13 @@ describe("OwnIDUiSdk instances test", () => {
     });
   });
 
-  it("should set config to {}", () => {
+  it('should set config to {}', () => {
     sdk.init();
 
     expect(sdk.config).toEqual({});
   });
 
-  it("render should call WidgetComponent", () => {
+  it('render should call WidgetComponent', () => {
     const params = {
       element: document.createElement('div'),
       type: WidgetType.Login,
@@ -40,7 +39,7 @@ describe("OwnIDUiSdk instances test", () => {
     expect(sut).toBeInstanceOf(WidgetComponent);
   });
 
-  it("render should return null", () => {
+  it('render should return null', () => {
     const params: IWidgetConfig = {
       // @ts-ignore
       element: null,
@@ -49,7 +48,5 @@ describe("OwnIDUiSdk instances test", () => {
     const sut = sdk.render(params);
 
     expect(sut).toBe(null);
-  })
+  });
 });
-
-
