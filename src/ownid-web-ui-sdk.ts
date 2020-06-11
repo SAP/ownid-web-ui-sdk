@@ -1,6 +1,6 @@
 import WidgetComponent from './components/widget.component';
 import RequestService from './services/request.service';
-import { IInitConfig, IWidgetConfig } from './interfaces/i-widget.interfeces';
+import { IInitConfig, IWidgetConfig } from './interfaces/i-widget.interfaces';
 
 export default class OwnIDUiSdk {
   config = {} as IInitConfig;

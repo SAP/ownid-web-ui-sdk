@@ -1,6 +1,6 @@
 import WidgetComponent from './widget.component';
 import RequestService from '../services/request.service';
-import { Languages, WidgetType } from '../interfaces/i-widget.interfeces';
+import { Languages, WidgetType } from '../interfaces/i-widget.interfaces';
 
 interface IMyNavigator extends Navigator {
   userAgent: string;
@@ -135,6 +135,109 @@ describe('callStatus', () => {
         });
       }),
     );
+  });
+
+  it('should check status automatically for desktop version', () => {
+    return new Promise(resolve => {
+      const parent = document.createElement('div');
+
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const sut: any = new WidgetComponent(
+        {
+          element: parent,
+          type: WidgetType.Login,
+          URLPrefix: 'url',
+        },
+        requestService,
+      );
+
+      sut.setCallStatus = jest.fn();
+
+      sut.widgetReady.then(() => {
+        expect(sut.setCallStatus).toBeCalled();
+        resolve();
+      });
+    });
+  });
+  it('should not check status automatically for mobile version', () => {
+    return new Promise(resolve => {
+      navigator.userAgent =
+        'Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36';
+
+      const parent = document.createElement('div');
+
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const sut: any = new WidgetComponent(
+        {
+          element: parent,
+          type: WidgetType.Login,
+          URLPrefix: 'url'
+        },
+        requestService,
+      );
+
+      sut.setCallStatus = jest.fn();
+
+      sut.widgetReady.then(() => {
+        expect(sut.setCallStatus).not.toBeCalled();
+        resolve();
+      });
+    });
+  });
+
+  it('should start status check after clicking on button', () => {
+    return new Promise(resolve => {
+      navigator.userAgent = 'Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36';
+
+      const parent = document.createElement('div');
+
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const sut: any = new WidgetComponent(
+        {
+          element: parent,
+          type: WidgetType.Login,
+          URLPrefix: 'url'
+        },
+        requestService,
+      );
+
+      sut.setCallStatus = jest.fn();
+
+      sut.widgetReady.then(() => {
+        const link = parent.children[0] as HTMLAnchorElement;
+        expect(link).not.toBeNull();
+
+        link.click();
+
+        expect(sut.setCallStatus).toBeCalled();
+        resolve();
+      });
+    });
+  });
+
+  it('should add context to check status url', () => {
+    return new Promise(resolve => {
+      navigator.userAgent = '';
+
+      const parent = document.createElement('div');
+
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const sut: any = new WidgetComponent(
+        {
+          element: parent,
+          type: WidgetType.Login,
+          URLPrefix: 'url',
+        },
+        requestService,
+      );
+
+      sut.setCallStatus = jest.fn();
+
+      sut.widgetReady.then(() => {
+        expect(sut.setCallStatus).toBeCalledWith('url/123/status');
+        resolve();
+      });
+    });
   });
 
   it('should call onLogin', () => {

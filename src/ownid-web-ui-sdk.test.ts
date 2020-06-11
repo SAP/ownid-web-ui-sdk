@@ -1,6 +1,6 @@
 import OwnIDUiSdk from './ownid-web-ui-sdk';
 import WidgetComponent from './components/widget.component';
-import { IWidgetConfig, WidgetType } from './interfaces/i-widget.interfeces';
+import { IWidgetConfig, WidgetType } from './interfaces/i-widget.interfaces';
 
 describe('OwnIDUiSdk instances test', () => {
   const sdk = new OwnIDUiSdk();

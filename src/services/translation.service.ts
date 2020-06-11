@@ -1,5 +1,5 @@
 // todo: implement in correct way
-import { Languages, WidgetType } from '../interfaces/i-widget.interfeces';
+import { Languages, WidgetType } from '../interfaces/i-widget.interfaces';
 
 interface ITranslationsTexts {
   [key: string]: {
