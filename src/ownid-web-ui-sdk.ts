@@ -1,6 +1,10 @@
 import WidgetComponent from './components/widget.component';
 import RequestService from './services/request.service';
-import { IInitConfig, IWidgetConfig } from './interfaces/i-widget.interfeces';
+import {
+  IInitConfig,
+  IWidgetConfig,
+  WidgetType,
+} from './interfaces/i-widget.interfeces';
 
 export default class OwnIDUiSdk {
   config = {} as IInitConfig;
@@ -16,9 +20,14 @@ export default class OwnIDUiSdk {
       return null;
     }
 
+    const desktopDisable = config.type === WidgetType.Link;
+    const mobileDisable = false;
+
     return new WidgetComponent(
       { ...this.config, ...config },
       new RequestService(),
+      desktopDisable,
+      mobileDisable,
     );
   }
 }

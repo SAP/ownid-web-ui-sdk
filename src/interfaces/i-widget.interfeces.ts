@@ -1,6 +1,7 @@
 export enum WidgetType {
   Register = 'register',
   Login = 'login',
+  Link = 'link',
 }
 
 export enum Languages {
@@ -28,6 +29,7 @@ export interface IWidgetConfig {
   statusInterval?: number;
   onLogin?: (response: object) => void;
   onRegister?: (response: object) => void;
+  onLink?: (response: object) => void;
 }
 
 export interface IPartialConfig {
@@ -38,4 +40,5 @@ export interface IPartialConfig {
   statusInterval?: number;
   onLogin?: (response: object) => void;
   onRegister?: (response: object) => void;
+  onLink?: (response: object) => void;
 }

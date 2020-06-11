@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>OWNID Page Example</title>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-
   <script>
     window.ownidAsyncInit = function() {
       ownid.init({
@@ -28,6 +27,14 @@
         desktopSubtitle: '', // optional
       });
 
+      ownid.render({
+        type: 'link',
+        element: document.querySelector('#ownid-link'),
+        mobileTitle: '', // optional
+        desktopTitle: '', // optional
+        desktopSubtitle: '', // optional
+      });
+
       let lang = 'en';
 
       document.getElementById('destroy')
@@ -38,6 +45,11 @@
           lang = lang === 'ru' ? 'en': 'ru';
           ownIdElem1.update({language: lang});
         });
+
+      // gigya.accounts.getJWT(resp => {
+      //   console.log(resp);
+      //
+      // });
     };
   </script>
   <script async defer src="../dist/ownid-web-ui-sdk.umd.js"></script>
@@ -77,6 +89,10 @@
   <h4 class="">Login</h4>
 
   <div id="ownid-login" class="ownid"></div>
+
+  <h4 class="">Link</h4>
+
+  <div id="ownid-link" class="ownid"></div>
 
   <button id="lang-change">Set Next lang</button>
   <button id="destroy">Destroy widget</button>

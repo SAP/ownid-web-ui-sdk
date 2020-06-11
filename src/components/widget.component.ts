@@ -21,6 +21,8 @@ export default class WidgetComponent extends BaseComponent {
   constructor(
     private config: IWidgetConfig,
     private requestService: RequestService,
+    private disableDesktop: boolean = false,
+    private disableMobile: boolean = false,
   ) {
     super(config);
     this.widgetReady = this.getContext(
@@ -58,6 +60,13 @@ export default class WidgetComponent extends BaseComponent {
   private render() {
     const lang = this.config.language || ConfigurationService.defaultLanguage;
     if (this.isMobile()) {
+      if (this.disableMobile) {
+        console.warn(
+          `Mobile rendering is disabled for ${this.config.type} widget type`,
+        );
+        return;
+      }
+
       const mobileTitle =
         this.config.mobileTitle ||
         TranslationService.texts[lang][this.config.type].mobileTitle;
@@ -65,6 +74,13 @@ export default class WidgetComponent extends BaseComponent {
         new LinkButton({ href: this.data!.url, title: mobileTitle }),
       );
     } else {
+      if (this.disableDesktop) {
+        console.warn(
+          `Desktop rendering is disabled for ${this.config.type} widget type`,
+        );
+        return;
+      }
+
       const desktopTitle =
         this.config.desktopTitle ||
         TranslationService.texts[lang][this.config.type].desktopTitle;
@@ -95,9 +111,15 @@ export default class WidgetComponent extends BaseComponent {
     if (response.status) {
       clearTimeout(this.statusTimeout as NodeJS.Timeout);
 
-      return this.config.type === WidgetType.Login
-        ? this.config.onLogin && this.config.onLogin(response)
-        : this.config.onRegister && this.config.onRegister(response);
+      switch (this.config.type) {
+        case WidgetType.Link:
+          return this.config.onLink && this.config.onLink(response);
+        case WidgetType.Login:
+          return this.config.onLogin && this.config.onLogin(response);
+        case WidgetType.Register:
+        default:
+          return this.config.onRegister && this.config.onRegister(response);
+      }
     }
 
     return this.setCallStatus(statusUrl);
