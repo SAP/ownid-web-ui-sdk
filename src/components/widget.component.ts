@@ -8,7 +8,7 @@ import {
   IPartialConfig,
   IWidgetConfig,
   WidgetType,
-} from '../interfaces/i-widget.interfeces';
+} from '../interfaces/i-widget.interfaces';
 import TranslationService from '../services/translation.service';
 
 export default class WidgetComponent extends BaseComponent {
@@ -52,16 +52,9 @@ export default class WidgetComponent extends BaseComponent {
     this.context = this.data.context;
     this.nonce = this.data.nonce;
 
-    const prefix = (
-      this.config.URLPrefix || ConfigurationService.URLPrefix
-    ).replace(/\/+$/, '');
-
-    const statusUrl = `${prefix}${ConfigurationService.statusUrl}`.replace(
-      ':context',
-      this.context,
-    );
-
-    this.setCallStatus(statusUrl);
+    if (!this.isMobile()) {
+      this.setCallStatus(this.getStatusUrl());
+    }
 
     this.render();
   }
@@ -79,9 +72,16 @@ export default class WidgetComponent extends BaseComponent {
       const mobileTitle =
         this.config.mobileTitle ||
         TranslationService.texts[lang][this.config.type].mobileTitle;
-      this.addChild(
-        new LinkButton({ href: this.data!.url, title: mobileTitle }),
-      );
+      const linkButton = new LinkButton({
+        href: this.data!.url,
+        title: mobileTitle,
+      });
+
+      linkButton.attachHandler('click', () => {
+        this.setCallStatus(this.getStatusUrl());
+      });
+
+      this.addChild(linkButton);
     } else {
       if (this.disableDesktop) {
         console.warn(
@@ -104,6 +104,19 @@ export default class WidgetComponent extends BaseComponent {
         }),
       );
     }
+  }
+
+  private getStatusUrl() {
+    const prefix = (
+      this.config.URLPrefix || ConfigurationService.URLPrefix
+    ).replace(/\/+$/, '');
+
+    const statusUrl = `${prefix}${ConfigurationService.statusUrl}`.replace(
+      ':context',
+      this.context as string,
+    );
+
+    return statusUrl;
   }
 
   private setCallStatus(statusUrl: string) {
@@ -134,12 +147,12 @@ export default class WidgetComponent extends BaseComponent {
     return this.setCallStatus(statusUrl);
   }
 
-  public destroy() {
+  public destroy(): void {
     clearTimeout(this.statusTimeout as NodeJS.Timeout);
     this.elements.forEach(element => element.destroy());
   }
 
-  public update(config: IPartialConfig) {
+  public update(config: IPartialConfig): void {
     this.elements.forEach(element => element.destroy());
     this.config = { ...this.config, ...config };
     this.render();

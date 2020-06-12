@@ -1,6 +1,6 @@
 // todo: implement in correct way
 
-import { Languages } from '../interfaces/i-widget.interfeces';
+import { Languages } from '../interfaces/i-widget.interfaces';
 
 export default class ConfigurationService {
   static readonly URLPrefix = '/ownid';

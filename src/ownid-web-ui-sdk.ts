@@ -4,7 +4,7 @@ import {
   IInitConfig,
   IWidgetConfig,
   WidgetType,
-} from './interfaces/i-widget.interfeces';
+} from './interfaces/i-widget.interfaces';
 import GigyaLinkWidgetComponent from "./components/gigya-link-widget.component";
 
 export default class OwnIDUiSdk {

@@ -1,5 +1,5 @@
 import WidgetComponent from "./widget.component";
-import {IWidgetConfig} from "../interfaces/i-widget.interfeces";
+import {IWidgetConfig} from "../interfaces/i-widget.interfaces";
 import RequestService from "../services/request.service";
 import ConfigurationService from "../services/configuration.service";
 
