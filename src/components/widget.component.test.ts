@@ -180,6 +180,35 @@ describe('widget component', () => {
     });
   });
 
+  it('should use custom init()', () => {
+    return new Promise(resolve => {
+      // eslint-disable-next-line no-shadow
+      requestService.post = jest
+        .fn()
+        .mockReturnValue(new Promise(resolve => resolve({})));
+
+      const parent = document.createElement('div');
+      document.body.append(parent);
+
+      const customInit = jest.fn().mockReturnValue(new Promise<void>(()=>{}));
+
+      const type = WidgetType.Login;
+      new WidgetComponent(
+        {
+          element: parent,
+          type,
+          URLPrefix: 'url',
+        },
+        requestService,
+        false,
+        true,
+        customInit
+      );
+      expect(customInit).toBeCalled();
+      resolve();
+    });
+  });
+
 });
 
 describe('callStatus', () => {

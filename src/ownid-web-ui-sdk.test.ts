@@ -49,4 +49,25 @@ describe('OwnIDUiSdk instances test', () => {
 
     expect(sut).toBe(null);
   });
+
+  // it('render should call WidgetComponent', () => {
+  //   const params = {
+  //     element: document.createElement('div'),
+  //     type: WidgetType.Login,
+  //   };
+  //   const sut = sdk.renderLinkGigya(params, );
+  //
+  //   expect(sut).toBeInstanceOf(WidgetComponent);
+  // });
+  //
+  // it('render should return null', () => {
+  //   const params: IWidgetConfig = {
+  //     // @ts-ignore
+  //     element: null,
+  //     type: WidgetType.Login,
+  //   };
+  //   const sut = sdk.render(params);
+  //
+  //   expect(sut).toBe(null);
+  // });
 });

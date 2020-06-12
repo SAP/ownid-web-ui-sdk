@@ -19,19 +19,28 @@ export default class WidgetComponent extends BaseComponent {
   private data: IContextRS | null = null;
 
   constructor(
-    private config: IWidgetConfig,
-    private requestService: RequestService,
-    private disableDesktop: boolean = false,
-    private disableMobile: boolean = false,
+    protected config: IWidgetConfig,
+    protected requestService: RequestService,
+    protected disableDesktop: boolean = false,
+    protected disableMobile: boolean = false,
+    protected init?: () => Promise<void>
   ) {
     super(config);
-    this.widgetReady = this.getContext(
-      config.URLPrefix || ConfigurationService.URLPrefix,
-    );
+
+    if(!init) {
+      this.widgetReady = this.getContext(
+        config.URLPrefix || ConfigurationService.URLPrefix,
+      );
+    }
+    else
+    {
+      this.widgetReady = init();
+    }
   }
 
-  private async getContext(contextUrl: string) {
-    const contextData = { type: this.config.type || WidgetType.Register };
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  protected async getContext(contextUrl: string, data: any = null) {
+    const contextData = { type: this.config.type || WidgetType.Register, data };
     this.data = await this.requestService.post(contextUrl, contextData);
 
     if (!this.data) {

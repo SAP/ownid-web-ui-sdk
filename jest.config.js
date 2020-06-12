@@ -6,6 +6,7 @@ module.exports = {
   globals: {
     window: {
       ownid: null,
+      gigya: null,
     },
   },
   testEnvironment: 'jsdom',
