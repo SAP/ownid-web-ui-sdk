@@ -23,19 +23,18 @@ export default class WidgetComponent extends BaseComponent {
     protected requestService: RequestService,
     protected disableDesktop: boolean = false,
     protected disableMobile: boolean = false,
-    protected init?: () => Promise<void>
+    // protected init?: () => void
   ) {
     super(config);
 
-    if(!init) {
-      this.widgetReady = this.getContext(
-        config.URLPrefix || ConfigurationService.URLPrefix,
-      );
-    }
-    else
-    {
-      this.widgetReady = init();
-    }
+    this.widgetReady = this.Init(config);
+  }
+
+  protected Init(config: IWidgetConfig): Promise<void>
+  {
+    return this.getContext(
+      config.URLPrefix || ConfigurationService.URLPrefix,
+    );
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any

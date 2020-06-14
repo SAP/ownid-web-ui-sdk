@@ -179,36 +179,6 @@ describe('widget component', () => {
       });
     });
   });
-
-  it('should use custom init()', () => {
-    return new Promise(resolve => {
-      // eslint-disable-next-line no-shadow
-      requestService.post = jest
-        .fn()
-        .mockReturnValue(new Promise(resolve => resolve({})));
-
-      const parent = document.createElement('div');
-      document.body.append(parent);
-
-      const customInit = jest.fn().mockReturnValue(new Promise<void>(()=>{}));
-
-      const type = WidgetType.Login;
-      new WidgetComponent(
-        {
-          element: parent,
-          type,
-          URLPrefix: 'url',
-        },
-        requestService,
-        false,
-        true,
-        customInit
-      );
-      expect(customInit).toBeCalled();
-      resolve();
-    });
-  });
-
 });
 
 describe('callStatus', () => {
@@ -224,7 +194,7 @@ describe('callStatus', () => {
           context: '123',
           nonce: '234',
           url: 'url',
-        });
+        })
       }),
     );
   });
@@ -232,6 +202,8 @@ describe('callStatus', () => {
   it('should check status automatically for desktop version', () => {
     return new Promise(resolve => {
       const parent = document.createElement('div');
+      navigator.userAgent =
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
 
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
@@ -251,6 +223,7 @@ describe('callStatus', () => {
       });
     });
   });
+
   it('should not check status automatically for mobile version', () => {
     return new Promise(resolve => {
       navigator.userAgent =
