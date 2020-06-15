@@ -117,6 +117,68 @@ describe('widget component', () => {
       });
     });
   });
+
+  it('should not render in desktop mode when desktopDisabled = true', () => {
+    return new Promise(resolve => {
+      navigator.userAgent =
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
+      // eslint-disable-next-line no-shadow
+      requestService.post = jest
+        .fn()
+        .mockReturnValue(new Promise(resolve => resolve({})));
+
+      const parent = document.createElement('div');
+      document.body.append(parent);
+      console.warn = jest.fn();
+      const type = WidgetType.Login;
+      const sut = new WidgetComponent(
+        {
+          element: parent,
+          type,
+          URLPrefix: 'url',
+        },
+        requestService,
+        true
+      );
+      sut.widgetReady.then(() => {
+        expect(console.warn).toBeCalledWith(`Desktop rendering is disabled for ${type} widget type`);
+        expect(parent.children.length).toBe(0);
+        resolve();
+      });
+    });
+  });
+
+  it('should not render in mobile mode when mobileDisabled = true', () => {
+    return new Promise(resolve => {
+      navigator.userAgent =
+        'Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36';
+      // eslint-disable-next-line no-shadow
+      requestService.post = jest
+        .fn()
+        .mockReturnValue(new Promise(resolve => resolve({})));
+
+      const parent = document.createElement('div');
+      document.body.append(parent);
+      console.warn = jest.fn();
+
+      const type = WidgetType.Login;
+      const sut = new WidgetComponent(
+        {
+          element: parent,
+          type,
+          URLPrefix: 'url',
+        },
+        requestService,
+        false,
+        true
+      );
+      sut.widgetReady.then(() => {
+        expect(console.warn).toBeCalledWith(`Mobile rendering is disabled for ${type} widget type`);
+        expect(parent.children.length).toBe(0);
+        resolve();
+      });
+    });
+  });
 });
 
 describe('callStatus', () => {
@@ -132,7 +194,7 @@ describe('callStatus', () => {
           context: '123',
           nonce: '234',
           url: 'url',
-        });
+        })
       }),
     );
   });
@@ -140,6 +202,8 @@ describe('callStatus', () => {
   it('should check status automatically for desktop version', () => {
     return new Promise(resolve => {
       const parent = document.createElement('div');
+      navigator.userAgent =
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
 
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
@@ -159,6 +223,7 @@ describe('callStatus', () => {
       });
     });
   });
+
   it('should not check status automatically for mobile version', () => {
     return new Promise(resolve => {
       navigator.userAgent =
@@ -297,6 +362,36 @@ describe('callStatus', () => {
     });
   });
 
+  it('should call onLink', () => {
+    return new Promise(resolve => {
+      const parent = document.createElement('div');
+
+      const onLink = jest.fn();
+
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const sut: any = new WidgetComponent(
+        {
+          element: parent,
+          URLPrefix: 'url',
+          type: WidgetType.Link,
+          onLink,
+          // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+        } as any,
+        requestService,
+      );
+
+      // eslint-disable-next-line no-shadow
+      requestService.post = jest
+        .fn()
+        .mockReturnValue(new Promise(resolve => resolve({ status: true })));
+
+      sut.callStatus('url').then(() => {
+        expect(onLink).toBeCalledWith({ status: true });
+        resolve();
+      });
+    });
+  });
+
   it('should call setCallStatus', () => {
     return new Promise(resolve => {
       const parent = document.createElement('div');
@@ -378,3 +473,5 @@ describe('callStatus', () => {
     expect(sut.config.language).toEqual(Languages.ru);
   });
 });
+
+

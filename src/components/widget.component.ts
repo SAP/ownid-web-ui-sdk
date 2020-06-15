@@ -19,17 +19,27 @@ export default class WidgetComponent extends BaseComponent {
   private data: IContextRS | null = null;
 
   constructor(
-    private config: IWidgetConfig,
-    private requestService: RequestService,
+    protected config: IWidgetConfig,
+    protected requestService: RequestService,
+    protected disableDesktop: boolean = false,
+    protected disableMobile: boolean = false,
+    // protected init?: () => void
   ) {
     super(config);
-    this.widgetReady = this.getContext(
+
+    this.widgetReady = this.init(config);
+  }
+
+  protected init(config: IWidgetConfig): Promise<void>
+  {
+    return this.getContext(
       config.URLPrefix || ConfigurationService.URLPrefix,
     );
   }
 
-  private async getContext(contextUrl: string) {
-    const contextData = { type: this.config.type || WidgetType.Register };
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  protected async getContext(contextUrl: string, data: any = null) {
+    const contextData = { type: this.config.type || WidgetType.Register, data };
     this.data = await this.requestService.post(contextUrl, contextData);
 
     if (!this.data) {
@@ -51,6 +61,13 @@ export default class WidgetComponent extends BaseComponent {
   private render() {
     const lang = this.config.language || ConfigurationService.defaultLanguage;
     if (this.isMobile()) {
+      if (this.disableMobile) {
+        console.warn(
+          `Mobile rendering is disabled for ${this.config.type} widget type`,
+        );
+        return;
+      }
+
       const mobileTitle =
         this.config.mobileTitle ||
         TranslationService.texts[lang][this.config.type].mobileTitle;
@@ -65,6 +82,13 @@ export default class WidgetComponent extends BaseComponent {
 
       this.addChild(linkButton);
     } else {
+      if (this.disableDesktop) {
+        console.warn(
+          `Desktop rendering is disabled for ${this.config.type} widget type`,
+        );
+        return;
+      }
+
       const desktopTitle =
         this.config.desktopTitle ||
         TranslationService.texts[lang][this.config.type].desktopTitle;
@@ -108,9 +132,15 @@ export default class WidgetComponent extends BaseComponent {
     if (response.status) {
       clearTimeout(this.statusTimeout as NodeJS.Timeout);
 
-      return this.config.type === WidgetType.Login
-        ? this.config.onLogin && this.config.onLogin(response)
-        : this.config.onRegister && this.config.onRegister(response);
+      switch (this.config.type) {
+        case WidgetType.Link:
+          return this.config.onLink && this.config.onLink(response);
+        case WidgetType.Login:
+          return this.config.onLogin && this.config.onLogin(response);
+        case WidgetType.Register:
+        default:
+          return this.config.onRegister && this.config.onRegister(response);
+      }
     }
 
     return this.setCallStatus(statusUrl);

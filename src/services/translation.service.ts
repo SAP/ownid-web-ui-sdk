@@ -25,6 +25,12 @@ export default class TranslationService {
         desktopSubtitle:
           'Use your phone to scan and complete a passwordless registration.',
       },
+      [WidgetType.Link]: {
+        mobileTitle: 'Enable Instant Login',
+        desktopTitle: 'Enable Instant Login',
+        desktopSubtitle:
+          'Use your phone to scan for enabling passwordless sign in.',
+      },
     },
     [Languages.ru]: {
       [WidgetType.Login]: {
@@ -38,6 +44,12 @@ export default class TranslationService {
         desktopTitle: 'Пропустить пароль с OwnID',
         desktopSubtitle:
           'Используйте свой телефон для сканирования и завершения регистрации без пароля.',
+      },
+      [WidgetType.Link]: {
+        mobileTitle: 'Включить мгновенный вход',
+        desktopTitle: 'Включить мгновенный вход',
+        desktopSubtitle:
+          'Используйте свой телефон для сканирования и включения входа без пароля.',
       },
     },
   };
