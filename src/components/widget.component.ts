@@ -27,10 +27,10 @@ export default class WidgetComponent extends BaseComponent {
   ) {
     super(config);
 
-    this.widgetReady = this.Init(config);
+    this.widgetReady = this.init(config);
   }
 
-  protected Init(config: IWidgetConfig): Promise<void>
+  protected init(config: IWidgetConfig): Promise<void>
   {
     return this.getContext(
       config.URLPrefix || ConfigurationService.URLPrefix,
