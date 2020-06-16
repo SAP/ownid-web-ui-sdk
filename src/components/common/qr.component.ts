@@ -1,5 +1,5 @@
-import QRCode from "qrcode-generator";
-import BaseCommonComponent from "./base-common.component";
+import QRCode from 'qrcode-generator';
+import BaseCommonComponent from './base-common.component';
 
 declare type QrOptions = {
   title: string;

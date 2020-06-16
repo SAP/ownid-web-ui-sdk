@@ -1,4 +1,4 @@
-export  declare type Options = {
+export declare type Options = {
   className?: string;
   id?: string;
   href: string;
@@ -10,7 +10,8 @@ export interface ICommonComponent {
   destroy(): void;
 }
 
-export default abstract class BaseCommonComponent<T> implements ICommonComponent{
+export default abstract class BaseCommonComponent<T>
+  implements ICommonComponent {
   protected constructor(options: T) {
     this.ref = this.render(options);
   }
@@ -19,11 +20,11 @@ export default abstract class BaseCommonComponent<T> implements ICommonComponent
 
   protected abstract render(options: T): HTMLElement;
 
-  public attachHandler(event: string, handler: ()=>void) {
+  public attachHandler(event: string, handler: () => void) {
     this.ref.addEventListener(event, handler);
   }
 
-  public appendToParent(parent: HTMLElement): void{
+  public appendToParent(parent: HTMLElement): void {
     parent.append(this.ref);
   }
 
