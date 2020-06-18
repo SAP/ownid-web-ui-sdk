@@ -4,7 +4,7 @@
 		"collectionName":"webapp",
 		"folders":[
 		{
-			"startingFolderPath":"web-ui-sdk/src/services/**",
+			"startingFolderPath":"src/services/**",
 			"sourceFilters":["translation.service.ts"],
 			"targetFolderPath":"../translated/[langCode]/strings.json"
 		}
