@@ -1,5 +1,11 @@
+import { ILogger } from '../interfaces/i-logger.interfaces';
+
 export default class RequestService {
+  constructor(private logger?: ILogger) {}
+
   public async post(url: string, data = {}) {
+    this.logger?.logInfo(`request: ${url}`);
+
     const response = await fetch(url, {
       method: 'POST',
       mode: 'cors',
