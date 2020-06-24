@@ -27,9 +27,7 @@ export interface IWidgetConfig {
   element: HTMLElement;
   type: WidgetType;
   language?: Languages;
-  data?: {
-    pwrt?: string,
-  };
+  data?: unknown;
   URLPrefix?: string;
   mobileTitle?: string;
   desktopTitle?: string;
@@ -43,9 +41,7 @@ export interface IWidgetConfig {
 
 export interface IPartialConfig {
   language?: Languages;
-  data?: {
-    pwrt?: string,
-  },
+  data?: unknown,
   mobileTitle?: string;
   desktopTitle?: string;
   desktopSubtitle?: string;
