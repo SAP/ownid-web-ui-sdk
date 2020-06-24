@@ -31,6 +31,12 @@ export default class TranslationService {
         desktopSubtitle:
           'Use your phone to scan for enabling passwordless sign in.',
       },
+      [WidgetType.Recover]: {
+        mobileTitle: 'Recover account without a password',
+        desktopTitle: 'Skip the password with OwnID',
+        desktopSubtitle:
+          'Use your phone to scan and complete a passwordless account recover.',
+      },
     },
     [Languages.ru]: {
       [WidgetType.Login]: {
@@ -50,6 +56,12 @@ export default class TranslationService {
         desktopTitle: 'Включить мгновенный вход',
         desktopSubtitle:
           'Используйте свой телефон для сканирования и включения входа без пароля.',
+      },
+      [WidgetType.Recover]: {
+        mobileTitle: 'Восстановить аккаунт без пароля',
+        desktopTitle: 'Пропустить пароль с OwnID',
+        desktopSubtitle:
+          'Используйте свой телефон для сканирования и завершения востановления аккаунта без пароля.',
       },
     },
   };
