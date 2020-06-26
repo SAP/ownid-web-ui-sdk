@@ -23,7 +23,6 @@ export default class WidgetComponent extends BaseComponent {
     protected requestService: RequestService,
     protected disableDesktop: boolean = false,
     protected disableMobile: boolean = false,
-    // protected init?: () => void
   ) {
     super(config);
 
@@ -34,6 +33,7 @@ export default class WidgetComponent extends BaseComponent {
   {
     return this.getContext(
       config.URLPrefix || ConfigurationService.URLPrefix,
+      config.data,
     );
   }
 
@@ -137,6 +137,8 @@ export default class WidgetComponent extends BaseComponent {
           return this.config.onLink && this.config.onLink(response);
         case WidgetType.Login:
           return this.config.onLogin && this.config.onLogin(response);
+        case WidgetType.Recover:
+          return this.config.onRecover && this.config.onRecover(response);
         case WidgetType.Register:
         default:
           return this.config.onRegister && this.config.onRegister(response);

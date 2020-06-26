@@ -6,6 +6,8 @@ import {
   WidgetType,
 } from './interfaces/i-widget.interfaces';
 import GigyaLinkWidgetComponent from "./components/gigya-link-widget.component";
+import LoggerDecorator from './services/logger.service';
+import { LogLevel } from './interfaces/i-logger.interfaces';
 
 export default class OwnIDUiSdk {
   config = {} as IInitConfig;
@@ -14,6 +16,16 @@ export default class OwnIDUiSdk {
 
   init(config: IInitConfig = {}): void {
     this.config = config;
+
+    // init logger decorator
+    if (config.logger) {
+      // parse log level
+      const logLevel = config.logLevel
+        ? LogLevel[config.logLevel  as keyof typeof LogLevel]
+        : LogLevel.error;
+
+      this.config.logger = new LoggerDecorator(config.logger, logLevel);
+    }
   }
 
   render(config: IWidgetConfig): WidgetComponent | null {
@@ -28,7 +40,7 @@ export default class OwnIDUiSdk {
 
     return new WidgetComponent(
       {...this.config, ...config},
-      new RequestService(),
+      new RequestService(this.config.logger),
       desktopDisable,
       mobileDisable,
     );
