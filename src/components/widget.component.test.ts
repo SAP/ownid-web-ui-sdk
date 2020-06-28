@@ -141,7 +141,7 @@ describe('widget component', () => {
         true
       );
       sut.widgetReady.then(() => {
-        expect(console.warn).toBeCalledWith(`Desktop rendering is disabled for ${type} widget type`);
+        expect(console.warn).toBeCalledWith(`Desktop rendering is disabled for ${ type } widget type`);
         expect(parent.children.length).toBe(0);
         resolve();
       });
@@ -173,7 +173,7 @@ describe('widget component', () => {
         true
       );
       sut.widgetReady.then(() => {
-        expect(console.warn).toBeCalledWith(`Mobile rendering is disabled for ${type} widget type`);
+        expect(console.warn).toBeCalledWith(`Mobile rendering is disabled for ${ type } widget type`);
         expect(parent.children.length).toBe(0);
         resolve();
       });
@@ -387,6 +387,36 @@ describe('callStatus', () => {
 
       sut.callStatus('url').then(() => {
         expect(onLink).toBeCalledWith({ status: true });
+        resolve();
+      });
+    });
+  });
+
+  it('should call onRecover', () => {
+    return new Promise(resolve => {
+      const parent = document.createElement('div');
+
+      const onRecover = jest.fn();
+
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const sut: any = new WidgetComponent(
+        {
+          element: parent,
+          URLPrefix: 'url',
+          type: WidgetType.Recover,
+          onRecover,
+          // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+        } as any,
+        requestService,
+      );
+
+      // eslint-disable-next-line no-shadow
+      requestService.post = jest
+        .fn()
+        .mockReturnValue(new Promise(resolve => resolve({ status: true })));
+
+      sut.callStatus('url').then(() => {
+        expect(onRecover).toBeCalledWith({ status: true });
         resolve();
       });
     });
