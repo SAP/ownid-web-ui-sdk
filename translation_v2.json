@@ -5,12 +5,15 @@
 		"folders":[
 		{
 			"startingFolderPath":"src/services/**",
-			"sourceFilters":["translation.service.ts"],
-			"targetFolderPath":"../translated/[langCode]/strings.json"
+			"sourceFilters":["strings_en.json"],
+			"targetFolderPath":"."
 		}
 		]
 	}
 	],
 	"defaultConfiguration":{
+		"pseudoLocFolderPath":".",
+	    "oneQFolderPath":".",
+		"targetFileNamingConvention": "strings_[langCode].json"
 	}
 }
