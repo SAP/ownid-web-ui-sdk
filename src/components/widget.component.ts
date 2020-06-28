@@ -137,8 +137,6 @@ export default class WidgetComponent extends BaseComponent {
           return this.config.onLink && this.config.onLink(response);
         case WidgetType.Login:
           return this.config.onLogin && this.config.onLogin(response);
-        case WidgetType.Recover:
-          return this.config.onRecover && this.config.onRecover(response);
         case WidgetType.Register:
         default:
           return this.config.onRegister && this.config.onRegister(response);
