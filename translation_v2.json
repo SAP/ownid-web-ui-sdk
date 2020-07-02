@@ -4,7 +4,7 @@
 		"collectionName":"web_ui_sdk",
 		"folders":[
 		{
-			"startingFolderPath":"src/services/**",
+			"startingFolderPath":"src/i18n/**",
 			"sourceFilters":["strings.json"],
 			"targetFolderPath":"."
 		}

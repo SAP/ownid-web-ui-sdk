@@ -1,0 +1,22 @@
+{
+  "login": {
+    "mobileTitle": "Instant Sign In",
+    "desktopTitle": "Instant Sign In",
+    "desktopSubtitle": "Use your phone to scan for passwordless sign in."
+  },
+  "register": {
+    "mobileTitle": "Register without a password",
+    "desktopTitle": "Skip the password with OwnID",
+    "desktopSubtitle": "Use your phone to scan and complete a passwordless registration."
+  },
+  "link": {
+    "mobileTitle": "Enable Instant Login",
+    "desktopTitle": "Enable Instant Login",
+    "desktopSubtitle": "Use your phone to scan for enabling passwordless sign in."
+  },
+  "recover": {
+    "mobileTitle": "Recover account without a password",
+    "desktopTitle": "Skip the password with OwnID",
+    "desktopSubtitle": "Use your phone to scan and complete a passwordless account recover."
+  }
+}
