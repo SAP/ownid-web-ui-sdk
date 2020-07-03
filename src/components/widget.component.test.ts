@@ -40,15 +40,15 @@ describe('widget component', () => {
     );
   });
 
-  it('should render and add chile in mobile mode', () => {
+  it('should render and add child in mobile mode', () => {
     return new Promise(resolve => {
       navigator.userAgent =
         'Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36';
 
       const parent = document.createElement('div');
-      document.body.append(parent);
+      window.clearTimeout = jest.fn();
 
-      const sut = new WidgetComponent(
+      const sut: any = new WidgetComponent(
         {
           element: parent,
           type: WidgetType.Login,
@@ -57,13 +57,19 @@ describe('widget component', () => {
         requestService,
       );
 
-      sut.widgetReady.then(() => {
+      sut.attachPostMessagesHandler();
+
+      window.postMessage('ownid postMessages enabled', '*');
+      window.postMessage('ownid success', '*');
+
+      setTimeout(() => {
         expect(sut).not.toBeNull();
         expect(parent.children.length).toBe(1);
-        expect(parent.children[0].tagName.toLowerCase()).toEqual('a');
+        expect(parent.children[0].tagName.toLowerCase()).toEqual('button');
+        expect(window.clearTimeout).toBeCalled();
 
         resolve(true);
-      });
+      }, 1000);
     });
   });
 
@@ -141,7 +147,7 @@ describe('widget component', () => {
         true
       );
       sut.widgetReady.then(() => {
-        expect(console.warn).toBeCalledWith(`Desktop rendering is disabled for ${type} widget type`);
+        expect(console.warn).toBeCalledWith(`Desktop rendering is disabled for ${ type } widget type`);
         expect(parent.children.length).toBe(0);
         resolve();
       });
@@ -173,7 +179,7 @@ describe('widget component', () => {
         true
       );
       sut.widgetReady.then(() => {
-        expect(console.warn).toBeCalledWith(`Mobile rendering is disabled for ${type} widget type`);
+        expect(console.warn).toBeCalledWith(`Mobile rendering is disabled for ${ type } widget type`);
         expect(parent.children.length).toBe(0);
         resolve();
       });

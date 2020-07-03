@@ -4,17 +4,13 @@ import Qr from './common/qr.component';
 import ConfigurationService from '../services/configuration.service';
 import { IContextRS } from '../interfaces/i-context.interfaces';
 import RequestService from '../services/request.service';
-import {
-  IPartialConfig,
-  IWidgetConfig,
-  WidgetType,
-} from '../interfaces/i-widget.interfaces';
+import { IPartialConfig, IWidgetConfig, WidgetType, } from '../interfaces/i-widget.interfaces';
 import TranslationService from '../services/translation.service';
 
 export default class WidgetComponent extends BaseComponent {
   widgetReady: Promise<void>;
 
-  private statusTimeout: NodeJS.Timeout | null = null;
+  private statusTimeout: number | undefined;
 
   private data: IContextRS | null = null;
 
@@ -29,8 +25,7 @@ export default class WidgetComponent extends BaseComponent {
     this.widgetReady = this.init(config);
   }
 
-  protected init(config: IWidgetConfig): Promise<void>
-  {
+  protected init(config: IWidgetConfig): Promise<void> {
     return this.getContext(
       config.URLPrefix || ConfigurationService.URLPrefix,
       config.data,
@@ -63,7 +58,7 @@ export default class WidgetComponent extends BaseComponent {
     if (this.isMobile()) {
       if (this.disableMobile) {
         console.warn(
-          `Mobile rendering is disabled for ${this.config.type} widget type`,
+          `Mobile rendering is disabled for ${ this.config.type } widget type`,
         );
         return;
       }
@@ -78,13 +73,15 @@ export default class WidgetComponent extends BaseComponent {
 
       linkButton.attachHandler('click', () => {
         this.setCallStatus(this.getStatusUrl());
+
+        this.attachPostMessagesHandler();
       });
 
       this.addChild(linkButton);
     } else {
       if (this.disableDesktop) {
         console.warn(
-          `Desktop rendering is disabled for ${this.config.type} widget type`,
+          `Desktop rendering is disabled for ${ this.config.type } widget type`,
         );
         return;
       }
@@ -110,16 +107,11 @@ export default class WidgetComponent extends BaseComponent {
       this.config.URLPrefix || ConfigurationService.URLPrefix
     ).replace(/\/+$/, '');
 
-    const statusUrl = `${prefix}${ConfigurationService.statusUrl}`.replace(
-      ':context',
-      this.context as string,
-    );
-
-    return statusUrl;
+    return `${ prefix }${ ConfigurationService.statusUrl }`.replace(':context', this.context as string);
   }
 
   private setCallStatus(statusUrl: string) {
-    this.statusTimeout = setTimeout(
+    this.statusTimeout = window.setTimeout(
       () => this.callStatus(statusUrl),
       this.config.statusInterval || ConfigurationService.statusTimeout,
     );
@@ -130,7 +122,7 @@ export default class WidgetComponent extends BaseComponent {
       nonce: this.nonce,
     });
     if (response.status) {
-      clearTimeout(this.statusTimeout as NodeJS.Timeout);
+      clearTimeout(this.statusTimeout);
 
       switch (this.config.type) {
         case WidgetType.Link:
@@ -147,7 +139,7 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   public destroy(): void {
-    clearTimeout(this.statusTimeout as NodeJS.Timeout);
+    clearTimeout(this.statusTimeout);
     this.elements.forEach(element => element.destroy());
   }
 
@@ -155,5 +147,18 @@ export default class WidgetComponent extends BaseComponent {
     this.elements.forEach(element => element.destroy());
     this.config = { ...this.config, ...config };
     this.render();
+  }
+
+  private attachPostMessagesHandler() {
+    window.addEventListener('message', (message: MessageEvent) => {
+
+      if (message.data === 'ownid postMessages enabled') {
+        clearTimeout(this.statusTimeout);
+      }
+
+      if (message.data === 'ownid success') {
+        this.callStatus(this.getStatusUrl());
+      }
+    }, false);
   }
 }

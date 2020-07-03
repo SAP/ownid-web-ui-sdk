@@ -73,7 +73,7 @@ describe('widget component', () => {
       sut.widgetReady.then(() => {
         expect(sut).not.toBeNull();
         expect(parent.children.length).toBe(1);
-        expect(parent.children[0].tagName.toLowerCase()).toEqual('a');
+        expect(parent.children[0].tagName.toLowerCase()).toEqual('button');
         // @ts-ignore
         expect(window.gigya.accounts.getJWT).toBeCalledTimes(1);
 
