@@ -2,17 +2,26 @@ import { BaseComponent } from './base.component';
 import LinkButton from './common/link-button.component';
 import Qr from './common/qr.component';
 import ConfigurationService from '../services/configuration.service';
-import { IContextRS } from '../interfaces/i-context.interfaces';
+import { IContextRS, IContext } from '../interfaces/i-context.interfaces';
 import RequestService from '../services/request.service';
 import { IPartialConfig, IWidgetConfig, WidgetType, } from '../interfaces/i-widget.interfaces';
 import TranslationService from '../services/translation.service';
+import StatusResponse, { ContextStatus } from './status-response';
 
 export default class WidgetComponent extends BaseComponent {
   widgetReady: Promise<void>;
 
   private statusTimeout: number | undefined;
 
-  private data: IContextRS | null = null;
+  private refreshLinkTimeout: number | undefined;
+
+  private qr: Qr | undefined;
+
+  private link: LinkButton | undefined;
+
+  private cacheExpiration: number | undefined;
+
+  private contexts: Array<IContextRS> = new Array<IContextRS>();
 
   constructor(
     protected config: IWidgetConfig,
@@ -22,7 +31,18 @@ export default class WidgetComponent extends BaseComponent {
   ) {
     super(config);
 
-    this.widgetReady = this.init(config);
+    this.widgetReady = this.init(config).then(() => {
+      this.render();
+
+      this.setRefreshLinkOrQR();
+
+      if (!this.isMobile()) {
+        this.setCallStatus();
+      }
+    }, (error: Error) => {
+      // eslint-disable-next-line no-console
+      console.error(error.message);
+    });
   }
 
   protected init(config: IWidgetConfig): Promise<void> {
@@ -33,32 +53,25 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  protected async getContext(contextUrl: string, data: any = null) {
+  protected async getContext(contextUrl: string, data: any = null): Promise<void> {
     const contextData = { type: this.config.type || WidgetType.Register, data };
-    this.data = await this.requestService.post(contextUrl, contextData);
+    const contextResponse = await this.requestService.post(contextUrl, contextData);
 
-    if (!this.data) {
-      // eslint-disable-next-line no-console
-      console.error('No context data received');
-      return;
+    if (!contextResponse) {
+      throw new Error('No context data received');
     }
 
-    this.context = this.data.context;
-    this.nonce = this.data.nonce;
-
-    if (!this.isMobile()) {
-      this.setCallStatus(this.getStatusUrl());
-    }
-
-    this.render();
+    this.cacheExpiration = contextResponse.expiration;
+    this.contexts.push(contextResponse);
   }
 
   private render() {
     const lang = this.config.language || ConfigurationService.defaultLanguage;
     if (this.isMobile()) {
       if (this.disableMobile) {
+        // eslint-disable-next-line no-console
         console.warn(
-          `Mobile rendering is disabled for ${ this.config.type } widget type`,
+          `Mobile rendering is disabled for ${this.config.type} widget type`,
         );
         return;
       }
@@ -66,22 +79,24 @@ export default class WidgetComponent extends BaseComponent {
       const mobileTitle =
         this.config.mobileTitle ||
         TranslationService.texts[lang][this.config.type].mobileTitle;
-      const linkButton = new LinkButton({
-        href: this.data!.url,
+      this.link = new LinkButton({
+        href: this.getStartUrl(),
         title: mobileTitle,
       });
 
-      linkButton.attachHandler('click', () => {
-        this.setCallStatus(this.getStatusUrl());
+      this.link.attachHandler('click', () => {
+        this.setCallStatus();
+        clearTimeout(this.refreshLinkTimeout);
 
         this.attachPostMessagesHandler();
       });
 
-      this.addChild(linkButton);
+      this.addChild(this.link);
     } else {
       if (this.disableDesktop) {
+        // eslint-disable-next-line no-console
         console.warn(
-          `Desktop rendering is disabled for ${ this.config.type } widget type`,
+          `Desktop rendering is disabled for ${this.config.type} widget type`,
         );
         return;
       }
@@ -92,14 +107,17 @@ export default class WidgetComponent extends BaseComponent {
       const desktopSubtitle =
         this.config.desktopTitle ||
         TranslationService.texts[lang][this.config.type].desktopSubtitle;
-      this.addChild(
-        new Qr({
-          href: this.data!.url,
-          title: desktopTitle,
-          subtitle: desktopSubtitle,
-        }),
-      );
+      this.qr = new Qr({
+        href: this.getStartUrl(),
+        title: desktopTitle,
+        subtitle: desktopSubtitle,
+      })
+      this.addChild(this.qr,);
     }
+  }
+
+  private getStartUrl() {
+    return this.contexts[this.contexts.length - 1].url;
   }
 
   private getStatusUrl() {
@@ -107,22 +125,29 @@ export default class WidgetComponent extends BaseComponent {
       this.config.URLPrefix || ConfigurationService.URLPrefix
     ).replace(/\/+$/, '');
 
-    return `${ prefix }${ ConfigurationService.statusUrl }`.replace(':context', this.context as string);
+    return `${prefix}${ConfigurationService.statusUrl}`;
   }
 
-  private setCallStatus(statusUrl: string) {
+  private setCallStatus() {
     this.statusTimeout = window.setTimeout(
-      () => this.callStatus(statusUrl),
+      () => this.callStatus(),
       this.config.statusInterval || ConfigurationService.statusTimeout,
     );
   }
 
-  private async callStatus(statusUrl: string) {
-    const response = await this.requestService.post(statusUrl, {
-      nonce: this.nonce,
-    });
-    if (response.status) {
-      clearTimeout(this.statusTimeout);
+  private async callStatus() {
+    const request = this.contexts.map(x => { return { context: x.context, nonce: x.nonce } as IContext; });
+    const statusResponse = await this.requestService.post(this.getStatusUrl(), request) as Array<StatusResponse>;
+
+    if (!statusResponse) {
+      return this.setCallStatus();
+    }
+
+    // check if any context finished
+    const statuses = statusResponse.map(x => x.status);
+    const finishedIndex = statuses.indexOf(ContextStatus.Finished);
+    if (finishedIndex >= 0) {
+      const response = statusResponse[finishedIndex].payload.Data;
 
       switch (this.config.type) {
         case WidgetType.Link:
@@ -135,11 +160,54 @@ export default class WidgetComponent extends BaseComponent {
       }
     }
 
-    return this.setCallStatus(statusUrl);
+    // stop link regeneration if any context in progress status
+    const processingIndex = statuses.indexOf(ContextStatus.Processing);
+    if (processingIndex >= 0) {
+      window.clearTimeout(this.refreshLinkTimeout);
+    }
+
+    // remove expired items from contexts array
+    let i = this.contexts.length;
+    while (i > 0) {
+      i -= 1;
+      const item = this.contexts[i];
+      if (statusResponse.findIndex(x => x.context === item.context) < 0) {
+        this.contexts.splice(i, 1);
+      }
+    }
+
+    return this.setCallStatus();
+  }
+
+  private setRefreshLinkOrQR() {
+    if (!this.cacheExpiration) {
+      return;
+    }
+
+    this.refreshLinkTimeout = window.setTimeout(
+      () => this.refreshLinkOrQR(),
+      this.cacheExpiration / 2,
+    )
+  }
+
+  private refreshLinkOrQR() {
+    this.init(this.config).then(() => {
+      if (this.qr) {
+        this.qr.update(this.getStartUrl());
+      } else if (this.link) {
+        this.link.update(this.getStartUrl());
+      }
+
+      this.setRefreshLinkOrQR();
+    }, (error: Error) => {
+      // eslint-disable-next-line no-console
+      console.error(error.message);
+    });
   }
 
   public destroy(): void {
     clearTimeout(this.statusTimeout);
+    clearTimeout(this.refreshLinkTimeout);
     this.elements.forEach(element => element.destroy());
   }
 
@@ -157,7 +225,7 @@ export default class WidgetComponent extends BaseComponent {
       }
 
       if (message.data === 'ownid success') {
-        this.callStatus(this.getStatusUrl());
+        this.callStatus();
       }
     }, false);
   }

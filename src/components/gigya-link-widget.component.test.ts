@@ -1,5 +1,5 @@
 import RequestService from "../services/request.service";
-import {WidgetType} from "../interfaces/i-widget.interfaces";
+import { WidgetType } from "../interfaces/i-widget.interfaces";
 import GigyaLinkWidgetComponent from "./gigya-link-widget.component";
 
 interface IMyNavigator extends Navigator {
@@ -115,6 +115,8 @@ describe('widget component', () => {
 
       const parent = document.createElement('div');
       document.body.append(parent);
+      console.error = jest.fn();
+
 
       // @ts-ignore
       window.gigya.accounts.getJWT = jest.fn().mockImplementationOnce(options => {
@@ -124,7 +126,7 @@ describe('widget component', () => {
         })
       });
 
-      const sut = new GigyaLinkWidgetComponent(
+      const sut: any = new GigyaLinkWidgetComponent(
         {
           element: parent,
           type: WidgetType.Link,
@@ -132,21 +134,17 @@ describe('widget component', () => {
         },
         requestService,
       );
+      sut.getContext = jest.fn();
 
-      const onSuccess = jest.fn();
+      sut.widgetReady.finally(() => {
+          expect(parent.children.length).toBe(0);
 
-      sut.widgetReady.then(onSuccess)
-        .catch(e=>{
-        expect(parent.children.length).toBe(0);
-        expect(e).toBe('gigya error');
-      }).finally(()=>{
-        // @ts-ignore
-        expect(window.gigya.accounts.getJWT).toBeCalledTimes(1);
-        expect(onSuccess).toBeCalledTimes(0);
-        resolve();
-      });
+          // @ts-ignore
+          expect(window.gigya.accounts.getJWT).toBeCalledTimes(1);
+          expect(sut.getContext).not.toBeCalled();
+          expect(console.error).toBeCalledWith('Gigya.GetJWT -> 1: my fake error');
+          resolve();
+        });
     });
   });
-
-})
-;
+});

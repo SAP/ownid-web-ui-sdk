@@ -1,16 +1,16 @@
 import WidgetComponent from "./widget.component";
-import {IWidgetConfig} from "../interfaces/i-widget.interfaces";
+import { IWidgetConfig } from "../interfaces/i-widget.interfaces";
 import RequestService from "../services/request.service";
 import ConfigurationService from "../services/configuration.service";
 
 export default class GigyaLinkWidgetComponent extends WidgetComponent {
   constructor(protected config: IWidgetConfig,
-              protected requestService: RequestService) {
+    protected requestService: RequestService) {
     super(config, requestService, true, false)
   }
 
   protected init(config: IWidgetConfig) {
-    return  new Promise<void>( (resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       window.gigya.accounts.getJWT({
@@ -18,12 +18,14 @@ export default class GigyaLinkWidgetComponent extends WidgetComponent {
           if (data.errorCode !== 0) {
             const errorText = `Gigya.GetJWT -> ${data.errorCode}: ${data.errorMessage}`;
             console.error(errorText)
-            reject(errorText);
+            reject(new Error(errorText));
           }
+
           await this.getContext(
             config.URLPrefix || ConfigurationService.URLPrefix,
-            {jwt: data.id_token}
+            { jwt: data.id_token }
           )
+
           resolve();
         }
       })
