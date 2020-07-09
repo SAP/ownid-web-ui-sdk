@@ -5,8 +5,8 @@ import ConfigurationService from "../services/configuration.service";
 
 export default class GigyaLinkWidgetComponent extends WidgetComponent {
   constructor(protected config: IWidgetConfig,
-    protected requestService: RequestService) {
-    super(config, requestService, true, false)
+              protected requestService: RequestService) {
+    super(config, requestService)
   }
 
   protected init(config: IWidgetConfig) {

@@ -19,7 +19,7 @@ export default class RequestService {
       body: JSON.stringify(data),
     });
 
-    if (response.ok) {
+    if (response.status === 200) {
       return response.json();
     }
 

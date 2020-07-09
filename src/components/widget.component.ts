@@ -21,7 +21,7 @@ export default class WidgetComponent extends BaseComponent {
 
   private cacheExpiration: number | undefined;
 
-  private contexts: Array<IContextRS> = new Array<IContextRS>();
+  private contexts: IContextRS[] = [];
 
   constructor(
     protected config: IWidgetConfig,
@@ -54,7 +54,7 @@ export default class WidgetComponent extends BaseComponent {
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   protected async getContext(contextUrl: string, data: any = null): Promise<void> {
-    const contextData = { type: this.config.type || WidgetType.Register, data };
+    const contextData = { type: this.config.type || WidgetType.Register, data, qr: !this.isMobile() };
     const contextResponse = await this.requestService.post(contextUrl, contextData);
 
     if (!contextResponse) {
@@ -71,7 +71,7 @@ export default class WidgetComponent extends BaseComponent {
       if (this.disableMobile) {
         // eslint-disable-next-line no-console
         console.warn(
-          `Mobile rendering is disabled for ${this.config.type} widget type`,
+          `Mobile rendering is disabled for ${ this.config.type } widget type`,
         );
         return;
       }
@@ -96,7 +96,7 @@ export default class WidgetComponent extends BaseComponent {
       if (this.disableDesktop) {
         // eslint-disable-next-line no-console
         console.warn(
-          `Desktop rendering is disabled for ${this.config.type} widget type`,
+          `Desktop rendering is disabled for ${ this.config.type } widget type`,
         );
         return;
       }
@@ -125,7 +125,15 @@ export default class WidgetComponent extends BaseComponent {
       this.config.URLPrefix || ConfigurationService.URLPrefix
     ).replace(/\/+$/, '');
 
-    return `${prefix}${ConfigurationService.statusUrl}`;
+    return `${ prefix }${ ConfigurationService.statusUrl }`;
+  }
+
+  private getApproveUrl(context: string) {
+    const prefix = (
+      this.config.URLPrefix || ConfigurationService.URLPrefix
+    ).replace(/\/+$/, '');
+
+    return `${ prefix }${ ConfigurationService.approveUrl.replace(':context', context) }`;
   }
 
   private setCallStatus() {
@@ -144,7 +152,7 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     // check if any context finished
-    const statuses = statusResponse.map(x => x.status);
+    const statuses = statusResponse.map((x: StatusResponse) => x.status);
     const finishedIndex = statuses.indexOf(ContextStatus.Finished);
     if (finishedIndex >= 0) {
       const response = statusResponse[finishedIndex].payload.Data;
@@ -154,6 +162,8 @@ export default class WidgetComponent extends BaseComponent {
           return this.config.onLink && this.config.onLink(response);
         case WidgetType.Login:
           return this.config.onLogin && this.config.onLogin(response);
+        case WidgetType.Recover:
+          return this.config.onRecover && this.config.onRecover(response);
         case WidgetType.Register:
         default:
           return this.config.onRegister && this.config.onRegister(response);
@@ -161,22 +171,48 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     // stop link regeneration if any context in progress status
-    const processingIndex = statuses.indexOf(ContextStatus.Processing);
+    const processingIndex = statuses.indexOf(ContextStatus.Started);
     if (processingIndex >= 0) {
       window.clearTimeout(this.refreshLinkTimeout);
     }
 
+    // stop link regeneration if any context in waitingApproval status
+    const waitingApprovalIndex = statuses.indexOf(ContextStatus.WaitingForApproval);
+    if (waitingApprovalIndex >= 0) {
+      clearTimeout(this.refreshLinkTimeout);
+
+      const contextRS = this.contexts[waitingApprovalIndex];
+      const { pin } = statusResponse[waitingApprovalIndex].payload;
+
+      if (this.qr) {
+        const yesCb = () => {
+          this.sendApprove(true, contextRS);
+          this.qr?.showPending();
+        }
+
+        const noCb = () => {
+          this.sendApprove(false, contextRS);
+          this.qr?.showPending();
+          this.reCreateWidget();
+        }
+
+        this.qr.showSecurityCheck(pin, yesCb, noCb);
+      }
+    }
+
     // remove expired items from contexts array
-    let i = this.contexts.length;
-    while (i > 0) {
-      i -= 1;
+    for (let i = this.contexts.length; i--;) {
       const item = this.contexts[i];
-      if (statusResponse.findIndex(x => x.context === item.context) < 0) {
+      if (statusResponse.findIndex((x: StatusResponse) => x.context === item.context) < 0) {
         this.contexts.splice(i, 1);
       }
     }
 
     return this.setCallStatus();
+  }
+
+  private sendApprove(approved: boolean, { context, nonce }: IContextRS) {
+    this.requestService.post(this.getApproveUrl(context), { context, nonce, approved });
   }
 
   private setRefreshLinkOrQR() {
@@ -228,5 +264,18 @@ export default class WidgetComponent extends BaseComponent {
         this.callStatus();
       }
     }, false);
+  }
+
+  private reCreateWidget() {
+    this.widgetReady = this.init(this.config).then(() => {
+      this.destroy();
+      this.render();
+
+      this.setRefreshLinkOrQR();
+
+      if (!this.isMobile()) {
+        this.setCallStatus();
+      }
+    });
   }
 }

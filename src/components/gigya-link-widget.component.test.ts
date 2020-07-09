@@ -82,7 +82,7 @@ describe('widget component', () => {
     });
   });
 
-  it('should not render in desktop mode', () => {
+  it('should render in desktop mode', () => {
     return new Promise(resolve => {
       navigator.userAgent =
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
@@ -101,7 +101,7 @@ describe('widget component', () => {
 
       sut.widgetReady.then(() => {
         expect(sut).not.toBeNull();
-        expect(parent.children.length).toBe(0);
+        expect(parent.children.length).toBe(1);
 
         resolve(true);
       });

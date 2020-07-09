@@ -24,7 +24,7 @@ describe('update', () => {
   it('do nothing if wrapper is undefined', () => {
     const options = { href: 'test-url', title: 'title', subtitle: 'subtitle' };
     const sut: any = new Qr(options);
-    sut.wrapper = null;
+    sut.ref = null;
     sut.generateQRCode = jest.fn();
 
     sut.update('new-test-url');
@@ -37,7 +37,7 @@ describe('update', () => {
     const sut: any = new Qr(options);
 
     sut.generateQRCode = jest.fn();
-    sut.wrapper.querySelector = jest.fn().mockReturnValue(null);
+    sut.ref.querySelector = jest.fn().mockReturnValue(null);
 
     sut.update('new-test-url');
 

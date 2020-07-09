@@ -41,6 +41,7 @@ module.exports = {
     'promise/always-return': 'off',
     'unicorn/no-null': 'off',
     '@typescript-eslint/ban-types': 'warn',
+    'no-plusplus': 'off',
   },
   settings: {
     'import/parsers': {

@@ -1,4 +1,4 @@
-export default interface StatusResponse{
+export default interface StatusResponse {
   status: ContextStatus;
   context: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -6,7 +6,10 @@ export default interface StatusResponse{
 }
 
 export enum ContextStatus {
-  Started = 1,
-  Processing = 2,
-  Finished = 3
+  Initiated = 1,
+  Started = 2,
+  WaitingForApproval = 3,
+  Approved = 4,
+  Declined = 5,
+  Finished = 99,
 }

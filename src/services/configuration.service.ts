@@ -7,6 +7,8 @@ export default class ConfigurationService {
 
   static readonly statusUrl = `/status`;
 
+  static readonly approveUrl = `/:context/approve`;
+
   static readonly statusTimeout = 2000;
 
   static readonly defaultLanguage = Languages.en;

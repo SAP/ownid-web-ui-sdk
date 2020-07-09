@@ -2,6 +2,7 @@ import WidgetComponent from './widget.component';
 import RequestService from '../services/request.service';
 import { Languages, WidgetType } from '../interfaces/i-widget.interfaces';
 import { IContext } from '../interfaces/i-context.interfaces';
+import { ContextStatus } from './status-response';
 
 interface IMyNavigator extends Navigator {
   userAgent: string;
@@ -215,19 +216,19 @@ describe('callStatus', () => {
     expiration: 10
   };
   const startedContextResponse = {
-    "status": 1,
-    "context": "context1",
-    "payload": null
+    status: ContextStatus.Initiated,
+    context: "context1",
+    payload: null
   };
   const processingContextResponse = {
-    "status": 2,
-    "context": "context1",
-    "payload": null
+    status: ContextStatus.Started,
+    context: "context1",
+    payload: null
   };
   const finishedContextResponse = {
-    "status": 3,
-    "context": "context1",
-    "payload": { "Data": { "a": "b" } }
+    status: ContextStatus.Finished,
+    context: "context1",
+    payload: { "Data": { "a": "b" } }
   };
 
   beforeEach(() => {
@@ -389,6 +390,9 @@ describe('callStatus', () => {
     return new Promise(resolve => {
       const onLogin = jest.fn();
 
+      requestService.post = jest.fn()
+        .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
+
       const sut: any = new WidgetComponent(
         {
           element: document.createElement('div'),
@@ -398,8 +402,6 @@ describe('callStatus', () => {
         },
         requestService,
       );
-      requestService.post = jest.fn()
-        .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
 
       sut.callStatus().then(() => {
         expect(onLogin).toBeCalledWith({ "a": "b" });
