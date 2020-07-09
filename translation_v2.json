@@ -14,6 +14,6 @@
 	"defaultConfiguration":{
 		"pseudoLocFolderPath":".",
 	    "oneQFolderPath":".",
-		"targetFileNamingConvention": "[filename]_[langCode].json"
+		"targetFileNamingConvention": "[filename]_[langCode].[extension]"
 	}
 }
