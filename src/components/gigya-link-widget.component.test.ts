@@ -65,7 +65,6 @@ describe('widget component', () => {
         {
           element: parent,
           type: WidgetType.Link,
-          URLPrefix: 'url',
         },
         requestService,
       );

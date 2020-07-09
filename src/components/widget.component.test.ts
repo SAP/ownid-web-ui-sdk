@@ -46,11 +46,11 @@ describe('widget component', () => {
         "context": "context1",
         "payload": null
       },
-      {
-        "status": 1,
-        "context": "context2",
-        "payload": null
-      }]);
+        {
+          "status": 1,
+          "context": "context2",
+          "payload": null
+        }]);
     }));
   });
 
@@ -164,7 +164,7 @@ describe('widget component', () => {
         true
       );
       sut.widgetReady.then(() => {
-        expect(console.warn).toBeCalledWith(`Desktop rendering is disabled for ${type} widget type`);
+        expect(console.warn).toBeCalledWith(`Desktop rendering is disabled for ${ type } widget type`);
         expect(parent.children.length).toBe(0);
         resolve();
       });
@@ -196,7 +196,7 @@ describe('widget component', () => {
         true
       );
       sut.widgetReady.then(() => {
-        expect(console.warn).toBeCalledWith(`Mobile rendering is disabled for ${type} widget type`);
+        expect(console.warn).toBeCalledWith(`Mobile rendering is disabled for ${ type } widget type`);
         expect(parent.children.length).toBe(0);
         resolve();
       });
@@ -227,6 +227,12 @@ describe('callStatus', () => {
   };
   const finishedContextResponse = {
     status: ContextStatus.Finished,
+    context: "context1",
+    payload: { "Data": { "a": "b" } }
+  };
+
+  const waitingApprovalContextResponse = {
+    status: ContextStatus.WaitingForApproval,
     context: "context1",
     payload: { "Data": { "a": "b" } }
   };
@@ -334,6 +340,34 @@ describe('callStatus', () => {
     });
   });
 
+  it('should show pin widget', () => {
+    return new Promise(resolve => {
+      const sut: any = new WidgetComponent(
+        {
+          element: document.createElement('div'),
+          type: WidgetType.Login,
+          URLPrefix: 'url'
+        },
+        requestService,
+      );
+
+      sut.qr = {
+        showPending: jest.fn(),
+        showSecurityCheck: jest.fn().mockImplementation((_, yesCBb, noCb) => {
+          yesCBb();
+          noCb();
+        }),
+      };
+
+      requestService.post = jest.fn().mockReturnValue(new Promise(resolve => resolve([waitingApprovalContextResponse])));
+
+      sut.callStatus().then(() => {
+        expect(sut.qr.showSecurityCheck).toBeCalled();
+        resolve();
+      });
+    });
+  });
+
   it('should start status check after clicking on button', () => {
     return new Promise(resolve => {
       navigator.userAgent = 'Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36';
@@ -379,7 +413,10 @@ describe('callStatus', () => {
 
       sut.widgetReady.then(() => {
         sut.callStatus().then(() => {
-          expect(requestService.post).toBeCalledWith('url/status', [{ context: contextResponse.context, nonce: contextResponse.nonce }] as Array<IContext>);
+          expect(requestService.post).toBeCalledWith('url/status', [{
+            context: contextResponse.context,
+            nonce: contextResponse.nonce
+          }] as Array<IContext>);
           resolve();
         });
       });
@@ -411,6 +448,29 @@ describe('callStatus', () => {
   });
 
   it('should call onRegister', () => {
+    return new Promise(resolve => {
+      const onRegister = jest.fn();
+
+      const sut: any = new WidgetComponent(
+        {
+          element: document.createElement('div'),
+          type: WidgetType.Register,
+          onRegister
+        } as any,
+        requestService,
+      );
+
+      requestService.post = jest.fn()
+        .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
+
+      sut.callStatus().then(() => {
+        expect(onRegister).toBeCalledWith({ "a": "b" });
+        resolve();
+      });
+    });
+  });
+
+  it('should call onRegister if type is not set', () => {
     return new Promise(resolve => {
       const onRegister = jest.fn();
 
@@ -457,6 +517,30 @@ describe('callStatus', () => {
     });
   });
 
+  it('should call onRecover', () => {
+    return new Promise(resolve => {
+      const onRecover = jest.fn();
+
+      const sut: any = new WidgetComponent(
+        {
+          element: document.createElement('div'),
+          URLPrefix: 'url',
+          type: WidgetType.Recover,
+          onRecover,
+        },
+        requestService,
+      );
+
+      requestService.post = jest.fn()
+        .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
+
+      sut.callStatus('url').then(() => {
+        expect(onRecover).toBeCalledWith({ "a": "b" });
+        resolve();
+      });
+    });
+  });
+
   it('should call setCallStatus', () => {
     return new Promise(resolve => {
       const sut: any = new WidgetComponent(
@@ -483,7 +567,6 @@ describe('callStatus', () => {
     const sut: any = new WidgetComponent(
       {
         element: document.createElement('div'),
-        URLPrefix: 'url',
         onRegister: jest.fn(),
       } as any,
       requestService,
@@ -524,6 +607,59 @@ describe('callStatus', () => {
       });
     });
   });
+
+  describe('reCreateWidget', () => {
+    it('should call destroy and render', () => {
+      return new Promise(resolve => {
+        const sut: any = new WidgetComponent(
+          {
+            element: document.createElement('div'),
+            URLPrefix: 'url',
+          } as any,
+          requestService,
+        );
+
+        sut.destroy = jest.fn();
+        sut.render = jest.fn();
+        sut.setCallStatus = jest.fn();
+        sut.reCreateWidget();
+
+        sut.widgetReady.then(() => {
+          expect(sut.destroy).toBeCalled();
+          expect(sut.render).toBeCalled();
+          expect(sut.setCallStatus).toBeCalled();
+          resolve();
+        });
+      });
+    });
+
+    it('should call destroy and render and not setCallStatus on desktop', () => {
+      return new Promise(resolve => {
+        const sut: any = new WidgetComponent(
+          {
+            element: document.createElement('div'),
+            URLPrefix: 'url',
+          } as any,
+          requestService,
+        );
+
+        sut.destroy = jest.fn();
+        sut.render = jest.fn();
+        sut.setCallStatus = jest.fn();
+        sut.isMobile = jest.fn().mockReturnValue(true);
+
+        sut.reCreateWidget();
+
+        sut.widgetReady.then(() => {
+          expect(sut.destroy).toBeCalled();
+          expect(sut.render).toBeCalled();
+          expect(sut.setCallStatus).not.toBeCalled();
+          resolve();
+        });
+      });
+    });
+  });
+
 });
 
 

@@ -65,3 +65,58 @@ describe('Destroy()', () => {
     expect(document.querySelector(`.own-id-qr-code`)).toBeNull();
   });
 });
+
+describe('showSecurityCheck', () => {
+  it('should remove qr(button) element from document', () => {
+    const options = { href: 'test-url', title: 'title', subtitle: 'subtitle' };
+    const qr = new Qr(options);
+    qr.appendToParent(parent);
+
+    const yesCb = jest.fn();
+    const noCb = jest.fn();
+
+    qr.showSecurityCheck(1234, yesCb, noCb);
+
+    expect(parent.querySelector(`[ownid-btn="yes"]`)).toBeTruthy();
+
+    qr.showSecurityCheck(1234, yesCb, noCb);
+    const yesBtn: HTMLElement | null = parent.querySelector(`[ownid-btn="yes"]`);
+    yesBtn!.click()
+    const noBtn: HTMLElement | null = parent.querySelector(`[ownid-btn="no"]`);
+    noBtn!.click()
+
+    expect(yesCb).toBeCalled();
+    expect(noCb).toBeCalled();
+  });
+});
+
+describe('showPending', () => {
+  it('should set display style for pending element', () => {
+    const options = { href: 'test-url', title: 'title', subtitle: 'subtitle' };
+    const qr: any = new Qr(options);
+    qr.appendToParent(parent);
+
+    const yesCb = jest.fn();
+    const noCb = jest.fn();
+
+    qr.showSecurityCheck(1234, yesCb, noCb);
+
+    qr.showPending();
+
+    const el: HTMLElement | null = qr.ref.querySelector('[ownid-pending]')
+
+    expect(el!.style.display).toEqual('flex');
+  });
+
+  it('should not set display style for pending element', () => {
+    const options = { href: 'test-url', title: 'title', subtitle: 'subtitle' };
+    const qr = new Qr(options);
+    qr.appendToParent(parent);
+
+    qr.showPending();
+
+    const el: HTMLElement | null = parent.querySelector('[ownid-pending]')
+
+    expect(el!.style.display).toEqual('none');
+  });
+});
