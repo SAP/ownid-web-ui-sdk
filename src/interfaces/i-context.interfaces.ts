@@ -1,5 +1,8 @@
-export interface IContextRS {
-  url: string;
+export interface IContext {
   context: string;
   nonce: string;
+}
+export interface IContextRS extends IContext {
+  url: string;
+  expiration: number;
 }

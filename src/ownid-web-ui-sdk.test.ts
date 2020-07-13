@@ -2,6 +2,7 @@ import OwnIDUiSdk from './ownid-web-ui-sdk';
 import WidgetComponent from './components/widget.component';
 import { IWidgetConfig, WidgetType } from './interfaces/i-widget.interfaces';
 import GigyaLinkWidgetComponent from "./components/gigya-link-widget.component";
+import { ILogger } from './interfaces/i-logger.interfaces';
 
 describe('OwnIDUiSdk instances test', () => {
   const sdk = new OwnIDUiSdk();
@@ -16,11 +17,35 @@ describe('OwnIDUiSdk instances test', () => {
   it('init should set config', () => {
     const params = {
       URLPrefix: 'url',
+      logger: {} as ILogger,
     };
     sdk.init(params);
 
     expect(sdk.config).toEqual({
       URLPrefix: 'url',
+      logger: {
+        externalLogger: {},
+        logLevel: 3,
+      }
+    });
+  });
+
+  it('init should set config (more options)', () => {
+    const params = {
+      URLPrefix: 'url',
+      logger: {} as ILogger,
+      logLevel: 'info' as 'info',
+    };
+
+    sdk.init(params);
+
+    expect(sdk.config).toEqual({
+      URLPrefix: 'url',
+      logLevel: 'info',
+      logger: {
+        externalLogger: {},
+        logLevel: 2,
+      }
     });
   });
 

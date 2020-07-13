@@ -1,16 +1,19 @@
 {
 	"collections":[
 	{
-		"collectionName":"webapp",
+		"collectionName":"web_ui_sdk",
 		"folders":[
 		{
-			"startingFolderPath":"src/services/**",
-			"sourceFilters":["translation.service.ts"],
-			"targetFolderPath":"../translated/[langCode]/strings.json"
+			"startingFolderPath":"src/i18n/**",
+			"sourceFilters":["strings.json"],
+			"targetFolderPath":"."
 		}
 		]
 	}
 	],
 	"defaultConfiguration":{
+		"pseudoLocFolderPath":".",
+	    "oneQFolderPath":".",
+		"targetFileNamingConvention": "[filename]_[langCode].[extension]"
 	}
 }

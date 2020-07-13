@@ -16,7 +16,7 @@ export default abstract class BaseCommonComponent<T>
     this.ref = this.render(options);
   }
 
-  private readonly ref: HTMLElement;
+  protected readonly ref: HTMLElement;
 
   protected abstract render(options: T): HTMLElement;
 

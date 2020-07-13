@@ -4,6 +4,7 @@ describe('RequestService', () => {
   beforeEach(() => {
     window.fetch = jest.fn().mockReturnValue(new Promise((resolve) => resolve({
       ok: true,
+      status: 200,
       json: jest.fn().mockReturnValue({
         context: 'contextID',
         url: 'challengeUrlMock',

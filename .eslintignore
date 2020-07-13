@@ -7,3 +7,4 @@ coverage
 rollup.config.ts
 src/**/*.test.ts
 out
+src/i18n/*.json
