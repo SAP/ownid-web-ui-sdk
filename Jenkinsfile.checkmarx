@@ -1,0 +1,63 @@
+#!/usr/bin/env groovy
+
+pipeline {
+
+  agent {
+    node {
+      label 'checkmarx'
+    }
+  }
+
+  //triggers {
+    //    cron('H H(0-1) * * *')
+    //}
+
+  options {
+    timeout(time: 30, unit: 'MINUTES')
+    timestamps()
+    buildDiscarder(logRotator(daysToKeepStr: '-1', numToKeepStr: '20', artifactDaysToKeepStr: '-1', artifactNumToKeepStr: '-1'))
+    disableConcurrentBuilds()
+  }
+
+  stages {
+   stage('Checkmarx') {
+      steps{
+        step([
+          $class: 'CxScanBuilder',
+          avoidDuplicateProjectScans: true,
+          comment: '',
+          credentialsId: 'd068408-checkmarx',
+          excludeFolders: '',
+          excludeOpenSourceFolders: '',
+          exclusionsSetting: 'global',
+          failBuildOnNewResults: false,
+          failBuildOnNewSeverity: 'HIGH',
+          filterPattern: '',
+          fullScanCycle: 5,
+          fullScansScheduled: true,
+          generatePdfReport: true,
+          groupId: '7a8e59a8-e743-4c7b-b183-561869b6ca57',
+          includeOpenSourceFolders: '',
+          incremental: true,
+          osaArchiveIncludePatterns: '*.zip, *.war, *.ear, *.tgz',
+          osaInstallBeforeScan: false,
+          // password: '{AQAAABAAAAAQUOishQYgKJQiBKqifWOv+2tPkfjMmK8dvbRmbNFzNwI=}',
+          preset: '100008',
+          projectName: 'ownid-web-ui-sdk',
+          sastEnabled: true,
+          serverUrl: 'https://cx.wdf.sap.corp',
+          sourceEncoding: '1',
+          // username: '',
+          vulnerabilityThresholdResult: 'FAILURE'
+        ])
+      }
+    }
+  }
+
+  post {
+    always {
+      cleanWs()
+    }
+  }
+
+}
