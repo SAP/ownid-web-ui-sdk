@@ -20,17 +20,15 @@ export default abstract class BaseCommonComponent<T>
 
   protected abstract render(options: T): HTMLElement;
 
-  public attachHandler(event: string, handler: () => void) {
+  public attachHandler(event: string, handler: () => void): void {
     this.ref.addEventListener(event, handler);
   }
 
   public appendToParent(parent: HTMLElement): void {
-    parent.append(this.ref);
+    parent.appendChild(this.ref);
   }
 
-  public destroy() {
-    this.ref.remove();
+  public destroy(): void {
+    this.ref.parentNode!.removeChild(this.ref);
   }
-
-  // listeners and etc.
 }

@@ -33,6 +33,8 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'error',
     'unicorn/prevent-abbreviations': 'off',
     'unicorn/prefer-query-selector': 'off',
+    'unicorn/prefer-node-append': 'off',
+    'unicorn/prefer-node-remove': 'off',
     'jest/no-standalone-expect': 'off',
     'no-useless-constructor': 'off',
     '@typescript-eslint/no-useless-constructor': 'off',

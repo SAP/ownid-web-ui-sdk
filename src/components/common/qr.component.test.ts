@@ -1,7 +1,7 @@
 import Qr from "./qr.component";
 
 const parent = document.createElement('div');
-document.body.append(parent);
+document.body.appendChild(parent);
 
 describe('ctor -> Render', () => {
   it('should create qr(button) element with options', () => {
@@ -102,6 +102,7 @@ describe('showPending', () => {
     qr.showSecurityCheck(1234, yesCb, noCb);
 
     qr.showPending();
+    qr.showPending(() => {});
 
     const el: HTMLElement | null = qr.ref.querySelector('[ownid-pending]')
 
@@ -118,5 +119,19 @@ describe('showPending', () => {
     const el: HTMLElement | null = parent.querySelector('[ownid-pending]')
 
     expect(el!.style.display).toEqual('none');
+  });
+});
+
+describe('showDone', () => {
+  it('should set display style for done element', () => {
+    const options = { href: 'test-url', title: 'title', subtitle: 'subtitle' };
+    const qr: any = new Qr(options);
+    qr.appendToParent(parent);
+
+    qr.showDone();
+
+    const el: HTMLElement | null = qr.ref.querySelector('[ownid-done]')
+
+    expect(el!.style.display).toEqual('flex');
   });
 });

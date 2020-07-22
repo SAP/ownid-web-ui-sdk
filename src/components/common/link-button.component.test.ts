@@ -4,7 +4,7 @@ describe('LinkButton Component', () => {
   let parent: HTMLElement;
   beforeEach(() => {
     parent = document.createElement('div');
-    document.body.append(parent);
+    document.body.appendChild(parent);
   });
 
   describe('ctor -> Render', () => {

@@ -278,6 +278,7 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private reCreateWidget() {
+    this.contexts = [];
     this.widgetReady = this.init(this.config).then(() => {
       this.destroy();
       this.render();

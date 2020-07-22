@@ -23,6 +23,8 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 
   private securityCheckShown = false;
 
+  private spendingShown = false;
+
   constructor(options: QrOptions) {
     super(options);
   }
@@ -94,11 +96,17 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
   }
 
   public showPending(cancelCb: () => void = () => {}) {
+    if (this.spendingShown) {
+      return;
+    }
+
+    this.spendingShown = true;
+
     const pendingPane: HTMLElement | null = this.ref.querySelector('[ownid-pending]');
     if (pendingPane) {
       pendingPane.style.display = 'flex';
       const cancelBtn = pendingPane.querySelector('[ownid-btn="cancel"]');
-      cancelBtn?.addEventListener('click', () => cancelCb());
+      cancelBtn!.addEventListener('click', () => cancelCb());
     }
   }
 
@@ -188,6 +196,6 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
         }
       }`;
 
-    document.head.append(style);
+    document.head.appendChild(style);
   }
 }

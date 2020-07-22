@@ -93,7 +93,7 @@ describe('widget component', () => {
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
 
       const parent = document.createElement('div');
-      document.body.append(parent);
+      document.body.appendChild(parent);
 
       const sut = new WidgetComponent(
         {
@@ -151,7 +151,7 @@ describe('widget component', () => {
         .mockReturnValue(new Promise(resolve => resolve({})));
 
       const parent = document.createElement('div');
-      document.body.append(parent);
+      document.body.appendChild(parent);
       console.warn = jest.fn();
       const type = WidgetType.Login;
       const sut = new WidgetComponent(
@@ -181,7 +181,7 @@ describe('widget component', () => {
         .mockReturnValue(new Promise(resolve => resolve({})));
 
       const parent = document.createElement('div');
-      document.body.append(parent);
+      document.body.appendChild(parent);
       console.warn = jest.fn();
 
       const type = WidgetType.Login;
