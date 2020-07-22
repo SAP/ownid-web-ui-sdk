@@ -228,13 +228,13 @@ describe('callStatus', () => {
   const finishedContextResponse = {
     status: ContextStatus.Finished,
     context: "context1",
-    payload: { "Data": { "a": "b" } }
+    payload: { data: { "a": "b" } }
   };
 
   const waitingApprovalContextResponse = {
     status: ContextStatus.WaitingForApproval,
     context: "context1",
-    payload: { "Data": { "a": "b" } }
+    payload: { data: { "a": "b" } }
   };
 
   beforeEach(() => {
@@ -332,6 +332,10 @@ describe('callStatus', () => {
       sut.refreshLinkTimeout = jest.fn();
       window.clearTimeout = jest.fn();
       requestService.post = jest.fn().mockReturnValue(new Promise(resolve => resolve([processingContextResponse])));
+
+      sut.qr = {
+        showPending: jest.fn(),
+      };
 
       sut.callStatus().then(() => {
         expect(window.clearTimeout).toBeCalledWith(sut.refreshLinkTimeout);
@@ -462,6 +466,10 @@ describe('callStatus', () => {
 
       requestService.post = jest.fn()
         .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
+
+      sut.qr = {
+        showDone: jest.fn(),
+      };
 
       sut.callStatus().then(() => {
         expect(onRegister).toBeCalledWith({ "a": "b" });

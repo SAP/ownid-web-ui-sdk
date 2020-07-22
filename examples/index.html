@@ -35,6 +35,12 @@
         element: document.querySelector('#ownid-link'),
       }, '3_s5-gLs4aLp5FXluP8HXs7_JN40XWNlbvYWVCCkbNCqlhW6Sm5Z4tXGGsHcSJYD3W');
 
+      ownid.render({
+        type: 'register',
+        partial: true,
+        element: document.querySelector('#ownid-instant-register'),
+      });
+
       let lang = 'en';
 
       document.getElementById('destroy')
@@ -92,6 +98,10 @@
   <h4 class="">Recover</h4>
 
   <div id="ownid-recover" class="ownid"></div>
+
+  <h4 class="">Instant Register</h4>
+
+  <div id="ownid-instant-register" class="ownid"></div>
 
   <button id="lang-change">Set Next lang</button>
   <button id="destroy">Destroy widget</button>

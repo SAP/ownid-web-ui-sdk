@@ -32,6 +32,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     '@typescript-eslint/no-explicit-any': 'error',
     'unicorn/prevent-abbreviations': 'off',
+    'unicorn/prefer-query-selector': 'off',
     'jest/no-standalone-expect': 'off',
     'no-useless-constructor': 'off',
     '@typescript-eslint/no-useless-constructor': 'off',

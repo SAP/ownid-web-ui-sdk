@@ -2,7 +2,7 @@ import { BaseComponent } from './base.component';
 import LinkButton from './common/link-button.component';
 import Qr from './common/qr.component';
 import ConfigurationService from '../services/configuration.service';
-import { IContextRS, IContext } from '../interfaces/i-context.interfaces';
+import { IContextRS } from '../interfaces/i-context.interfaces';
 import RequestService from '../services/request.service';
 import { IPartialConfig, IWidgetConfig, WidgetType, } from '../interfaces/i-widget.interfaces';
 import TranslationService from '../services/translation.service';
@@ -54,7 +54,12 @@ export default class WidgetComponent extends BaseComponent {
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   protected async getContext(contextUrl: string, data: any = null): Promise<void> {
-    const contextData = { type: this.config.type || WidgetType.Register, data, qr: !this.isMobile() };
+    const contextData = {
+      type: this.config.type || WidgetType.Register,
+      data,
+      qr: !this.isMobile(),
+      partial: !!this.config.partial
+    };
     const contextResponse = await this.requestService.post(contextUrl, contextData);
 
     if (!contextResponse) {
@@ -144,7 +149,7 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private async callStatus() {
-    const request = this.contexts.map(x => { return { context: x.context, nonce: x.nonce } as IContext; });
+    const request = this.contexts.map(({ context, nonce }) => ({ context, nonce }));
     const statusResponse = await this.requestService.post(this.getStatusUrl(), request) as Array<StatusResponse>;
 
     if (!statusResponse) {
@@ -155,7 +160,9 @@ export default class WidgetComponent extends BaseComponent {
     const statuses = statusResponse.map((x: StatusResponse) => x.status);
     const finishedIndex = statuses.indexOf(ContextStatus.Finished);
     if (finishedIndex >= 0) {
-      const response = statusResponse[finishedIndex].payload.Data;
+      this.qr?.showDone();
+
+      const response = statusResponse[finishedIndex].payload.data;
 
       switch (this.config.type) {
         case WidgetType.Link:
@@ -174,6 +181,10 @@ export default class WidgetComponent extends BaseComponent {
     const processingIndex = statuses.indexOf(ContextStatus.Started);
     if (processingIndex >= 0) {
       window.clearTimeout(this.refreshLinkTimeout);
+      if (this.qr) {
+        const cancelCb = () => this.reCreateWidget();
+        this.qr.showPending(cancelCb);
+      }
     }
 
     // stop link regeneration if any context in waitingApproval status
@@ -182,12 +193,12 @@ export default class WidgetComponent extends BaseComponent {
       clearTimeout(this.refreshLinkTimeout);
 
       const contextRS = this.contexts[waitingApprovalIndex];
-      const { pin } = statusResponse[waitingApprovalIndex].payload;
+      const { pin } = statusResponse[waitingApprovalIndex].payload.data;
 
       if (this.qr) {
         const yesCb = () => {
           this.sendApprove(true, contextRS);
-          this.qr?.showPending();
+          this.qr?.showPending(() => this.reCreateWidget());
         }
 
         const noCb = () => {

@@ -33,6 +33,7 @@ export interface IWidgetConfig {
   desktopTitle?: string;
   desktopSubtitle?: string;
   statusInterval?: number;
+  partial?: boolean;
   onLogin?: (response: object) => void;
   onRegister?: (response: object) => void;
   onLink?: (response: object) => void;
