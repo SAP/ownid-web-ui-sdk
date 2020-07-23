@@ -8,9 +8,9 @@ pipeline {
     }
   }
 
-  //triggers {
-    //    cron('H H(0-1) * * *')
-    //}
+  triggers {
+      cron('0 16 * * *')
+  }
 
   options {
     timeout(time: 30, unit: 'MINUTES')
