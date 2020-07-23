@@ -1,0 +1,35 @@
+#!/usr/bin/env groovy
+
+pipeline {
+
+  agent any
+
+  //triggers {
+    //    cron('H H(0-1) * * *')
+    //}
+
+  options {
+    timeout(time: 30, unit: 'MINUTES')
+    timestamps()
+    buildDiscarder(logRotator(daysToKeepStr: '-1', numToKeepStr: '20', artifactDaysToKeepStr: '-1', artifactNumToKeepStr: '-1'))
+    disableConcurrentBuilds()
+  }
+
+  stages {
+    stage('WhiteSource Scan') {
+      steps {
+        ansiColor('xterm') {
+          sh 'yarn install'
+          sh 'whitesource yarn'
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      cleanWs()
+    }
+  }
+
+}
