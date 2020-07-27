@@ -1,4 +1,5 @@
 import BaseCommonComponent from './base-common.component';
+import { validateUrl } from '../../services/helper.service';
 
 declare type LinkButtonOptions = {
   title: string;
@@ -13,6 +14,11 @@ export default class LinkButton extends BaseCommonComponent<LinkButtonOptions> {
   }
 
   protected render(options: LinkButtonOptions): HTMLElement {
+    if (!validateUrl(options.href)) {
+      console.error('URL validation failed');
+      return document.createElement('div');
+    }
+
     const button = document.createElement('button');
 
     button.addEventListener('click', () => this.openWindow());
@@ -29,6 +35,11 @@ export default class LinkButton extends BaseCommonComponent<LinkButtonOptions> {
   }
 
   public update(href: string): void {
+    if (!validateUrl(href)) {
+      console.error('URL validation failed');
+      return;
+    }
+
     this.options.href = href;
   }
 
