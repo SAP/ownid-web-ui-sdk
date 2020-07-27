@@ -1,5 +1,6 @@
 import QRCode from 'qrcode-generator';
 import BaseCommonComponent from './base-common.component';
+import { validateUrl } from '../../services/helper.service';
 
 declare type QrOptions = {
   title: string;
@@ -31,6 +32,11 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 
   protected render(options: QrOptions): HTMLElement {
     const wrapper = document.createElement('div');
+
+    if (!validateUrl(options.href)) {
+      console.error('URL validation failed');
+      return wrapper;
+    }
 
     wrapper.style.position = 'relative';
 
@@ -65,6 +71,11 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
   }
 
   public update(href: string): void {
+    if (!validateUrl(href)) {
+      console.error('URL validation failed');
+      return;
+    }
+
     if (this.ref && !this.qrCodeWrapper) {
       this.qrCodeWrapper = this.ref.querySelector('.own-id-qr-code');
     }

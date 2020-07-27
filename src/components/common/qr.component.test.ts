@@ -5,7 +5,7 @@ document.body.appendChild(parent);
 
 describe('ctor -> Render', () => {
   it('should create qr(button) element with options', () => {
-    const options = { href: 'test-url', title: 'title', subtitle: 'subtitle' };
+    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
     const sut = new Qr(options);
 
     sut.appendToParent(parent);
@@ -18,22 +18,46 @@ describe('ctor -> Render', () => {
 
     sut.destroy();
   });
+
+  it('should create qr element empty', () => {
+    const options = { href: 'javascript:alert("hacked!!")', title: 'title', subtitle: 'subtitle' };
+    const sut = new Qr(options);
+
+    sut.appendToParent(parent);
+
+    const div = document.querySelector(`div`);
+    expect(div).not.toBeNull();
+
+    sut.destroy();
+  });
 });
 
 describe('update', () => {
   it('do nothing if wrapper is undefined', () => {
-    const options = { href: 'test-url', title: 'title', subtitle: 'subtitle' };
+    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
     const sut: any = new Qr(options);
     sut.ref = null;
     sut.generateQRCode = jest.fn();
 
-    sut.update('new-test-url');
+    sut.update('http://new-test-url');
 
     expect(sut.generateQRCode).not.toBeCalled();
   });
 
   it('do nothing if qrCode element is undefined', () => {
-    const options = { href: 'test-url', title: 'title', subtitle: 'subtitle' };
+    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
+    const sut: any = new Qr(options);
+
+    sut.generateQRCode = jest.fn();
+    sut.ref.querySelector = jest.fn().mockReturnValue(null);
+
+    sut.update('http://new-test-url');
+
+    expect(sut.generateQRCode).not.toBeCalled();
+  });
+
+  it('do nothing if not valid url', () => {
+    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
     const sut: any = new Qr(options);
 
     sut.generateQRCode = jest.fn();
@@ -45,20 +69,20 @@ describe('update', () => {
   });
 
   it('generate new qr code', () => {
-    const options = { href: 'test-url', title: 'title', subtitle: 'subtitle' };
+    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
     const sut: any = new Qr(options);
 
     sut.generateQRCode = jest.fn().mockReturnValue('some-qr-code');
 
-    sut.update('new-test-url');
+    sut.update('http://new-test-url');
 
-    expect(sut.generateQRCode).toBeCalledWith('new-test-url');
+    expect(sut.generateQRCode).toBeCalledWith('http://new-test-url');
   });
 });
 
 describe('Destroy()', () => {
   it('should remove qr(button) element from document', () => {
-    const options = { href: 'test-url', title: 'title', subtitle: 'subtitle' };
+    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
     const qr = new Qr(options);
     qr.appendToParent(parent);
     qr.destroy();
@@ -68,7 +92,7 @@ describe('Destroy()', () => {
 
 describe('showSecurityCheck', () => {
   it('should remove qr(button) element from document', () => {
-    const options = { href: 'test-url', title: 'title', subtitle: 'subtitle' };
+    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
     const qr = new Qr(options);
     qr.appendToParent(parent);
 
@@ -92,7 +116,7 @@ describe('showSecurityCheck', () => {
 
 describe('showPending', () => {
   it('should set display style for pending element', () => {
-    const options = { href: 'test-url', title: 'title', subtitle: 'subtitle' };
+    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
     const qr: any = new Qr(options);
     qr.appendToParent(parent);
 
@@ -110,7 +134,7 @@ describe('showPending', () => {
   });
 
   it('should not set display style for pending element', () => {
-    const options = { href: 'test-url', title: 'title', subtitle: 'subtitle' };
+    const options = { href: 'https://test-url', title: 'title', subtitle: 'subtitle' };
     const qr = new Qr(options);
     qr.appendToParent(parent);
 
@@ -124,7 +148,7 @@ describe('showPending', () => {
 
 describe('showDone', () => {
   it('should set display style for done element', () => {
-    const options = { href: 'test-url', title: 'title', subtitle: 'subtitle' };
+    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
     const qr: any = new Qr(options);
     qr.appendToParent(parent);
 
