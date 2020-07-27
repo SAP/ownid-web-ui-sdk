@@ -84,7 +84,7 @@ export default class WidgetComponent extends BaseComponent {
       if (this.disableMobile) {
         // eslint-disable-next-line no-console
         console.warn(
-          `Mobile rendering is disabled for ${ this.config.type } widget type`,
+          `Mobile rendering is disabled for ${this.config.type} widget type`,
         );
         return;
       }
@@ -114,7 +114,7 @@ export default class WidgetComponent extends BaseComponent {
       if (this.disableDesktop) {
         // eslint-disable-next-line no-console
         console.warn(
-          `Desktop rendering is disabled for ${ this.config.type } widget type`,
+          `Desktop rendering is disabled for ${this.config.type} widget type`,
         );
         return;
       }
@@ -143,7 +143,7 @@ export default class WidgetComponent extends BaseComponent {
       this.config.URLPrefix || ConfigurationService.URLPrefix
     ).replace(/\/+$/, '');
 
-    return `${ prefix }${ ConfigurationService.statusUrl }`;
+    return `${prefix}${ConfigurationService.statusUrl}`;
   }
 
   private getApproveUrl(context: string) {
@@ -151,7 +151,7 @@ export default class WidgetComponent extends BaseComponent {
       this.config.URLPrefix || ConfigurationService.URLPrefix
     ).replace(/\/+$/, '');
 
-    return `${ prefix }${ ConfigurationService.approveUrl.replace(':context', context) }`;
+    return `${prefix}${ConfigurationService.approveUrl.replace(':context', context)}`;
   }
 
   private setCallStatus() {
@@ -162,6 +162,10 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private async callStatus() {
+    if (this.contexts.length <= 0) {
+      return () => { };
+    }
+
     const request = this.contexts.map(({ context, nonce }) => ({ context, nonce }));
     const statusResponse = await this.requestService.post(this.getStatusUrl(), request) as Array<StatusResponse>;
 
@@ -174,6 +178,7 @@ export default class WidgetComponent extends BaseComponent {
     const finishedIndex = statuses.indexOf(ContextStatus.Finished);
     if (finishedIndex >= 0) {
       this.qr?.showDone();
+      this.contexts = [];
       this.link?.disableButton();
 
       this.finalResponse = statusResponse[finishedIndex].payload.data;
