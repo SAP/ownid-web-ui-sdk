@@ -46,11 +46,11 @@ describe('widget component', () => {
         "context": "context1",
         "payload": null
       },
-        {
-          "status": 1,
-          "context": "context2",
-          "payload": null
-        }]);
+      {
+        "status": 1,
+        "context": "context2",
+        "payload": null
+      }]);
     }));
   });
 
@@ -195,7 +195,7 @@ describe('widget component', () => {
         true
       );
       sut.widgetReady.then(() => {
-        expect(console.warn).toBeCalledWith(`Desktop rendering is disabled for ${ type } widget type`);
+        expect(console.warn).toBeCalledWith(`Desktop rendering is disabled for ${type} widget type`);
         expect(parent.children.length).toBe(0);
         resolve();
       });
@@ -227,7 +227,7 @@ describe('widget component', () => {
         true
       );
       sut.widgetReady.then(() => {
-        expect(console.warn).toBeCalledWith(`Mobile rendering is disabled for ${ type } widget type`);
+        expect(console.warn).toBeCalledWith(`Mobile rendering is disabled for ${type} widget type`);
         expect(parent.children.length).toBe(0);
         resolve();
       });
@@ -328,6 +328,28 @@ describe('callStatus', () => {
     });
   });
 
+  it('should not schedule status check if we have no contexts to check', () => {
+    return new Promise(resolve => {
+      const sut: any = new WidgetComponent(
+        {
+          element: document.createElement('div'),
+          type: WidgetType.Login,
+          URLPrefix: 'url'
+        },
+        requestService,
+      );
+
+      sut.contexts = [];
+      sut.setCallStatus = jest.fn();
+      requestService.post = jest.fn().mockReturnValue(null);
+
+      sut.callStatus().then(() => {
+        expect(sut.setCallStatus).not.toBeCalled();
+        resolve();
+      });
+    });
+  });
+
   it('should schedule new status request if no response has been received', () => {
     return new Promise(resolve => {
       const sut: any = new WidgetComponent(
@@ -339,6 +361,7 @@ describe('callStatus', () => {
         requestService,
       );
 
+      sut.contexts = [{ context: "a", nonce: "b" }];
       sut.setCallStatus = jest.fn();
       requestService.post = jest.fn().mockReturnValue(null);
 
@@ -360,6 +383,7 @@ describe('callStatus', () => {
         requestService,
       );
 
+      sut.contexts = [{ context: "a", nonce: "b" }];
       sut.refreshLinkTimeout = jest.fn();
       window.clearTimeout = jest.fn();
       requestService.post = jest.fn().mockReturnValue(new Promise(resolve => resolve([processingContextResponse])));
@@ -385,6 +409,7 @@ describe('callStatus', () => {
         },
         requestService,
       );
+      sut.contexts = [{ context: "a", nonce: "b" }];
 
       sut.qr = {
         showPending: jest.fn(),
@@ -476,6 +501,7 @@ describe('callStatus', () => {
         },
         requestService,
       );
+      sut.contexts = [{ context: "a", nonce: "b" }];
 
       sut.callStatus().then(() => {
         expect(onLogin).toBeCalledWith({ "a": "b" });
@@ -496,6 +522,7 @@ describe('callStatus', () => {
         } as any,
         requestService,
       );
+      sut.contexts = [{ context: "a", nonce: "b" }];
 
       requestService.post = jest.fn()
         .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
@@ -523,6 +550,7 @@ describe('callStatus', () => {
         } as any,
         requestService,
       );
+      sut.contexts = [{ context: "a", nonce: "b" }];
 
       requestService.post = jest.fn()
         .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
@@ -547,6 +575,7 @@ describe('callStatus', () => {
         },
         requestService,
       );
+      sut.contexts = [{ context: "a", nonce: "b" }];
 
       requestService.post = jest.fn()
         .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
@@ -571,6 +600,7 @@ describe('callStatus', () => {
         },
         requestService,
       );
+      sut.contexts = [{ context: "a", nonce: "b" }];
 
       requestService.post = jest.fn()
         .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
@@ -592,6 +622,7 @@ describe('callStatus', () => {
         },
         requestService,
       );
+      sut.contexts = [{ context: "a", nonce: "b" }];
 
       sut.setCallStatus = jest.fn();
       requestService.post = jest.fn()
@@ -704,3 +735,28 @@ describe('callStatus', () => {
 });
 
 
+describe('refresh link or qr', () => {
+  let requestService: RequestService;
+
+  it('log error to console if init fails during link/qr refresh', () => {
+    return new Promise(resolve => {
+      const sut: any = new WidgetComponent(
+        {
+          element: document.createElement('div'),
+          URLPrefix: 'url',
+        } as any,
+        requestService,
+      );
+      sut.init = jest.fn().mockReturnValue(Promise.reject('error'));
+      console.error = jest.fn();
+
+      sut.refreshLinkOrQR();
+
+      sut.widgetReady.then(() => {
+        expect(console.error).toBeCalled();
+
+        resolve();
+      });
+    });
+  });
+});
