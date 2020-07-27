@@ -9,7 +9,7 @@ describe('LinkButton Component', () => {
 
   describe('ctor -> Render', () => {
     it('should create anchor element with options', () => {
-      const options = { href: 'test-href', title: 'My test button' };
+      const options = { href: 'http://test-href', title: 'My test button' };
       const linkButton = new LinkButton(options);
 
       linkButton.appendToParent(parent);
@@ -19,11 +19,20 @@ describe('LinkButton Component', () => {
       // check if we have logo in anchor element
       expect(button!.querySelector('svg')).not.toBeNull();
     });
+
+    it('should create div element', () => {
+      const options = { href: 'javascript:alert("hacked!!")', title: 'My test button' };
+      const linkButton = new LinkButton(options);
+
+      linkButton.appendToParent(parent);
+      const div = parent.querySelector('div');
+      expect(div).not.toBeNull();
+    });
   });
 
   describe('Destroy()', () => {
     it('should remove LinkButton element from document', () => {
-      const options = { href: 'test-href2', title: 'My test button' };
+      const options = { href: 'http://test-href2', title: 'My test button' };
       const linkButton = new LinkButton(options);
       linkButton.appendToParent(parent);
       linkButton.destroy();
@@ -33,7 +42,7 @@ describe('LinkButton Component', () => {
 
   describe('AttachHandler()', () => {
     it('should attach handler LinkButton element and trigger when event pops up', () => {
-      const options = { href: 'test-href2', title: 'My test button' };
+      const options = { href: 'http://test-href2', title: 'My test button' };
       const linkButton = new LinkButton(options);
       linkButton.appendToParent(parent);
       const spyFn = jest.fn();
@@ -51,6 +60,22 @@ describe('LinkButton Component', () => {
       const linkButton = new LinkButton(options);
       linkButton.disableButton();
       expect(linkButton['disabled']).toBeTruthy();
+    });
+  });
+
+  describe('update()', () => {
+    it('should set options.href', () => {
+      const options = { href: 'http://test-href2', title: 'My test button' };
+      const sut: any = new LinkButton(options);
+      sut.update('http://test-href-updated');
+      expect(sut.options.href).toEqual('http://test-href-updated');
+    });
+
+    it('should not set options.href if not valid url', () => {
+      const options = { href: 'http://test-href2', title: 'My test button' };
+      const sut: any = new LinkButton(options);
+      sut.update('javascript:alert("hacked!!")');
+      expect(sut.options.href).toEqual('http://test-href2');
     });
   });
 });

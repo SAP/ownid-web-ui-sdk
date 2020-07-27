@@ -47,7 +47,7 @@ describe('widget component', () => {
         resolve({
           context: '123',
           nonce: '234',
-          url: 'url',
+          url: 'http://url',
         });
       }),
     );
