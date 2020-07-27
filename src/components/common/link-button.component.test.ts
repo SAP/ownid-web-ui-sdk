@@ -39,7 +39,18 @@ describe('LinkButton Component', () => {
       const spyFn = jest.fn();
       linkButton.attachHandler('click', spyFn);
       (parent.querySelector('button') as HTMLElement)?.click();
-      expect(spyFn.mock.calls.length).toEqual(1);
+      linkButton.disableButton();
+      (parent.querySelector('button') as HTMLElement)?.click();
+      expect(spyFn.mock.calls.length).toEqual(2);
+    });
+  });
+
+  describe('disableButton()', () => {
+    it('should set disabled to true', () => {
+      const options = { href: 'test-href2', title: 'My test button' };
+      const linkButton = new LinkButton(options);
+      linkButton.disableButton();
+      expect(linkButton['disabled']).toBeTruthy();
     });
   });
 });

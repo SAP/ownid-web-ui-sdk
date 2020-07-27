@@ -4,10 +4,20 @@
     "desktopTitle": "Instant Sign In",
     "desktopSubtitle": "Use your phone to scan for passwordless sign in."
   },
+  "login-partial": {
+    "mobileTitle": "Instant Sign In",
+    "desktopTitle": "Instant Sign In",
+    "desktopSubtitle": "Use your phone to scan for passwordless sign in."
+  },
   "register": {
     "mobileTitle": "Register without a password",
     "desktopTitle": "Skip the password with OwnID",
     "desktopSubtitle": "Use your phone to scan and complete a passwordless registration."
+  },
+  "register-partial": {
+    "mobileTitle": "Register without a password",
+    "desktopTitle": "Scan this QR to complete your registration.",
+    "desktopSubtitle": ""
   },
   "link": {
     "mobileTitle": "Enable Instant Login",

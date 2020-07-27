@@ -23,6 +23,9 @@ export default class WidgetComponent extends BaseComponent {
 
   private contexts: IContextRS[] = [];
 
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  private finalResponse: any | null = null;
+
   constructor(
     protected config: IWidgetConfig,
     protected requestService: RequestService,
@@ -39,6 +42,11 @@ export default class WidgetComponent extends BaseComponent {
       if (!this.isMobile()) {
         this.setCallStatus();
       }
+
+      if (config.toggleElement) {
+        this.addInfoIcon(config.toggleElement);
+      }
+
     }, (error: Error) => {
       // eslint-disable-next-line no-console
       console.error(error.message);
@@ -81,15 +89,20 @@ export default class WidgetComponent extends BaseComponent {
         return;
       }
 
+      const type = this.config.partial ? `${this.config.type}-partial`: this.config.type;
       const mobileTitle =
         this.config.mobileTitle ||
-        TranslationService.texts[lang][this.config.type].mobileTitle;
+        TranslationService.texts[lang][type].mobileTitle;
       this.link = new LinkButton({
         href: this.getStartUrl(),
         title: mobileTitle,
       });
 
       this.link.attachHandler('click', () => {
+        if (this.finalResponse) {
+          this.callOnSuccess(this.finalResponse)
+        }
+
         this.setCallStatus();
         clearTimeout(this.refreshLinkTimeout);
 
@@ -105,13 +118,13 @@ export default class WidgetComponent extends BaseComponent {
         );
         return;
       }
-
+      const type = this.config.partial ? `${this.config.type}-partial`: this.config.type;
       const desktopTitle =
         this.config.desktopTitle ||
-        TranslationService.texts[lang][this.config.type].desktopTitle;
+        TranslationService.texts[lang][type].desktopTitle;
       const desktopSubtitle =
         this.config.desktopTitle ||
-        TranslationService.texts[lang][this.config.type].desktopSubtitle;
+        TranslationService.texts[lang][type].desktopSubtitle;
       this.qr = new Qr({
         href: this.getStartUrl(),
         title: desktopTitle,
@@ -161,20 +174,10 @@ export default class WidgetComponent extends BaseComponent {
     const finishedIndex = statuses.indexOf(ContextStatus.Finished);
     if (finishedIndex >= 0) {
       this.qr?.showDone();
+      this.link?.disableButton();
 
-      const response = statusResponse[finishedIndex].payload.data;
-
-      switch (this.config.type) {
-        case WidgetType.Link:
-          return this.config.onLink && this.config.onLink(response);
-        case WidgetType.Login:
-          return this.config.onLogin && this.config.onLogin(response);
-        case WidgetType.Recover:
-          return this.config.onRecover && this.config.onRecover(response);
-        case WidgetType.Register:
-        default:
-          return this.config.onRegister && this.config.onRegister(response);
-      }
+      this.finalResponse = statusResponse[finishedIndex].payload.data;
+      this.callOnSuccess(this.finalResponse);
     }
 
     // stop link regeneration if any context in progress status
@@ -289,5 +292,45 @@ export default class WidgetComponent extends BaseComponent {
         this.setCallStatus();
       }
     });
+  }
+
+  private addInfoIcon(element: HTMLElement) {
+    const infoIcon = document.createElement('span');
+    infoIcon.setAttribute('style', 'margin-left:8px;cursor:pointer;position:relative');
+    infoIcon.setAttribute('ownid-info-button', '');
+
+    infoIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#354a5f"><path d="M.333 7A6.67 6.67 0 0 1 7 .333 6.67 6.67 0 0 1 13.667 7 6.67 6.67 0 0 1 7 13.667 6.67 6.67 0 0 1 .333 7zM7 1.667C4.054 1.667 1.667 4.055 1.667 7S4.054 12.334 7 12.334 12.333 9.946 12.333 7 9.945 1.667 7 1.667zm0 3.667a1 1 0 1 0 0-2 1 1 0 1 0 0 2zm0 1.333c.368 0 .667.298.667.667V10c0 .368-.298.667-.667.667s-.667-.298-.667-.667V7.334c0-.368.298-.667.667-.667z"/></svg>' +
+      '<div ownid-about-tooltip style="display: none;position: absolute;width: 220px;background: #FFFFFF;border: 1px solid #D5DADD;box-sizing: border-box;border-radius: 6px;font-size: 12px;line-height: 16px;padding: 16px 12px;bottom: 23px;left: -100px;cursor: default;">' +
+      '<strong style="color: #0070F2">OwnID</strong> is a tool that allows you to register and login to the websites and apps you use everyday.</div>';
+
+    const aboutTooltip = infoIcon.querySelector('[ownid-about-tooltip]') as HTMLElement;
+
+    document.addEventListener('click', (event) => {
+      const clickedInside = infoIcon.contains(event.target as Node);
+      if (!clickedInside) {
+        aboutTooltip.style.display = 'none';
+      }
+    });
+
+    infoIcon.querySelector('svg')!.addEventListener('click', () => {
+      aboutTooltip.style.display = aboutTooltip.style.display === 'block' ? 'none' : 'block';
+    });
+
+    element.parentNode!.insertBefore(infoIcon, element.nextSibling);
+  }
+
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  private callOnSuccess(finalResponse: any) {
+    switch (this.config.type) {
+      case WidgetType.Link:
+        return this.config.onLink && this.config.onLink(finalResponse);
+      case WidgetType.Login:
+        return this.config.onLogin && this.config.onLogin(finalResponse);
+      case WidgetType.Recover:
+        return this.config.onRecover && this.config.onRecover(finalResponse);
+      case WidgetType.Register:
+      default:
+        return this.config.onRegister && this.config.onRegister(finalResponse);
+    }
   }
 }

@@ -114,6 +114,37 @@ describe('widget component', () => {
     });
   });
 
+  it('should render partial in desktop mode', () => {
+    return new Promise(resolve => {
+      navigator.userAgent =
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
+
+      const toggleElement = document.createElement('span');
+      const parent = document.createElement('div');
+      document.body.appendChild(parent);
+      document.body.appendChild(toggleElement);
+
+      const sut = new WidgetComponent(
+        {
+          element: parent,
+          type: WidgetType.Register,
+          URLPrefix: 'url',
+          partial: true,
+          toggleElement,
+        },
+        requestService,
+      );
+
+      sut.widgetReady.then(() => {
+        expect(sut).not.toBeNull();
+        expect(parent.children.length).toBe(1);
+        expect(parent.children[0].tagName.toLowerCase()).toEqual('div');
+
+        resolve(true);
+      });
+    });
+  });
+
   it('should not render', () => {
     return new Promise(resolve => {
       navigator.userAgent =
@@ -394,6 +425,8 @@ describe('callStatus', () => {
         const link = parent.children[0] as HTMLAnchorElement;
         expect(link).not.toBeNull();
 
+        link.click();
+        sut.finalResponse = {};
         link.click();
 
         expect(sut.setCallStatus).toBeCalled();

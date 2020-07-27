@@ -4,8 +4,13 @@
   <meta charset="UTF-8">
   <title>OWNID Page Example</title>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <style>
+    .row {
+      margin: 0 0 16px;
+    }
+  </style>
   <script>
-    window.ownidAsyncInit = function() {
+    window.ownidAsyncInit = function () {
       ownid.init({
         URLPrefix: 'http://localhost:5002/ownid/', // optional. default path is /ownId/
       });
@@ -35,12 +40,6 @@
         element: document.querySelector('#ownid-link'),
       }, '3_s5-gLs4aLp5FXluP8HXs7_JN40XWNlbvYWVCCkbNCqlhW6Sm5Z4tXGGsHcSJYD3W');
 
-      ownid.render({
-        type: 'register',
-        partial: true,
-        element: document.querySelector('#ownid-instant-register'),
-      });
-
       let lang = 'en';
 
       document.getElementById('destroy')
@@ -48,12 +47,53 @@
 
       document.getElementById('lang-change')
         .addEventListener('click', () => {
-          lang = lang === 'ru' ? 'en': 'ru';
+          lang = lang === 'ru' ? 'en' : 'ru';
           ownIdElem1.update({language: lang});
         });
+
+      authFlow();
     };
   </script>
-  <script async defer src="../dist/ownid-web-ui-sdk.umd.js"></script>
+  <script>
+    // Authenticate only flow
+    function authFlow() {
+      const toggleElement = document.getElementById('custom-register-label');
+      const ownidWrapperEl = document.getElementById('ownid-toggle-register');
+      const authOnlyWidget = ownid.render({
+        type: 'register',
+        partial: true,
+        element: document.getElementById('ownid-toggle-register'),
+        toggleElement,
+        onRegister: (res) => console.log(res)
+      });
+
+      const toggleElements = document.querySelectorAll('[ownid-toggle]');
+
+      document.getElementById('custom-register-check').addEventListener('change', (event) => {
+
+        if (event.target.checked) {
+          ownidWrapperEl.style.display = 'block';
+
+          toggleElements.forEach((toggleElement) => {
+            const placeholder = document.createElement('ownid-toggle-placeholder');
+            placeholder.style.display = 'none';
+
+            toggleElement.parentNode.insertBefore(placeholder, toggleElement);
+            toggleElement.parentNode.removeChild(toggleElement);
+          });
+        } else {
+          ownidWrapperEl.style.display = 'none';
+
+          document.querySelectorAll('ownid-toggle-placeholder').forEach((element, index) => {
+            element.parentNode.insertBefore(toggleElements[index], element);
+            element.parentNode.removeChild(element);
+          });
+        }
+      });
+    }
+  </script>
+
+  <script async defer src="../dist/ownid-web-ui-sdk.es5.js"></script>
 
   <style>
     body {
@@ -89,6 +129,9 @@
 
   <h4 class="">Login</h4>
 
+  <button id="lang-change">Set Next lang</button>
+  <button id="destroy">Destroy widget</button>
+
   <div id="ownid-login" class="ownid"></div>
 
   <h4 class="">Link</h4>
@@ -99,12 +142,36 @@
 
   <div id="ownid-recover" class="ownid"></div>
 
-  <h4 class="">Instant Register</h4>
+  <h4 class="">Custom Register</h4>
+  <form>
+    <div class="row">
+      <input type="name" placeholder="name">
+    </div>
 
-  <div id="ownid-instant-register" class="ownid"></div>
+    <div class="row">
+      <input type="checkbox" id="custom-register-check">
+      <label id="custom-register-label" for="custom-register-check">Skip password with OwnID</label>
+    </div>
 
-  <button id="lang-change">Set Next lang</button>
-  <button id="destroy">Destroy widget</button>
+    <div class="row" ownid-toggle>
+      <input type="password" placeholder="password">
+    </div>
+
+    <div class="row" ownid-toggle>
+      <input type="password" placeholder="repeat password">
+    </div>
+
+    <div class="row">
+      <input type="checkbox" id="terms">
+      <label for="terms">terms and conditions</label>
+    </div>
+
+    <div class="row" ownid-toggle>
+      <button type="button">Submit</button>
+    </div>
+
+    <div id="ownid-toggle-register" class="ownid" style="display: none"></div>
+  </form>
 </div>
 </body>
 </html>
