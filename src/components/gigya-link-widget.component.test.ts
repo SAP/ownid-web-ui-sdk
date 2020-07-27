@@ -59,7 +59,7 @@ describe('widget component', () => {
         'Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36';
 
       const parent = document.createElement('div');
-      document.body.append(parent);
+      document.body.appendChild(parent);
 
       const sut = new GigyaLinkWidgetComponent(
         {
@@ -87,7 +87,7 @@ describe('widget component', () => {
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
 
       const parent = document.createElement('div');
-      document.body.append(parent);
+      document.body.appendChild(parent);
 
       const sut = new GigyaLinkWidgetComponent(
         {
@@ -113,7 +113,7 @@ describe('widget component', () => {
         'Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36';
 
       const parent = document.createElement('div');
-      document.body.append(parent);
+      document.body.appendChild(parent);
       console.error = jest.fn();
 
 

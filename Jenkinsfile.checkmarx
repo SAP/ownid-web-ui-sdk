@@ -8,9 +8,9 @@ pipeline {
     }
   }
 
-  //triggers {
-    //    cron('H H(0-1) * * *')
-    //}
+  triggers {
+      cron('0 16 * * *')
+  }
 
   options {
     timeout(time: 30, unit: 'MINUTES')
@@ -26,7 +26,7 @@ pipeline {
           $class: 'CxScanBuilder',
           avoidDuplicateProjectScans: true,
           comment: '',
-          credentialsId: 'd068408-checkmarx',
+          credentialsId: 'nvt-sap-io-checkmarx',
           excludeFolders: '',
           excludeOpenSourceFolders: '',
           exclusionsSetting: 'global',

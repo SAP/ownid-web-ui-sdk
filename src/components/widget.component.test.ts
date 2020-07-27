@@ -93,13 +93,44 @@ describe('widget component', () => {
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
 
       const parent = document.createElement('div');
-      document.body.append(parent);
+      document.body.appendChild(parent);
 
       const sut = new WidgetComponent(
         {
           element: parent,
           type: WidgetType.Login,
           URLPrefix: 'url',
+        },
+        requestService,
+      );
+
+      sut.widgetReady.then(() => {
+        expect(sut).not.toBeNull();
+        expect(parent.children.length).toBe(1);
+        expect(parent.children[0].tagName.toLowerCase()).toEqual('div');
+
+        resolve(true);
+      });
+    });
+  });
+
+  it('should render partial in desktop mode', () => {
+    return new Promise(resolve => {
+      navigator.userAgent =
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
+
+      const toggleElement = document.createElement('span');
+      const parent = document.createElement('div');
+      document.body.appendChild(parent);
+      document.body.appendChild(toggleElement);
+
+      const sut = new WidgetComponent(
+        {
+          element: parent,
+          type: WidgetType.Register,
+          URLPrefix: 'url',
+          partial: true,
+          toggleElement,
         },
         requestService,
       );
@@ -151,7 +182,7 @@ describe('widget component', () => {
         .mockReturnValue(new Promise(resolve => resolve({})));
 
       const parent = document.createElement('div');
-      document.body.append(parent);
+      document.body.appendChild(parent);
       console.warn = jest.fn();
       const type = WidgetType.Login;
       const sut = new WidgetComponent(
@@ -181,7 +212,7 @@ describe('widget component', () => {
         .mockReturnValue(new Promise(resolve => resolve({})));
 
       const parent = document.createElement('div');
-      document.body.append(parent);
+      document.body.appendChild(parent);
       console.warn = jest.fn();
 
       const type = WidgetType.Login;
@@ -228,13 +259,13 @@ describe('callStatus', () => {
   const finishedContextResponse = {
     status: ContextStatus.Finished,
     context: "context1",
-    payload: { "Data": { "a": "b" } }
+    payload: { data: { "a": "b" } }
   };
 
   const waitingApprovalContextResponse = {
     status: ContextStatus.WaitingForApproval,
     context: "context1",
-    payload: { "Data": { "a": "b" } }
+    payload: { data: { "a": "b" } }
   };
 
   beforeEach(() => {
@@ -333,6 +364,10 @@ describe('callStatus', () => {
       window.clearTimeout = jest.fn();
       requestService.post = jest.fn().mockReturnValue(new Promise(resolve => resolve([processingContextResponse])));
 
+      sut.qr = {
+        showPending: jest.fn(),
+      };
+
       sut.callStatus().then(() => {
         expect(window.clearTimeout).toBeCalledWith(sut.refreshLinkTimeout);
         resolve();
@@ -390,6 +425,8 @@ describe('callStatus', () => {
         const link = parent.children[0] as HTMLAnchorElement;
         expect(link).not.toBeNull();
 
+        link.click();
+        sut.finalResponse = {};
         link.click();
 
         expect(sut.setCallStatus).toBeCalled();
@@ -462,6 +499,10 @@ describe('callStatus', () => {
 
       requestService.post = jest.fn()
         .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
+
+      sut.qr = {
+        showDone: jest.fn(),
+      };
 
       sut.callStatus().then(() => {
         expect(onRegister).toBeCalledWith({ "a": "b" });

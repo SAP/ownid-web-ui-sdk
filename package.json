@@ -86,6 +86,7 @@
     }
   },
   "dependencies": {
-    "qrcode-generator": "^1.4.4"
+    "qrcode-generator": "^1.4.4",
+    "whatwg-fetch": "^3.2.0"
   }
 }

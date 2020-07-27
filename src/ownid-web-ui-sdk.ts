@@ -77,7 +77,7 @@ export default class OwnIDUiSdk {
         const scriptElement = document.createElement('script')
         scriptElement.src = src;
         scriptElement.addEventListener('load', createWidgetResolve);
-        document.head.append(scriptElement);
+        document.head.appendChild(scriptElement);
       } else {
         createWidgetResolve();
       }

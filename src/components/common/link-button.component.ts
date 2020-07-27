@@ -6,6 +6,7 @@ declare type LinkButtonOptions = {
 };
 
 export default class LinkButton extends BaseCommonComponent<LinkButtonOptions> {
+  private disabled = false;
 
   constructor(private options: LinkButtonOptions) {
     super(options);
@@ -14,7 +15,9 @@ export default class LinkButton extends BaseCommonComponent<LinkButtonOptions> {
   protected render(options: LinkButtonOptions): HTMLElement {
     const button = document.createElement('button');
 
-    button.addEventListener('click', () => window.open(this.options.href));
+    button.addEventListener('click', () => this.openWindow());
+
+    button.type = 'button';
 
     button.style.cssText = `width: 100%; min-width: 288px; height: 40px;
       display: flex; align-items: center; justify-content: center; border: none; border-radius: 20px;
@@ -27,5 +30,16 @@ export default class LinkButton extends BaseCommonComponent<LinkButtonOptions> {
 
   public update(href: string): void {
     this.options.href = href;
+  }
+
+  public disableButton() {
+    this.disabled = true;
+  }
+
+  private openWindow() {
+    if (this.disabled) {
+      return;
+    }
+    window.open(this.options.href)
   }
 }
