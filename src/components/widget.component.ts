@@ -11,6 +11,11 @@ import StatusResponse, { ContextStatus } from './status-response';
 export default class WidgetComponent extends BaseComponent {
   widgetReady: Promise<void>;
 
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  finalResponse: any | null = null;
+
+  returnError: string | null = null;
+
   private statusTimeout: number | undefined;
 
   private refreshLinkTimeout: number | undefined;
@@ -23,8 +28,11 @@ export default class WidgetComponent extends BaseComponent {
 
   private contexts: IContextRS[] = [];
 
+  private postMessagesHandlerAttached = false;
+
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  private finalResponse: any | null = null;
+  private webappResolver: (value?: any) => void = () => {
+  };
 
   constructor(
     protected config: IWidgetConfig,
@@ -84,12 +92,12 @@ export default class WidgetComponent extends BaseComponent {
       if (this.disableMobile) {
         // eslint-disable-next-line no-console
         console.warn(
-          `Mobile rendering is disabled for ${this.config.type} widget type`,
+          `Mobile rendering is disabled for ${ this.config.type } widget type`,
         );
         return;
       }
 
-      const type = this.config.partial ? `${this.config.type}-partial`: this.config.type;
+      const type = this.config.partial ? `${ this.config.type }-partial` : this.config.type;
       const mobileTitle =
         this.config.mobileTitle ||
         TranslationService.texts[lang][type].mobileTitle;
@@ -110,15 +118,16 @@ export default class WidgetComponent extends BaseComponent {
       });
 
       this.addChild(this.link);
+      this.returnError = TranslationService.texts[lang].errors.link;
     } else {
       if (this.disableDesktop) {
         // eslint-disable-next-line no-console
         console.warn(
-          `Desktop rendering is disabled for ${this.config.type} widget type`,
+          `Desktop rendering is disabled for ${ this.config.type } widget type`,
         );
         return;
       }
-      const type = this.config.partial ? `${this.config.type}-partial`: this.config.type;
+      const type = this.config.partial ? `${ this.config.type }-partial` : this.config.type;
       const desktopTitle =
         this.config.desktopTitle ||
         TranslationService.texts[lang][type].desktopTitle;
@@ -131,6 +140,8 @@ export default class WidgetComponent extends BaseComponent {
         subtitle: desktopSubtitle,
       })
       this.addChild(this.qr,);
+
+      this.returnError = TranslationService.texts[lang].errors.qr;
     }
   }
 
@@ -143,7 +154,7 @@ export default class WidgetComponent extends BaseComponent {
       this.config.URLPrefix || ConfigurationService.URLPrefix
     ).replace(/\/+$/, '');
 
-    return `${prefix}${ConfigurationService.statusUrl}`;
+    return `${ prefix }${ ConfigurationService.statusUrl }`;
   }
 
   private getApproveUrl(context: string) {
@@ -151,7 +162,7 @@ export default class WidgetComponent extends BaseComponent {
       this.config.URLPrefix || ConfigurationService.URLPrefix
     ).replace(/\/+$/, '');
 
-    return `${prefix}${ConfigurationService.approveUrl.replace(':context', context)}`;
+    return `${ prefix }${ ConfigurationService.approveUrl.replace(':context', context) }`;
   }
 
   private setCallStatus() {
@@ -163,7 +174,8 @@ export default class WidgetComponent extends BaseComponent {
 
   private async callStatus() {
     if (this.contexts.length <= 0) {
-      return () => { };
+      return () => {
+      };
     }
 
     const request = this.contexts.map(({ context, nonce }) => ({ context, nonce }));
@@ -183,6 +195,7 @@ export default class WidgetComponent extends BaseComponent {
 
       this.finalResponse = statusResponse[finishedIndex].payload.data;
       this.callOnSuccess(this.finalResponse);
+      this.apiReply(this.finalResponse);
     }
 
     // stop link regeneration if any context in progress status
@@ -273,6 +286,12 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private attachPostMessagesHandler() {
+    if (!this.postMessagesHandlerAttached) {
+      return;
+    }
+
+    this.postMessagesHandlerAttached = true;
+
     window.addEventListener('message', (message: MessageEvent) => {
 
       if (message.data === 'ownid postMessages enabled') {
@@ -299,10 +318,24 @@ export default class WidgetComponent extends BaseComponent {
     });
   }
 
-  private addInfoIcon(element: HTMLElement) {
+  private addInfoIcon(checkInput: HTMLElement) {
+    if (!checkInput.id) {
+      // eslint-disable-next-line no-param-reassign
+      checkInput.id = `ownid-toggle-check-${ Math.random() }`;
+    }
+
+    const lang = this.config.language || ConfigurationService.defaultLanguage;
+    const label = document.createElement('label');
+    label.setAttribute('for', checkInput.id);
+    label.setAttribute('class', 'ownid-label ownid-toggle');
+    label.textContent = TranslationService.texts[lang].common.labelText
+
+    checkInput.parentNode!.insertBefore(label, checkInput.nextSibling);
+
     const infoIcon = document.createElement('span');
     infoIcon.setAttribute('style', 'margin-left:8px;cursor:pointer;position:relative');
     infoIcon.setAttribute('ownid-info-button', '');
+
 
     infoIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#354a5f"><path d="M.333 7A6.67 6.67 0 0 1 7 .333 6.67 6.67 0 0 1 13.667 7 6.67 6.67 0 0 1 7 13.667 6.67 6.67 0 0 1 .333 7zM7 1.667C4.054 1.667 1.667 4.055 1.667 7S4.054 12.334 7 12.334 12.333 9.946 12.333 7 9.945 1.667 7 1.667zm0 3.667a1 1 0 1 0 0-2 1 1 0 1 0 0 2zm0 1.333c.368 0 .667.298.667.667V10c0 .368-.298.667-.667.667s-.667-.298-.667-.667V7.334c0-.368.298-.667.667-.667z"/></svg>' +
       '<div ownid-about-tooltip style="display: none;position: absolute;width: 220px;background: #FFFFFF;border: 1px solid #D5DADD;box-sizing: border-box;border-radius: 6px;font-size: 12px;line-height: 16px;padding: 16px 12px;bottom: 23px;left: -100px;cursor: default;">' +
@@ -321,7 +354,33 @@ export default class WidgetComponent extends BaseComponent {
       aboutTooltip.style.display = aboutTooltip.style.display === 'block' ? 'none' : 'block';
     });
 
-    element.parentNode!.insertBefore(infoIcon, element.nextSibling);
+    label.parentNode!.insertBefore(infoIcon, label.nextSibling);
+
+    const toggleElements = document.querySelectorAll(checkInput.getAttribute('ownid-toggle-rel') as string);
+
+    checkInput.addEventListener('change', ({ target }) => {
+
+      if ((target as HTMLInputElement).checked) {
+        this.config.element.style.display = 'block';
+
+        toggleElements.forEach((toggleElement) => {
+          const placeholder = document.createElement('ownid-toggle-placeholder');
+          placeholder.style.display = 'none';
+
+          toggleElement.parentNode!.insertBefore(placeholder, toggleElement);
+          toggleElement.parentNode!.removeChild(toggleElement);
+        });
+      } else {
+        this.config.element.style.display = 'none';
+
+        document.querySelectorAll('ownid-toggle-placeholder').forEach((element, index) => {
+          element.parentNode!.insertBefore(toggleElements[index], element);
+          element.parentNode!.removeChild(element);
+        });
+      }
+    });
+
+    this.config.element.style.display = 'none';
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -337,5 +396,26 @@ export default class WidgetComponent extends BaseComponent {
       default:
         return this.config.onRegister && this.config.onRegister(finalResponse);
     }
+  }
+
+  public async openWebapp() {
+    window.open(this.getStartUrl());
+
+    this.setCallStatus();
+    clearTimeout(this.refreshLinkTimeout);
+
+    this.attachPostMessagesHandler();
+
+    return new Promise((resolve) => {
+      this.webappResolver = resolve;
+    });
+  }
+
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  private apiReply(response: any) {
+    this.webappResolver({
+      error: null,
+      data: response,
+    });
   }
 }

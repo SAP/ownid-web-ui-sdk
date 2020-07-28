@@ -1,13 +1,11 @@
 import WidgetComponent from './components/widget.component';
 import RequestService from './services/request.service';
-import {
-  IInitConfig,
-  IWidgetConfig,
-  WidgetType,
-} from './interfaces/i-widget.interfaces';
+import { IInitConfig, IWidgetConfig, WidgetType, } from './interfaces/i-widget.interfaces';
 import GigyaLinkWidgetComponent from "./components/gigya-link-widget.component";
 import LoggerDecorator from './services/logger.service';
 import { LogLevel } from './interfaces/i-logger.interfaces';
+
+const possibleChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 export default class OwnIDUiSdk {
   config = {} as IInitConfig;
@@ -21,7 +19,7 @@ export default class OwnIDUiSdk {
     if (config.logger) {
       // parse log level
       const logLevel = config.logLevel
-        ? LogLevel[config.logLevel  as keyof typeof LogLevel]
+        ? LogLevel[config.logLevel as keyof typeof LogLevel]
         : LogLevel.error;
 
       this.config.logger = new LoggerDecorator(config.logger, logLevel);
@@ -36,14 +34,34 @@ export default class OwnIDUiSdk {
     }
 
     const desktopDisable = config.type === WidgetType.Link;
-    const mobileDisable = false;
+    const mobileDisable = config.type === WidgetType.Register && config.partial;
 
     return new WidgetComponent(
-      {...this.config, ...config},
+      { ...this.config, ...config },
       new RequestService(this.config.logger),
       desktopDisable,
       mobileDisable,
     );
+  }
+
+  async getOwnIDPayload(widget: WidgetComponent) {
+    if (widget.finalResponse) {
+      return { error: null, data: widget.finalResponse };
+    }
+
+    if (widget.returnError) {
+      return { error: true, message: widget.returnError };
+    }
+
+    return widget.openWebapp();
+  }
+
+  generateOwnIDPassword(length: number) {
+    let result = '';
+    for (let i = length; i--;) {
+      result += possibleChars[Math.floor(Math.random() * possibleChars.length)];
+    }
+    return result;
   }
 
   async renderLinkGigya(config: IWidgetConfig, apiKey: string): Promise<GigyaLinkWidgetComponent | null> {
@@ -57,8 +75,7 @@ export default class OwnIDUiSdk {
     // @ts-ignore
     const { gigya } = window;
 
-    if(!apiKey && !gigya)
-    {
+    if (!apiKey && !gigya) {
       console.error(`Gigya apiKey should be provided`);
       return null;
     }
@@ -66,14 +83,14 @@ export default class OwnIDUiSdk {
     return new Promise<GigyaLinkWidgetComponent | null>((resolve) => {
       const createWidgetResolve = () => {
         resolve(new GigyaLinkWidgetComponent(
-          {...this.config, ...config},
+          { ...this.config, ...config },
           new RequestService()
         ));
       };
 
       if (!this.isGigyaAdded && !gigya) {
         this.isGigyaAdded = true;
-        const src = `https://cdns.gigya.com/js/gigya.js?apikey=${apiKey}`;
+        const src = `https://cdns.gigya.com/js/gigya.js?apikey=${ apiKey }`;
         const scriptElement = document.createElement('script')
         scriptElement.src = src;
         scriptElement.addEventListener('load', createWidgetResolve);

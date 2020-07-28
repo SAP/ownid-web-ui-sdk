@@ -13,6 +13,6 @@ if (window.ownidAsyncInit) {
   window.ownidAsyncInit();
 } else {
   console.log(
-    'ownid sdk is not initialized, ownidAsyncInit fucntion was not found',
+    'OwnID sdk is loaded, ownidAsyncInit function was not found',
   );
 }

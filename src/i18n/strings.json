@@ -28,5 +28,12 @@
     "mobileTitle": "Recover account without a password",
     "desktopTitle": "Skip the password with OwnID",
     "desktopSubtitle": "Use your phone to scan and complete a passwordless account recover."
+  },
+  "errors": {
+    "qr": "You must scan QR code before you proceed",
+    "link": "You must click OwnID button before you proceed"
+  },
+  "common": {
+    "labelText": "Skip password with OwnID"
   }
 }
