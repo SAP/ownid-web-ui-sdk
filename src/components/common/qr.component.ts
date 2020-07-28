@@ -132,7 +132,9 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 
   public showDone() {
     const donePane = this.ref.querySelector('[ownid-done]') as HTMLElement;
-    donePane.style.display = 'flex';
+    if (donePane) {
+      donePane.style.display = 'flex';
+    }
   }
 
   private generateQRCode(href: string): string {
