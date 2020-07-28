@@ -7,16 +7,18 @@ export declare type Options = {
 
 export interface ICommonComponent {
   appendToParent(parent: HTMLElement): void;
+
   destroy(): void;
+
+  ref: HTMLElement;
 }
 
-export default abstract class BaseCommonComponent<T>
-  implements ICommonComponent {
+export default abstract class BaseCommonComponent<T> implements ICommonComponent {
   protected constructor(options: T) {
     this.ref = this.render(options);
   }
 
-  protected readonly ref: HTMLElement;
+  readonly ref: HTMLElement;
 
   protected abstract render(options: T): HTMLElement;
 

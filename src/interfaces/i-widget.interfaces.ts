@@ -53,4 +53,3 @@ export interface IPartialConfig {
   onLink?: (response: object) => void;
   onRecover?: (response: object) => void;
 }
-

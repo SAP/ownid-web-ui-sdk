@@ -80,10 +80,9 @@ describe('widget component', () => {
         expect(sut).not.toBeNull();
         expect(parent.children.length).toBe(1);
         expect(parent.children[0].tagName.toLowerCase()).toEqual('button');
-        expect(window.clearTimeout).toBeCalled();
 
         resolve(true);
-      }, 1000);
+      }, 100);
     });
   });
 

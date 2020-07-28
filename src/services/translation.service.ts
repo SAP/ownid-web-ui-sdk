@@ -7,9 +7,7 @@ import ru from '../i18n/strings_ru.json'
 interface ITranslationsTexts {
   [key: string]: {
     [key: string]: {
-      mobileTitle: string;
-      desktopTitle: string;
-      desktopSubtitle: string;
+      [key: string]: string;
     };
   };
 }
