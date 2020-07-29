@@ -274,6 +274,7 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   public destroy(): void {
+    window.removeEventListener('message', this.onMessage);
     clearTimeout(this.statusTimeout);
     clearTimeout(this.refreshLinkTimeout);
     this.elements.forEach(element => element.destroy());
@@ -285,23 +286,24 @@ export default class WidgetComponent extends BaseComponent {
     this.render();
   }
 
+  private onMessage = (message: MessageEvent) => {
+    if (message.data === 'ownid postMessages enabled') {
+      clearTimeout(this.statusTimeout);
+    }
+
+    if (message.data === 'ownid success') {
+      this.callStatus();
+    }
+  }
+
   private attachPostMessagesHandler() {
-    if (!this.postMessagesHandlerAttached) {
+    if (this.postMessagesHandlerAttached) {
       return;
     }
 
     this.postMessagesHandlerAttached = true;
 
-    window.addEventListener('message', (message: MessageEvent) => {
-
-      if (message.data === 'ownid postMessages enabled') {
-        clearTimeout(this.statusTimeout);
-      }
-
-      if (message.data === 'ownid success') {
-        this.callStatus();
-      }
-    }, false);
+    window.addEventListener('message', this.onMessage, false);
   }
 
   private reCreateWidget() {
