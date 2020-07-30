@@ -4,11 +4,7 @@ import Qr from './common/qr.component';
 import ConfigurationService from '../services/configuration.service';
 import { IContextRS } from '../interfaces/i-context.interfaces';
 import RequestService from '../services/request.service';
-import {
-  IPartialConfig,
-  IWidgetConfig,
-  WidgetType,
-} from '../interfaces/i-widget.interfaces';
+import { IPartialConfig, IWidgetConfig, WidgetType } from '../interfaces/i-widget.interfaces';
 import TranslationService from '../services/translation.service';
 import StatusResponse, { ContextStatus } from './status-response';
 
@@ -67,10 +63,7 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   protected init(config: IWidgetConfig): Promise<void> {
-    return this.getContext(
-      config.URLPrefix || ConfigurationService.URLPrefix,
-      config.data,
-    );
+    return this.getContext(config.URLPrefix || ConfigurationService.URLPrefix, config.data);
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -81,10 +74,7 @@ export default class WidgetComponent extends BaseComponent {
       qr: !this.isMobile(),
       partial: !!this.config.partial,
     };
-    const contextResponse = await this.requestService.post(
-      contextUrl,
-      contextData,
-    );
+    const contextResponse = await this.requestService.post(contextUrl, contextData);
 
     if (!contextResponse) {
       throw new Error('No context data received');
@@ -99,18 +89,12 @@ export default class WidgetComponent extends BaseComponent {
     if (this.isMobile()) {
       if (this.disableMobile) {
         // eslint-disable-next-line no-console
-        console.warn(
-          `Mobile rendering is disabled for ${this.config.type} widget type`,
-        );
+        console.warn(`Mobile rendering is disabled for ${this.config.type} widget type`);
         return;
       }
 
-      const type = this.config.partial
-        ? `${this.config.type}-partial`
-        : this.config.type;
-      const mobileTitle =
-        this.config.mobileTitle ||
-        TranslationService.texts[lang][type].mobileTitle;
+      const type = this.config.partial ? `${this.config.type}-partial` : this.config.type;
+      const mobileTitle = this.config.mobileTitle || TranslationService.texts[lang][type].mobileTitle;
       this.link = new LinkButton({
         href: this.getStartUrl(),
         title: mobileTitle,
@@ -132,20 +116,12 @@ export default class WidgetComponent extends BaseComponent {
     } else {
       if (this.disableDesktop) {
         // eslint-disable-next-line no-console
-        console.warn(
-          `Desktop rendering is disabled for ${this.config.type} widget type`,
-        );
+        console.warn(`Desktop rendering is disabled for ${this.config.type} widget type`);
         return;
       }
-      const type = this.config.partial
-        ? `${this.config.type}-partial`
-        : this.config.type;
-      const desktopTitle =
-        this.config.desktopTitle ||
-        TranslationService.texts[lang][type].desktopTitle;
-      const desktopSubtitle =
-        this.config.desktopTitle ||
-        TranslationService.texts[lang][type].desktopSubtitle;
+      const type = this.config.partial ? `${this.config.type}-partial` : this.config.type;
+      const desktopTitle = this.config.desktopTitle || TranslationService.texts[lang][type].desktopTitle;
+      const desktopSubtitle = this.config.desktopTitle || TranslationService.texts[lang][type].desktopSubtitle;
       this.qr = new Qr({
         href: this.getStartUrl(),
         title: desktopTitle,
@@ -162,22 +138,15 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private getStatusUrl() {
-    const prefix = (
-      this.config.URLPrefix || ConfigurationService.URLPrefix
-    ).replace(/\/+$/, '');
+    const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
     return `${prefix}${ConfigurationService.statusUrl}`;
   }
 
   private getApproveUrl(context: string) {
-    const prefix = (
-      this.config.URLPrefix || ConfigurationService.URLPrefix
-    ).replace(/\/+$/, '');
+    const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
-    return `${prefix}${ConfigurationService.approveUrl.replace(
-      ':context',
-      context,
-    )}`;
+    return `${prefix}${ConfigurationService.approveUrl.replace(':context', context)}`;
   }
 
   private setCallStatus() {
@@ -196,10 +165,7 @@ export default class WidgetComponent extends BaseComponent {
       context,
       nonce,
     }));
-    const statusResponse = (await this.requestService.post(
-      this.getStatusUrl(),
-      request,
-    )) as Array<StatusResponse>;
+    const statusResponse = (await this.requestService.post(this.getStatusUrl(), request)) as Array<StatusResponse>;
 
     if (!statusResponse) {
       return this.setCallStatus();
@@ -229,9 +195,7 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     // stop link regeneration if any context in waitingApproval status
-    const waitingApprovalIndex = statuses.indexOf(
-      ContextStatus.WaitingForApproval,
-    );
+    const waitingApprovalIndex = statuses.indexOf(ContextStatus.WaitingForApproval);
     if (waitingApprovalIndex >= 0) {
       clearTimeout(this.refreshLinkTimeout);
 
@@ -257,11 +221,7 @@ export default class WidgetComponent extends BaseComponent {
     // remove expired items from contexts array
     for (let i = this.contexts.length; i--; ) {
       const item = this.contexts[i];
-      if (
-        statusResponse.findIndex(
-          (x: StatusResponse) => x.context === item.context,
-        ) < 0
-      ) {
+      if (statusResponse.findIndex((x: StatusResponse) => x.context === item.context) < 0) {
         this.contexts.splice(i, 1);
       }
     }
@@ -282,10 +242,7 @@ export default class WidgetComponent extends BaseComponent {
       return;
     }
 
-    this.refreshLinkTimeout = window.setTimeout(
-      () => this.refreshLinkOrQR(),
-      this.cacheExpiration / 2,
-    );
+    this.refreshLinkTimeout = window.setTimeout(() => this.refreshLinkOrQR(), this.cacheExpiration / 2);
   }
 
   private refreshLinkOrQR() {
@@ -368,10 +325,7 @@ export default class WidgetComponent extends BaseComponent {
     checkInput.parentNode!.insertBefore(label, checkInput.nextSibling);
 
     const infoIcon = document.createElement('span');
-    infoIcon.setAttribute(
-      'style',
-      'margin-left:8px;cursor:pointer;position:relative',
-    );
+    infoIcon.setAttribute('style', 'margin-left:8px;cursor:pointer;position:relative');
     infoIcon.setAttribute('ownid-info-button', '');
 
     infoIcon.innerHTML =
@@ -379,9 +333,7 @@ export default class WidgetComponent extends BaseComponent {
       '<div ownid-about-tooltip style="display: none;position: absolute;width: 220px;background: #FFFFFF;border: 1px solid #D5DADD;box-sizing: border-box;border-radius: 6px;font-size: 12px;line-height: 16px;padding: 16px 12px;bottom: 23px;left: -100px;cursor: default;">' +
       '<strong style="color: #0070F2">OwnID</strong> is a tool that allows you to register and login to the websites and apps you use everyday.</div>';
 
-    const aboutTooltip = infoIcon.querySelector(
-      '[ownid-about-tooltip]',
-    ) as HTMLElement;
+    const aboutTooltip = infoIcon.querySelector('[ownid-about-tooltip]') as HTMLElement;
 
     document.addEventListener('click', (event) => {
       const clickedInside = infoIcon.contains(event.target as Node);
@@ -391,24 +343,19 @@ export default class WidgetComponent extends BaseComponent {
     });
 
     infoIcon.querySelector('svg')!.addEventListener('click', () => {
-      aboutTooltip.style.display =
-        aboutTooltip.style.display === 'block' ? 'none' : 'block';
+      aboutTooltip.style.display = aboutTooltip.style.display === 'block' ? 'none' : 'block';
     });
 
     label.parentNode!.insertBefore(infoIcon, label.nextSibling);
 
-    const toggleElements = document.querySelectorAll(
-      checkInput.getAttribute('ownid-toggle-rel') as string,
-    );
+    const toggleElements = document.querySelectorAll(checkInput.getAttribute('ownid-toggle-rel') as string);
 
     checkInput.addEventListener('change', ({ target }) => {
       if ((target as HTMLInputElement).checked) {
         this.config.element.style.display = 'block';
 
         toggleElements.forEach((toggleElement) => {
-          const placeholder = document.createElement(
-            'ownid-toggle-placeholder',
-          );
+          const placeholder = document.createElement('ownid-toggle-placeholder');
           placeholder.style.display = 'none';
 
           toggleElement.parentNode!.insertBefore(placeholder, toggleElement);
@@ -417,12 +364,10 @@ export default class WidgetComponent extends BaseComponent {
       } else {
         this.config.element.style.display = 'none';
 
-        document
-          .querySelectorAll('ownid-toggle-placeholder')
-          .forEach((element, index) => {
-            element.parentNode!.insertBefore(toggleElements[index], element);
-            element.parentNode!.removeChild(element);
-          });
+        document.querySelectorAll('ownid-toggle-placeholder').forEach((element, index) => {
+          element.parentNode!.insertBefore(toggleElements[index], element);
+          element.parentNode!.removeChild(element);
+        });
       }
     });
 

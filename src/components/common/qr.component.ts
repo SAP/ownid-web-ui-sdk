@@ -54,14 +54,11 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
       ? `<div style="font-family:'SF Compact Text',sans-serif;font-weight:500;font-size:16px;line-height:24px;">${options.subtitle}</div>`
       : '';
 
-    const onlyTitleFx =
-      title && !subTitle ? '<div style="height: 25px"></div>' : '';
+    const onlyTitleFx = title && !subTitle ? '<div style="height: 25px"></div>' : '';
 
     wrapper.innerHTML = `
       <div style="display:flex;padding:15px;background:#fff;border-radius:10px">
-        <div class="own-id-qr-code" style="margin-right:25px">${this.generateQRCode(
-          options.href,
-        )}</div>
+        <div class="own-id-qr-code" style="margin-right:25px">${this.generateQRCode(options.href)}</div>
         <div style="display:flex;flex-direction:column;justify-content:space-between;flex:1;">
           ${onlyTitleFx}
           <div>${title}${subTitle}</div>
@@ -131,9 +128,7 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 
     this.spendingShown = true;
 
-    const pendingPane = this.ref.querySelector(
-      '[ownid-pending]',
-    ) as HTMLElement;
+    const pendingPane = this.ref.querySelector('[ownid-pending]') as HTMLElement;
     pendingPane.style.display = 'flex';
     const cancelBtn = pendingPane.querySelector('[ownid-btn="cancel"]');
     cancelBtn!.addEventListener('click', () => cancelCb());

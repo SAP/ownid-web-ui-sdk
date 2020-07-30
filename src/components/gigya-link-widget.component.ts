@@ -4,10 +4,7 @@ import RequestService from '../services/request.service';
 import ConfigurationService from '../services/configuration.service';
 
 export default class GigyaLinkWidgetComponent extends WidgetComponent {
-  constructor(
-    protected config: IWidgetConfig,
-    protected requestService: RequestService,
-  ) {
+  constructor(protected config: IWidgetConfig, protected requestService: RequestService) {
     super(config, requestService);
   }
 
@@ -23,10 +20,7 @@ export default class GigyaLinkWidgetComponent extends WidgetComponent {
             reject(new Error(errorText));
           }
 
-          await this.getContext(
-            config.URLPrefix || ConfigurationService.URLPrefix,
-            { jwt: data.id_token },
-          );
+          await this.getContext(config.URLPrefix || ConfigurationService.URLPrefix, { jwt: data.id_token });
 
           resolve();
         },
