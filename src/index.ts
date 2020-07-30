@@ -12,7 +12,5 @@ window.ownid = window.ownid instanceof OwnIDUiSdk ? window.ownid : new OwnIDUiSd
 if (window.ownidAsyncInit) {
   window.ownidAsyncInit();
 } else {
-  console.log(
-    'OwnID sdk is loaded, ownidAsyncInit function was not found',
-  );
+  console.log('OwnID sdk is loaded, ownidAsyncInit function was not found');
 }

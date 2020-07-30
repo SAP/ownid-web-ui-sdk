@@ -1,7 +1,7 @@
 export enum LogLevel {
   debug = 1,
   info = 2,
-  error = 3
+  error = 3,
 }
 
 export interface ILogger {
