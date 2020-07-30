@@ -7,12 +7,11 @@ interface IMyWindow extends Window {
 
 declare let window: IMyWindow;
 
-window.ownid = window.ownid instanceof OwnIDUiSdk ? window.ownid : new OwnIDUiSdk();
+window.ownid =
+  window.ownid instanceof OwnIDUiSdk ? window.ownid : new OwnIDUiSdk();
 
 if (window.ownidAsyncInit) {
   window.ownidAsyncInit();
 } else {
-  console.log(
-    'OwnID sdk is loaded, ownidAsyncInit function was not found',
-  );
+  console.log('OwnID sdk is loaded, ownidAsyncInit function was not found');
 }

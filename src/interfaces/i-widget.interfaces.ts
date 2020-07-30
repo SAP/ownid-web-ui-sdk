@@ -43,7 +43,7 @@ export interface IWidgetConfig {
 
 export interface IPartialConfig {
   language?: Languages;
-  data?: unknown,
+  data?: unknown;
   mobileTitle?: string;
   desktopTitle?: string;
   desktopSubtitle?: string;

@@ -1,5 +1,5 @@
 import { ILogger } from '../interfaces/i-logger.interfaces';
-import 'whatwg-fetch'
+import 'whatwg-fetch';
 
 export default class RequestService {
   constructor(private logger?: ILogger) {}

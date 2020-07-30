@@ -1,11 +1,16 @@
 import WidgetComponent from './components/widget.component';
 import RequestService from './services/request.service';
-import { IInitConfig, IWidgetConfig, WidgetType, } from './interfaces/i-widget.interfaces';
-import GigyaLinkWidgetComponent from "./components/gigya-link-widget.component";
+import {
+  IInitConfig,
+  IWidgetConfig,
+  WidgetType,
+} from './interfaces/i-widget.interfaces';
+import GigyaLinkWidgetComponent from './components/gigya-link-widget.component';
 import LoggerDecorator from './services/logger.service';
 import { LogLevel } from './interfaces/i-logger.interfaces';
 
-const possibleChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const possibleChars =
+  '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 export default class OwnIDUiSdk {
   config = {} as IInitConfig;
@@ -58,13 +63,16 @@ export default class OwnIDUiSdk {
 
   generateOwnIDPassword(length: number) {
     let result = '';
-    for (let i = length; i--;) {
+    for (let i = length; i--; ) {
       result += possibleChars[Math.floor(Math.random() * possibleChars.length)];
     }
     return result;
   }
 
-  async renderLinkGigya(config: IWidgetConfig, apiKey: string): Promise<GigyaLinkWidgetComponent | null> {
+  async renderLinkGigya(
+    config: IWidgetConfig,
+    apiKey: string,
+  ): Promise<GigyaLinkWidgetComponent | null> {
     if (!config.element) {
       // eslint-disable-next-line no-console
       console.error(`Parent element wasn't found on the page`);
@@ -82,16 +90,18 @@ export default class OwnIDUiSdk {
 
     return new Promise<GigyaLinkWidgetComponent | null>((resolve) => {
       const createWidgetResolve = () => {
-        resolve(new GigyaLinkWidgetComponent(
-          { ...this.config, ...config },
-          new RequestService()
-        ));
+        resolve(
+          new GigyaLinkWidgetComponent(
+            { ...this.config, ...config },
+            new RequestService(),
+          ),
+        );
       };
 
       if (!this.isGigyaAdded && !gigya) {
         this.isGigyaAdded = true;
-        const src = `https://cdns.gigya.com/js/gigya.js?apikey=${ apiKey }`;
-        const scriptElement = document.createElement('script')
+        const src = `https://cdns.gigya.com/js/gigya.js?apikey=${apiKey}`;
+        const scriptElement = document.createElement('script');
         scriptElement.src = src;
         scriptElement.addEventListener('load', createWidgetResolve);
         document.head.appendChild(scriptElement);

@@ -13,7 +13,8 @@ export interface ICommonComponent {
   ref: HTMLElement;
 }
 
-export default abstract class BaseCommonComponent<T> implements ICommonComponent {
+export default abstract class BaseCommonComponent<T>
+  implements ICommonComponent {
   protected constructor(options: T) {
     this.ref = this.render(options);
   }
