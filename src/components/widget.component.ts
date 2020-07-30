@@ -30,8 +30,10 @@ export default class WidgetComponent extends BaseComponent {
 
   private postMessagesHandlerAttached = false;
 
+  private isDestroyed = false;
+
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  private webappResolver: (value?: any) => void = () => {};
+  private webappResolver: (value?: any) => void = () => { };
 
   constructor(
     protected config: IWidgetConfig,
@@ -157,8 +159,8 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private async callStatus() {
-    if (this.contexts.length <= 0) {
-      return () => {};
+    if (this.isDestroyed || this.contexts.length <= 0) {
+      return () => { };
     }
 
     const request = this.contexts.map(({ context, nonce }) => ({
@@ -219,7 +221,7 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     // remove expired items from contexts array
-    for (let i = this.contexts.length; i--; ) {
+    for (let i = this.contexts.length; i--;) {
       const item = this.contexts[i];
       if (statusResponse.findIndex((x: StatusResponse) => x.context === item.context) < 0) {
         this.contexts.splice(i, 1);
@@ -264,6 +266,7 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   public destroy(): void {
+    this.isDestroyed = true;
     window.removeEventListener('message', this.onMessage);
     clearTimeout(this.statusTimeout);
     clearTimeout(this.refreshLinkTimeout);
