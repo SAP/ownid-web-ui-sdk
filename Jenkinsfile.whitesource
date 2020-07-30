@@ -23,6 +23,7 @@ pipeline {
           // sh 'nvm --version'
           // sh 'node --version'
           nvm('v10.18.1'){
+            sh 'npm install yarn'
             sh 'yarn install'
             sh 'whitesource yarn'
           }
