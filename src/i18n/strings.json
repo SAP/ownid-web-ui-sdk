@@ -2,32 +2,56 @@
   "login": {
     "mobileTitle": "Instant Sign In",
     "desktopTitle": "Instant Sign In",
-    "desktopSubtitle": "Use your phone to scan for passwordless sign in."
+    "desktopSubtitle": "Use your phone to scan for passwordless sign in.",
+    "pendingMessage": "Logging in...",
+    "pendingButton": "Cancel",
+    "doneMessage": ""
   },
   "login-partial": {
     "mobileTitle": "Instant Sign In",
     "desktopTitle": "Instant Sign In",
-    "desktopSubtitle": "Use your phone to scan for passwordless sign in."
+    "desktopSubtitle": "Use your phone to scan for passwordless sign in.",
+    "pendingMessage": "Logging in...",
+    "pendingButton": "Cancel",
+    "doneMessage": ""
   },
   "register": {
     "mobileTitle": "Register without a password",
     "desktopTitle": "Skip the password with OwnID",
-    "desktopSubtitle": "Use your phone to scan and complete a passwordless registration."
+    "desktopSubtitle": "Use your phone to scan and complete a passwordless registration.",
+    "pendingMessage": "Finish registering on your phone",
+    "pendingButton": "Cancel",
+    "doneMessage": ""
   },
   "register-partial": {
     "mobileTitle": "Register without a password",
     "desktopTitle": "Scan this QR to complete your registration.",
-    "desktopSubtitle": ""
+    "desktopSubtitle": "",
+    "pendingMessage": "Loading...",
+    "pendingButton": "Cancel",
+    "doneMessage": "Skip the password enabled.<br>Finish registering..."
   },
   "link": {
     "mobileTitle": "Enable Instant Login",
     "desktopTitle": "Enable Instant Login",
-    "desktopSubtitle": "Use your phone to scan for enabling passwordless sign in."
+    "desktopSubtitle": "Use your phone to scan for enabling passwordless sign in.",
+    "pendingMessage": "Linking your account...",
+    "pendingButton": "Cancel",
+    "doneMessage": ""
   },
   "recover": {
     "mobileTitle": "Recover account without a password",
     "desktopTitle": "Skip the password with OwnID",
-    "desktopSubtitle": "Use your phone to scan and complete a passwordless account recover."
+    "desktopSubtitle": "Use your phone to scan and complete a passwordless account recover.",
+    "pendingMessage": "Linking your account...",
+    "pendingButton": "Cancel",
+    "doneMessage": ""
+  },
+  "verification": {
+    "title": "Verification Code",
+    "message": "Does the code on your device match this one?",
+    "yesButton": "Yes",
+    "noButton": "No"
   },
   "errors": {
     "qr": "You must scan QR code before you proceed",

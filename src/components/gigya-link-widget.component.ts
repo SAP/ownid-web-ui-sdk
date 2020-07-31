@@ -8,7 +8,7 @@ export default class GigyaLinkWidgetComponent extends WidgetComponent {
     super(config, requestService);
   }
 
-  protected init(config: IWidgetConfig) {
+  protected init(config: IWidgetConfig): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -16,6 +16,7 @@ export default class GigyaLinkWidgetComponent extends WidgetComponent {
         callback: async (data: IGetJwtResponse) => {
           if (data.errorCode !== 0) {
             const errorText = `Gigya.GetJWT -> ${data.errorCode}: ${data.errorMessage}`;
+            // eslint-disable-next-line no-console
             console.error(errorText);
             reject(new Error(errorText));
           }

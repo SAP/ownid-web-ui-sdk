@@ -1,11 +1,18 @@
 import Qr from "./qr.component";
+import { WidgetType } from '../../interfaces/i-widget.interfaces';
 
 const parent = document.createElement('div');
 document.body.appendChild(parent);
 
 describe('ctor -> Render', () => {
   it('should create qr(button) element with options', () => {
-    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
+    const options = {
+      href: 'http://test-url',
+      title: 'title',
+      subtitle: 'subtitle',
+      lang: 'en',
+      type: WidgetType.Register
+    };
     const sut = new Qr(options);
 
     sut.appendToParent(parent);
@@ -20,7 +27,13 @@ describe('ctor -> Render', () => {
   });
 
   it('should create qr element empty', () => {
-    const options = { href: 'javascript:alert("hacked!!")', title: 'title', subtitle: 'subtitle' };
+    const options = {
+      href: 'javascript:alert("hacked!!")',
+      title: 'title',
+      subtitle: 'subtitle',
+      lang: 'en',
+      type: WidgetType.Register
+    };
     const sut = new Qr(options);
 
     sut.appendToParent(parent);
@@ -34,7 +47,13 @@ describe('ctor -> Render', () => {
 
 describe('update', () => {
   it('do nothing if wrapper is undefined', () => {
-    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
+    const options = {
+      href: 'http://test-url',
+      title: 'title',
+      subtitle: 'subtitle',
+      lang: 'en',
+      type: WidgetType.Register
+    };
     const sut: any = new Qr(options);
     sut.ref = null;
     sut.generateQRCode = jest.fn();
@@ -45,7 +64,13 @@ describe('update', () => {
   });
 
   it('do nothing if qrCode element is undefined', () => {
-    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
+    const options = {
+      href: 'http://test-url',
+      title: 'title',
+      subtitle: 'subtitle',
+      lang: 'en',
+      type: WidgetType.Register
+    };
     const sut: any = new Qr(options);
 
     sut.generateQRCode = jest.fn();
@@ -57,7 +82,13 @@ describe('update', () => {
   });
 
   it('do nothing if not valid url', () => {
-    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
+    const options = {
+      href: 'http://test-url',
+      title: 'title',
+      subtitle: 'subtitle',
+      lang: 'en',
+      type: WidgetType.Register
+    };
     const sut: any = new Qr(options);
 
     sut.generateQRCode = jest.fn();
@@ -69,7 +100,13 @@ describe('update', () => {
   });
 
   it('generate new qr code', () => {
-    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
+    const options = {
+      href: 'http://test-url',
+      title: 'title',
+      subtitle: 'subtitle',
+      lang: 'en',
+      type: WidgetType.Register
+    };
     const sut: any = new Qr(options);
 
     sut.generateQRCode = jest.fn().mockReturnValue('some-qr-code');
@@ -82,7 +119,13 @@ describe('update', () => {
 
 describe('Destroy()', () => {
   it('should remove qr(button) element from document', () => {
-    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
+    const options = {
+      href: 'http://test-url',
+      title: 'title',
+      subtitle: 'subtitle',
+      lang: 'en',
+      type: WidgetType.Register
+    };
     const qr = new Qr(options);
     qr.appendToParent(parent);
     qr.destroy();
@@ -92,7 +135,13 @@ describe('Destroy()', () => {
 
 describe('showSecurityCheck', () => {
   it('should remove qr(button) element from document', () => {
-    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
+    const options = {
+      href: 'http://test-url',
+      title: 'title',
+      subtitle: 'subtitle',
+      lang: 'en',
+      type: WidgetType.Register
+    };
     const qr = new Qr(options);
     qr.appendToParent(parent);
 
@@ -116,7 +165,13 @@ describe('showSecurityCheck', () => {
 
 describe('showPending', () => {
   it('should set display style for pending element', () => {
-    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
+    const options = {
+      href: 'http://test-url',
+      title: 'title',
+      subtitle: 'subtitle',
+      lang: 'en',
+      type: WidgetType.Register
+    };
     const qr: any = new Qr(options);
     qr.appendToParent(parent);
 
@@ -130,11 +185,20 @@ describe('showPending', () => {
 
     const el: HTMLElement | null = qr.ref.querySelector('[ownid-pending]')
 
+    const cancelBtn = el!.querySelector('[ownid-btn="cancel"]') as HTMLElement;
+    cancelBtn.click();
+
     expect(el!.style.display).toEqual('flex');
   });
 
   it('should not set display style for pending element', () => {
-    const options = { href: 'https://test-url', title: 'title', subtitle: 'subtitle' };
+    const options = {
+      href: 'https://test-url',
+      title: '',
+      subtitle: '',
+      lang: 'en',
+      type: WidgetType.Register
+    };
     const qr = new Qr(options);
     qr.appendToParent(parent);
 
@@ -148,8 +212,14 @@ describe('showPending', () => {
 
 describe('showDone', () => {
   it('should set display style for done element', () => {
-    const options = { href: 'http://test-url', title: 'title', subtitle: 'subtitle' };
-    const qr: any = new Qr(options);
+    const options = {
+      href: 'http://test-url',
+      title: 'title',
+      subtitle: 'subtitle',
+      lang: 'en',
+      type: WidgetType.Register
+    };
+    const qr = new Qr(options);
     qr.appendToParent(parent);
 
     qr.showDone();
@@ -157,5 +227,25 @@ describe('showDone', () => {
     const el: HTMLElement | null = qr.ref.querySelector('[ownid-done]')
 
     expect(el!.style.display).toEqual('flex');
+  });
+
+  it('should do nothing if there no done pane', () => {
+    const options = {
+      href: 'http://test-url',
+      title: 'title',
+      subtitle: 'subtitle',
+      lang: 'en',
+      type: WidgetType.Register
+    };
+    const qr = new Qr(options);
+    qr.appendToParent(parent);
+
+    qr.showSecurityCheck(1234, () => {}, () => {});
+
+    qr.showDone();
+
+    const el: HTMLElement | null = qr.ref.querySelector('[ownid-done]')
+
+    expect(el).toEqual(null);
   });
 });

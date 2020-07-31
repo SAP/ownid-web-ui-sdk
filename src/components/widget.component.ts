@@ -33,7 +33,7 @@ export default class WidgetComponent extends BaseComponent {
   private isDestroyed = false;
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  private webappResolver: (value?: any) => void = () => { };
+  private webappResolver: (value?: any) => void = () => {};
 
   constructor(
     protected config: IWidgetConfig,
@@ -122,12 +122,13 @@ export default class WidgetComponent extends BaseComponent {
         return;
       }
       const type = this.config.partial ? `${this.config.type}-partial` : this.config.type;
-      const desktopTitle = this.config.desktopTitle || TranslationService.texts[lang][type].desktopTitle;
-      const desktopSubtitle = this.config.desktopTitle || TranslationService.texts[lang][type].desktopSubtitle;
+
       this.qr = new Qr({
         href: this.getStartUrl(),
-        title: desktopTitle,
-        subtitle: desktopSubtitle,
+        title: this.config.desktopTitle || TranslationService.texts[lang][type].desktopTitle,
+        subtitle: this.config.desktopSubtitle || TranslationService.texts[lang][type].desktopSubtitle,
+        type,
+        lang,
       });
       this.addChild(this.qr);
 
@@ -160,7 +161,7 @@ export default class WidgetComponent extends BaseComponent {
 
   private async callStatus() {
     if (this.isDestroyed || this.contexts.length <= 0) {
-      return () => { };
+      return () => {};
     }
 
     const request = this.contexts.map(({ context, nonce }) => ({
@@ -177,7 +178,10 @@ export default class WidgetComponent extends BaseComponent {
     const statuses = statusResponse.map((x: StatusResponse) => x.status);
     const finishedIndex = statuses.indexOf(ContextStatus.Finished);
     if (finishedIndex >= 0) {
-      this.qr?.showDone();
+      if (this.config.partial && this.config.type === WidgetType.Register && this.qr) {
+        this.qr.showDone();
+      }
+
       this.contexts = [];
       this.link?.disableButton();
 
@@ -221,7 +225,7 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     // remove expired items from contexts array
-    for (let i = this.contexts.length; i--;) {
+    for (let i = this.contexts.length; i--; ) {
       const item = this.contexts[i];
       if (statusResponse.findIndex((x: StatusResponse) => x.context === item.context) < 0) {
         this.contexts.splice(i, 1);
@@ -289,7 +293,7 @@ export default class WidgetComponent extends BaseComponent {
     }
   };
 
-  private attachPostMessagesHandler() {
+  private attachPostMessagesHandler(): void {
     if (this.postMessagesHandlerAttached) {
       return;
     }
@@ -299,7 +303,7 @@ export default class WidgetComponent extends BaseComponent {
     window.addEventListener('message', this.onMessage, false);
   }
 
-  private reCreateWidget() {
+  private reCreateWidget(): void {
     this.contexts = [];
     this.widgetReady = this.init(this.config).then(() => {
       this.destroy();
@@ -313,7 +317,7 @@ export default class WidgetComponent extends BaseComponent {
     });
   }
 
-  private addInfoIcon(checkInput: HTMLElement) {
+  private addInfoIcon(checkInput: HTMLElement): void {
     if (!checkInput.id) {
       // eslint-disable-next-line no-param-reassign
       checkInput.id = `ownid-toggle-check-${Math.random()}`;
@@ -378,7 +382,7 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  private callOnSuccess(finalResponse: any) {
+  private callOnSuccess(finalResponse: any): void {
     switch (this.config.type) {
       case WidgetType.Link:
         return this.config.onLink && this.config.onLink(finalResponse);
@@ -392,7 +396,7 @@ export default class WidgetComponent extends BaseComponent {
     }
   }
 
-  public async openWebapp() {
+  public async openWebapp(): Promise<unknown> {
     window.open(this.getStartUrl());
 
     this.setCallStatus();
@@ -406,7 +410,7 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  private apiReply(response: any) {
+  private apiReply(response: any): void {
     this.webappResolver({
       error: null,
       data: response,

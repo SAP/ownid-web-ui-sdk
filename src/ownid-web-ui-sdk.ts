@@ -42,7 +42,7 @@ export default class OwnIDUiSdk {
     );
   }
 
-  async getOwnIDPayload(widget: WidgetComponent) {
+  async getOwnIDPayload(widget: WidgetComponent): Promise<unknown> {
     if (widget.finalResponse) {
       return { error: null, data: widget.finalResponse };
     }
@@ -54,7 +54,7 @@ export default class OwnIDUiSdk {
     return widget.openWebapp();
   }
 
-  generateOwnIDPassword(length: number) {
+  generateOwnIDPassword(length: number): string {
     let result = '';
     for (let i = length; i--; ) {
       result += possibleChars[Math.floor(Math.random() * possibleChars.length)];
@@ -74,6 +74,7 @@ export default class OwnIDUiSdk {
     const { gigya } = window;
 
     if (!apiKey && !gigya) {
+      // eslint-disable-next-line no-console
       console.error(`Gigya apiKey should be provided`);
       return null;
     }

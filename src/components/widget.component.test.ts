@@ -41,16 +41,18 @@ describe('widget component', () => {
         });
       }),
     ).mockReturnValue(new Promise(resolve => {
-      resolve([{
-        "status": 1,
-        "context": "context1",
-        "payload": null
-      },
-      {
-        "status": 1,
-        "context": "context2",
-        "payload": null
-      }]);
+      resolve([
+        {
+          "status": 1,
+          "context": "context1",
+          "payload": null
+        },
+        {
+          "status": 1,
+          "context": "context2",
+          "payload": null
+        },
+      ]);
     }));
   });
 
@@ -115,8 +117,7 @@ describe('widget component', () => {
 
   it('should render partial in desktop mode', () => {
     return new Promise(resolve => {
-      navigator.userAgent =
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
+      navigator.userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
 
       const toggleElement = document.createElement('span');
       const parent = document.createElement('div');
@@ -135,6 +136,8 @@ describe('widget component', () => {
       );
 
       sut.widgetReady.then(() => {
+        toggleElement.click();
+
         expect(sut).not.toBeNull();
         expect(parent.children.length).toBe(1);
         expect(parent.children[0].tagName.toLowerCase()).toEqual('div');
@@ -194,7 +197,7 @@ describe('widget component', () => {
         true
       );
       sut.widgetReady.then(() => {
-        expect(console.warn).toBeCalledWith(`Desktop rendering is disabled for ${type} widget type`);
+        expect(console.warn).toBeCalledWith(`Desktop rendering is disabled for ${ type } widget type`);
         expect(parent.children.length).toBe(0);
         resolve();
       });
@@ -226,7 +229,7 @@ describe('widget component', () => {
         true
       );
       sut.widgetReady.then(() => {
-        expect(console.warn).toBeCalledWith(`Mobile rendering is disabled for ${type} widget type`);
+        expect(console.warn).toBeCalledWith(`Mobile rendering is disabled for ${ type } widget type`);
         expect(parent.children.length).toBe(0);
         resolve();
       });

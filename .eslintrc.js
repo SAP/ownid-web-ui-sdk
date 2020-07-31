@@ -44,6 +44,7 @@ module.exports = {
     'promise/always-return': 'off',
     'unicorn/no-null': 'off',
     '@typescript-eslint/ban-types': 'warn',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     'no-plusplus': 'off',
   },
   settings: {

@@ -15,6 +15,7 @@ export default class LinkButton extends BaseCommonComponent<LinkButtonOptions> {
 
   protected render(options: LinkButtonOptions): HTMLElement {
     if (!validateUrl(options.href)) {
+      // eslint-disable-next-line no-console
       console.error('URL validation failed');
       return document.createElement('div');
     }
@@ -36,6 +37,7 @@ export default class LinkButton extends BaseCommonComponent<LinkButtonOptions> {
 
   public update(href: string): void {
     if (!validateUrl(href)) {
+      // eslint-disable-next-line no-console
       console.error('URL validation failed');
       return;
     }
@@ -43,11 +45,11 @@ export default class LinkButton extends BaseCommonComponent<LinkButtonOptions> {
     this.options.href = href;
   }
 
-  public disableButton() {
+  public disableButton(): void {
     this.disabled = true;
   }
 
-  private openWindow() {
+  private openWindow(): void {
     if (this.disabled) {
       return;
     }
