@@ -78,7 +78,10 @@
     "ts-node": "~8.10.2",
     "tslint": "~6.1.2",
     "typedoc": "^0.17.8",
-    "typescript": "3.9.7"
+    "typescript": "3.9.7",
+    "dot-prop": "5.1.1",
+    "serialize-javascript": "3.1.0",
+    "lodash": "4.17.19"
   },
   "husky": {
     "hooks": {
