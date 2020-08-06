@@ -235,6 +235,28 @@ describe('widget component', () => {
       });
     });
   });
+
+  it('should render and add linked widget if we receive accountUrl', () => {
+    navigator.userAgent =
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
+
+    const parent = document.createElement('div');
+    window.clearTimeout = jest.fn();
+
+    const sut: any = new WidgetComponent(
+      {
+        element: parent,
+        type: WidgetType.Link,
+        URLPrefix: 'url',
+      },
+      requestService,
+    );
+
+    sut.contexts = [{ expiration: 0, url: 'accountUrl' }]
+    sut.render();
+
+    expect(sut.linked).not.toBeFalsy();
+  });
 });
 
 describe('callStatus', () => {

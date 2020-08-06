@@ -7,6 +7,7 @@ import RequestService from '../services/request.service';
 import { IPartialConfig, IWidgetConfig, WidgetType } from '../interfaces/i-widget.interfaces';
 import TranslationService from '../services/translation.service';
 import StatusResponse, { ContextStatus } from './status-response';
+import LinkedWidget from './common/linked.component';
 
 export default class WidgetComponent extends BaseComponent {
   widgetReady: Promise<void>;
@@ -24,6 +25,8 @@ export default class WidgetComponent extends BaseComponent {
 
   private link: LinkButton | undefined;
 
+  private linked: LinkedWidget | undefined;
+
   private cacheExpiration: number | undefined;
 
   private contexts: IContextRS[] = [];
@@ -33,7 +36,8 @@ export default class WidgetComponent extends BaseComponent {
   private isDestroyed = false;
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  private webappResolver: (value?: any) => void = () => {};
+  private webappResolver: (value?: any) => void = () => {
+  };
 
   constructor(
     protected config: IWidgetConfig,
@@ -87,15 +91,21 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private render() {
+    if (this.config.type === WidgetType.Link && this.contexts.find(({ context }) => !context)) {
+      this.linked = new LinkedWidget({ href: this.getStartUrl() });
+      this.addChild(this.linked);
+      return;
+    }
+
     const lang = this.config.language || ConfigurationService.defaultLanguage;
     if (this.isMobile()) {
       if (this.disableMobile) {
         // eslint-disable-next-line no-console
-        console.warn(`Mobile rendering is disabled for ${this.config.type} widget type`);
+        console.warn(`Mobile rendering is disabled for ${ this.config.type } widget type`);
         return;
       }
 
-      const type = this.config.partial ? `${this.config.type}-partial` : this.config.type;
+      const type = this.config.partial ? `${ this.config.type }-partial` : this.config.type;
       const mobileTitle = this.config.mobileTitle || TranslationService.texts[lang][type].mobileTitle;
       this.link = new LinkButton({
         href: this.getStartUrl(),
@@ -118,10 +128,10 @@ export default class WidgetComponent extends BaseComponent {
     } else {
       if (this.disableDesktop) {
         // eslint-disable-next-line no-console
-        console.warn(`Desktop rendering is disabled for ${this.config.type} widget type`);
+        console.warn(`Desktop rendering is disabled for ${ this.config.type } widget type`);
         return;
       }
-      const type = this.config.partial ? `${this.config.type}-partial` : this.config.type;
+      const type = this.config.partial ? `${ this.config.type }-partial` : this.config.type;
 
       this.qr = new Qr({
         href: this.getStartUrl(),
@@ -143,13 +153,13 @@ export default class WidgetComponent extends BaseComponent {
   private getStatusUrl() {
     const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
-    return `${prefix}${ConfigurationService.statusUrl}`;
+    return `${ prefix }${ ConfigurationService.statusUrl }`;
   }
 
   private getApproveUrl(context: string) {
     const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
-    return `${prefix}${ConfigurationService.approveUrl.replace(':context', context)}`;
+    return `${ prefix }${ ConfigurationService.approveUrl.replace(':context', context) }`;
   }
 
   private setCallStatus() {
@@ -161,7 +171,8 @@ export default class WidgetComponent extends BaseComponent {
 
   private async callStatus() {
     if (this.isDestroyed || this.contexts.length <= 0) {
-      return () => {};
+      return () => {
+      };
     }
 
     const request = this.contexts.map(({ context, nonce }) => ({
@@ -225,7 +236,7 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     // remove expired items from contexts array
-    for (let i = this.contexts.length; i--; ) {
+    for (let i = this.contexts.length; i--;) {
       const item = this.contexts[i];
       if (statusResponse.findIndex((x: StatusResponse) => x.context === item.context) < 0) {
         this.contexts.splice(i, 1);
@@ -320,7 +331,7 @@ export default class WidgetComponent extends BaseComponent {
   private addInfoIcon(checkInput: HTMLElement): void {
     if (!checkInput.id) {
       // eslint-disable-next-line no-param-reassign
-      checkInput.id = `ownid-toggle-check-${Math.random()}`;
+      checkInput.id = `ownid-toggle-check-${ Math.random() }`;
     }
 
     const lang = this.config.language || ConfigurationService.defaultLanguage;
