@@ -4,9 +4,10 @@ import Qr from './common/qr.component';
 import ConfigurationService from '../services/configuration.service';
 import { IContextRS } from '../interfaces/i-context.interfaces';
 import RequestService from '../services/request.service';
-import { IPartialConfig, IWidgetConfig, WidgetType, } from '../interfaces/i-widget.interfaces';
+import { IPartialConfig, IWidgetConfig, WidgetType } from '../interfaces/i-widget.interfaces';
 import TranslationService from '../services/translation.service';
 import StatusResponse, { ContextStatus } from './status-response';
+import LinkedWidget from './common/linked.component';
 
 export default class WidgetComponent extends BaseComponent {
   widgetReady: Promise<void>;
@@ -24,11 +25,15 @@ export default class WidgetComponent extends BaseComponent {
 
   private link: LinkButton | undefined;
 
+  private linked: LinkedWidget | undefined;
+
   private cacheExpiration: number | undefined;
 
   private contexts: IContextRS[] = [];
 
   private postMessagesHandlerAttached = false;
+
+  private isDestroyed = false;
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   private webappResolver: (value?: any) => void = () => {
@@ -42,30 +47,29 @@ export default class WidgetComponent extends BaseComponent {
   ) {
     super(config);
 
-    this.widgetReady = this.init(config).then(() => {
-      this.render();
+    this.widgetReady = this.init(config).then(
+      () => {
+        this.render();
 
-      this.setRefreshLinkOrQR();
+        this.setRefreshLinkOrQR();
 
-      if (!this.isMobile()) {
-        this.setCallStatus();
-      }
+        if (!this.isMobile()) {
+          this.setCallStatus();
+        }
 
-      if (config.toggleElement) {
-        this.addInfoIcon(config.toggleElement);
-      }
-
-    }, (error: Error) => {
-      // eslint-disable-next-line no-console
-      console.error(error.message);
-    });
+        if (config.toggleElement) {
+          this.addInfoIcon(config.toggleElement);
+        }
+      },
+      (error: Error) => {
+        // eslint-disable-next-line no-console
+        console.error(error.message);
+      },
+    );
   }
 
   protected init(config: IWidgetConfig): Promise<void> {
-    return this.getContext(
-      config.URLPrefix || ConfigurationService.URLPrefix,
-      config.data,
-    );
+    return this.getContext(config.URLPrefix || ConfigurationService.URLPrefix, config.data);
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -74,7 +78,7 @@ export default class WidgetComponent extends BaseComponent {
       type: this.config.type || WidgetType.Register,
       data,
       qr: !this.isMobile(),
-      partial: !!this.config.partial
+      partial: !!this.config.partial,
     };
     const contextResponse = await this.requestService.post(contextUrl, contextData);
 
@@ -87,20 +91,22 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private render() {
+    if (this.config.type === WidgetType.Link && this.contexts.find(({ context }) => !context)) {
+      this.linked = new LinkedWidget({ href: this.getStartUrl() });
+      this.addChild(this.linked);
+      return;
+    }
+
     const lang = this.config.language || ConfigurationService.defaultLanguage;
     if (this.isMobile()) {
       if (this.disableMobile) {
         // eslint-disable-next-line no-console
-        console.warn(
-          `Mobile rendering is disabled for ${ this.config.type } widget type`,
-        );
+        console.warn(`Mobile rendering is disabled for ${ this.config.type } widget type`);
         return;
       }
 
       const type = this.config.partial ? `${ this.config.type }-partial` : this.config.type;
-      const mobileTitle =
-        this.config.mobileTitle ||
-        TranslationService.texts[lang][type].mobileTitle;
+      const mobileTitle = this.config.mobileTitle || TranslationService.texts[lang][type].mobileTitle;
       this.link = new LinkButton({
         href: this.getStartUrl(),
         title: mobileTitle,
@@ -108,7 +114,7 @@ export default class WidgetComponent extends BaseComponent {
 
       this.link.attachHandler('click', () => {
         if (this.finalResponse) {
-          this.callOnSuccess(this.finalResponse)
+          this.callOnSuccess(this.finalResponse);
         }
 
         this.setCallStatus();
@@ -122,24 +128,19 @@ export default class WidgetComponent extends BaseComponent {
     } else {
       if (this.disableDesktop) {
         // eslint-disable-next-line no-console
-        console.warn(
-          `Desktop rendering is disabled for ${ this.config.type } widget type`,
-        );
+        console.warn(`Desktop rendering is disabled for ${ this.config.type } widget type`);
         return;
       }
       const type = this.config.partial ? `${ this.config.type }-partial` : this.config.type;
-      const desktopTitle =
-        this.config.desktopTitle ||
-        TranslationService.texts[lang][type].desktopTitle;
-      const desktopSubtitle =
-        this.config.desktopTitle ||
-        TranslationService.texts[lang][type].desktopSubtitle;
+
       this.qr = new Qr({
         href: this.getStartUrl(),
-        title: desktopTitle,
-        subtitle: desktopSubtitle,
-      })
-      this.addChild(this.qr,);
+        title: this.config.desktopTitle || TranslationService.texts[lang][type].desktopTitle,
+        subtitle: this.config.desktopSubtitle || TranslationService.texts[lang][type].desktopSubtitle,
+        type,
+        lang,
+      });
+      this.addChild(this.qr);
 
       this.returnError = TranslationService.texts[lang].errors.qr;
     }
@@ -150,17 +151,13 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private getStatusUrl() {
-    const prefix = (
-      this.config.URLPrefix || ConfigurationService.URLPrefix
-    ).replace(/\/+$/, '');
+    const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
     return `${ prefix }${ ConfigurationService.statusUrl }`;
   }
 
   private getApproveUrl(context: string) {
-    const prefix = (
-      this.config.URLPrefix || ConfigurationService.URLPrefix
-    ).replace(/\/+$/, '');
+    const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
     return `${ prefix }${ ConfigurationService.approveUrl.replace(':context', context) }`;
   }
@@ -173,13 +170,16 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private async callStatus() {
-    if (this.contexts.length <= 0) {
+    if (this.isDestroyed || this.contexts.length <= 0) {
       return () => {
       };
     }
 
-    const request = this.contexts.map(({ context, nonce }) => ({ context, nonce }));
-    const statusResponse = await this.requestService.post(this.getStatusUrl(), request) as Array<StatusResponse>;
+    const request = this.contexts.map(({ context, nonce }) => ({
+      context,
+      nonce,
+    }));
+    const statusResponse = (await this.requestService.post(this.getStatusUrl(), request)) as Array<StatusResponse>;
 
     if (!statusResponse) {
       return this.setCallStatus();
@@ -189,7 +189,10 @@ export default class WidgetComponent extends BaseComponent {
     const statuses = statusResponse.map((x: StatusResponse) => x.status);
     const finishedIndex = statuses.indexOf(ContextStatus.Finished);
     if (finishedIndex >= 0) {
-      this.qr?.showDone();
+      if (this.config.partial && this.config.type === WidgetType.Register && this.qr) {
+        this.qr.showDone();
+      }
+
       this.contexts = [];
       this.link?.disableButton();
 
@@ -220,13 +223,13 @@ export default class WidgetComponent extends BaseComponent {
         const yesCb = () => {
           this.sendApprove(true, contextRS);
           this.qr?.showPending(() => this.reCreateWidget());
-        }
+        };
 
         const noCb = () => {
           this.sendApprove(false, contextRS);
           this.qr?.showPending();
           this.reCreateWidget();
-        }
+        };
 
         this.qr.showSecurityCheck(pin, yesCb, noCb);
       }
@@ -244,7 +247,11 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private sendApprove(approved: boolean, { context, nonce }: IContextRS) {
-    this.requestService.post(this.getApproveUrl(context), { context, nonce, approved });
+    this.requestService.post(this.getApproveUrl(context), {
+      context,
+      nonce,
+      approved,
+    });
   }
 
   private setRefreshLinkOrQR() {
@@ -252,59 +259,62 @@ export default class WidgetComponent extends BaseComponent {
       return;
     }
 
-    this.refreshLinkTimeout = window.setTimeout(
-      () => this.refreshLinkOrQR(),
-      this.cacheExpiration / 2,
-    )
+    this.refreshLinkTimeout = window.setTimeout(() => this.refreshLinkOrQR(), this.cacheExpiration / 2);
   }
 
   private refreshLinkOrQR() {
-    this.init(this.config).then(() => {
-      if (this.qr) {
-        this.qr.update(this.getStartUrl());
-      } else if (this.link) {
-        this.link.update(this.getStartUrl());
-      }
+    this.init(this.config).then(
+      () => {
+        if (this.qr) {
+          this.qr.update(this.getStartUrl());
+        } else if (this.link) {
+          this.link.update(this.getStartUrl());
+        }
 
-      this.setRefreshLinkOrQR();
-    }, (error: Error) => {
-      // eslint-disable-next-line no-console
-      console.error(error.message);
-    });
+        this.setRefreshLinkOrQR();
+      },
+      (error: Error) => {
+        // eslint-disable-next-line no-console
+        console.error(error.message);
+      },
+    );
   }
 
   public destroy(): void {
+    this.isDestroyed = true;
+    window.removeEventListener('message', this.onMessage);
     clearTimeout(this.statusTimeout);
     clearTimeout(this.refreshLinkTimeout);
-    this.elements.forEach(element => element.destroy());
+    this.elements.forEach((element) => element.destroy());
   }
 
   public update(config: IPartialConfig): void {
-    this.elements.forEach(element => element.destroy());
+    this.elements.forEach((element) => element.destroy());
     this.config = { ...this.config, ...config };
     this.render();
   }
 
-  private attachPostMessagesHandler() {
-    if (!this.postMessagesHandlerAttached) {
+  private onMessage = (message: MessageEvent) => {
+    if (message.data === 'ownid postMessages enabled') {
+      clearTimeout(this.statusTimeout);
+    }
+
+    if (message.data === 'ownid success') {
+      this.callStatus();
+    }
+  };
+
+  private attachPostMessagesHandler(): void {
+    if (this.postMessagesHandlerAttached) {
       return;
     }
 
     this.postMessagesHandlerAttached = true;
 
-    window.addEventListener('message', (message: MessageEvent) => {
-
-      if (message.data === 'ownid postMessages enabled') {
-        clearTimeout(this.statusTimeout);
-      }
-
-      if (message.data === 'ownid success') {
-        this.callStatus();
-      }
-    }, false);
+    window.addEventListener('message', this.onMessage, false);
   }
 
-  private reCreateWidget() {
+  private reCreateWidget(): void {
     this.contexts = [];
     this.widgetReady = this.init(this.config).then(() => {
       this.destroy();
@@ -318,7 +328,7 @@ export default class WidgetComponent extends BaseComponent {
     });
   }
 
-  private addInfoIcon(checkInput: HTMLElement) {
+  private addInfoIcon(checkInput: HTMLElement): void {
     if (!checkInput.id) {
       // eslint-disable-next-line no-param-reassign
       checkInput.id = `ownid-toggle-check-${ Math.random() }`;
@@ -328,7 +338,7 @@ export default class WidgetComponent extends BaseComponent {
     const label = document.createElement('label');
     label.setAttribute('for', checkInput.id);
     label.setAttribute('class', 'ownid-label ownid-toggle');
-    label.textContent = TranslationService.texts[lang].common.labelText
+    label.textContent = TranslationService.texts[lang].common.labelText;
 
     checkInput.parentNode!.insertBefore(label, checkInput.nextSibling);
 
@@ -336,8 +346,8 @@ export default class WidgetComponent extends BaseComponent {
     infoIcon.setAttribute('style', 'margin-left:8px;cursor:pointer;position:relative');
     infoIcon.setAttribute('ownid-info-button', '');
 
-
-    infoIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#354a5f"><path d="M.333 7A6.67 6.67 0 0 1 7 .333 6.67 6.67 0 0 1 13.667 7 6.67 6.67 0 0 1 7 13.667 6.67 6.67 0 0 1 .333 7zM7 1.667C4.054 1.667 1.667 4.055 1.667 7S4.054 12.334 7 12.334 12.333 9.946 12.333 7 9.945 1.667 7 1.667zm0 3.667a1 1 0 1 0 0-2 1 1 0 1 0 0 2zm0 1.333c.368 0 .667.298.667.667V10c0 .368-.298.667-.667.667s-.667-.298-.667-.667V7.334c0-.368.298-.667.667-.667z"/></svg>' +
+    infoIcon.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#354a5f"><path d="M.333 7A6.67 6.67 0 0 1 7 .333 6.67 6.67 0 0 1 13.667 7 6.67 6.67 0 0 1 7 13.667 6.67 6.67 0 0 1 .333 7zM7 1.667C4.054 1.667 1.667 4.055 1.667 7S4.054 12.334 7 12.334 12.333 9.946 12.333 7 9.945 1.667 7 1.667zm0 3.667a1 1 0 1 0 0-2 1 1 0 1 0 0 2zm0 1.333c.368 0 .667.298.667.667V10c0 .368-.298.667-.667.667s-.667-.298-.667-.667V7.334c0-.368.298-.667.667-.667z"/></svg>' +
       '<div ownid-about-tooltip style="display: none;position: absolute;width: 220px;background: #FFFFFF;border: 1px solid #D5DADD;box-sizing: border-box;border-radius: 6px;font-size: 12px;line-height: 16px;padding: 16px 12px;bottom: 23px;left: -100px;cursor: default;">' +
       '<strong style="color: #0070F2">OwnID</strong> is a tool that allows you to register and login to the websites and apps you use everyday.</div>';
 
@@ -359,7 +369,6 @@ export default class WidgetComponent extends BaseComponent {
     const toggleElements = document.querySelectorAll(checkInput.getAttribute('ownid-toggle-rel') as string);
 
     checkInput.addEventListener('change', ({ target }) => {
-
       if ((target as HTMLInputElement).checked) {
         this.config.element.style.display = 'block';
 
@@ -384,7 +393,7 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  private callOnSuccess(finalResponse: any) {
+  private callOnSuccess(finalResponse: any): void {
     switch (this.config.type) {
       case WidgetType.Link:
         return this.config.onLink && this.config.onLink(finalResponse);
@@ -398,7 +407,7 @@ export default class WidgetComponent extends BaseComponent {
     }
   }
 
-  public async openWebapp() {
+  public async openWebapp(): Promise<unknown> {
     window.open(this.getStartUrl());
 
     this.setCallStatus();
@@ -412,7 +421,7 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  private apiReply(response: any) {
+  private apiReply(response: any): void {
     this.webappResolver({
       error: null,
       data: response,

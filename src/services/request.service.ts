@@ -1,10 +1,11 @@
 import { ILogger } from '../interfaces/i-logger.interfaces';
-import 'whatwg-fetch'
+import 'whatwg-fetch';
 
 export default class RequestService {
   constructor(private logger?: ILogger) {}
 
-  public async post(url: string, data = {}) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public async post(url: string, data = {}): Promise<any> {
     this.logger?.logInfo(`request: ${url}`);
 
     const response = await fetch(url, {

@@ -1,12 +1,7 @@
 import OwnIDUiSdk from "./ownid-web-ui-sdk";
-
-window.ownid = new OwnIDUiSdk();
-window.ownidAsyncInit = () => {};
-
 import * as i from '.';
 
 interface IMyWindow extends Window {
-  ownidAsyncInit: () => void;
   ownid: OwnIDUiSdk;
 }
 
