@@ -13,6 +13,7 @@ branches:
   only:
   - master
   - develop
+  - alpha-rti
 
 language: node_js
 node_js:
