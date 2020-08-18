@@ -1,11 +1,11 @@
 {
   "name": "ownid-web-ui-sdk",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha-0.0.1",
   "description": "",
   "keywords": [],
-  "main": "dist/ownid-web-ui-sdk.umd.js",
-  "module": "dist/ownid-web-ui-sdk.es5.js",
-  "typings": "dist/types/ownid-web-ui-sdk.d.ts",
+  "main": "dist/sdk.umd.js",
+  "module": "dist/sdk.es5.js",
+  "typings": "dist/types/sdk.d.ts",
   "files": [
     "dist"
   ],

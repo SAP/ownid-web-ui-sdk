@@ -22,9 +22,9 @@ cache:
   directories:
   - "./node_modules"
 
-before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.22.4
-  - export PATH="$HOME/.yarn/bin:$PATH"
+# before_install:
+#   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.22.4
+#   - export PATH="$HOME/.yarn/bin:$PATH"
 
 install:
   - yarn
@@ -37,8 +37,6 @@ before_deploy:
   - pyenv global 3.7.1
   - pip install -U pip
   - pip install awscli
-  - echo Logging in to Amazon...
-  - aws --version
 
 deploy:
 - provider: script
@@ -51,3 +49,8 @@ deploy:
   skip_cleanup: true
   on:
     branch: master
+- provider: script
+  script: sh scripts/publish-prod.sh
+  skip_cleanup: true
+  on:
+    branch: alpha-rti
