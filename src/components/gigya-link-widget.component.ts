@@ -10,7 +10,6 @@ export default class GigyaLinkWidgetComponent extends WidgetComponent {
 
   protected init(config: IWidgetConfig): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       window.gigya.accounts.getJWT({
         callback: async (data: IGetJwtResponse) => {
