@@ -37,8 +37,6 @@ before_deploy:
   - pyenv global 3.7.1
   - pip install -U pip
   - pip install awscli
-  - echo Logging in to Amazon...
-  - aws --version
 
 deploy:
 - provider: script
