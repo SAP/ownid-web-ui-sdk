@@ -175,6 +175,7 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 .ownid-qr-pane--about{text-decoration:none;display:flex;justify-content:flex-end}
 .ownid-qr-pane--about-text{font-weight:500;font-size:12px;line-height:24px;color:#ACACAC;margin-right:5px}
 .ownid-spacer{display:none}
+.ownid-disabled{opacity:.3;pointer-events:none}
 
 [ownid-done]{display:none;position:absolute;top:0;background:#FFF;width:100%;height:100%;justify-content:space-around;align-items:center}
 .ownid-done-icon{margin:0 48px;flex:0 0 auto}

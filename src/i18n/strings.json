@@ -2,7 +2,7 @@
   "login": {
     "mobileTitle": "Instant Sign In",
     "desktopTitle": "Instant Sign In",
-    "desktopSubtitle": "Use your phone to scan for passwordless sign in.",
+    "desktopSubtitle": "Skip the password by scanning this QR with your phone’s camera or an app.",
     "pendingMessage": "Logging in...",
     "pendingButton": "Cancel",
     "doneMessage": ""
@@ -10,7 +10,7 @@
   "login-partial": {
     "mobileTitle": "Instant Sign In",
     "desktopTitle": "Instant Sign In",
-    "desktopSubtitle": "Use your phone to scan for passwordless sign in.",
+    "desktopSubtitle": "Skip the password by scanning this QR with your phone’s camera or an app.",
     "pendingMessage": "Logging in...",
     "pendingButton": "Cancel",
     "doneMessage": ""
@@ -58,6 +58,6 @@
     "link": "You must click OwnID button before you proceed"
   },
   "common": {
-    "labelText": "Skip password with OwnID"
+    "labelText": "Skip the password"
   }
 }

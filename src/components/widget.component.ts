@@ -350,7 +350,7 @@ export default class WidgetComponent extends BaseComponent {
     checkInput.parentNode!.insertBefore(label, checkInput.nextSibling);
 
     const infoIcon = document.createElement('span');
-    infoIcon.setAttribute('style', 'margin-left:8px;cursor:pointer;position:relative');
+    infoIcon.setAttribute('style', 'margin:8px 0 0 8px;cursor:pointer;position:relative');
     infoIcon.setAttribute('ownid-info-button', '');
 
     infoIcon.innerHTML =
