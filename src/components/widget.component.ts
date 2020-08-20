@@ -93,6 +93,12 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private render() {
+    const styles = document.getElementById('OwnID-common-styles');
+
+    if (!styles) {
+      this.addOwnIDStyleTag('OwnID-common-styles');
+    }
+
     if (this.config.type === WidgetType.Link && this.contexts.find(({ context }) => !context)) {
       this.linked = new LinkedWidget({ href: this.getStartUrl() });
       this.addChild(this.linked);
@@ -457,6 +463,15 @@ export default class WidgetComponent extends BaseComponent {
     return new Promise((resolve) => {
       this.webappResolver = resolve;
     });
+  }
+
+  private addOwnIDStyleTag(id: string): void {
+    const style = document.createElement('style');
+    style.id = id;
+    style.innerHTML = `.ownid-disabled{opacity:.3;pointer-events:none}
+`;
+
+    document.head.appendChild(style);
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
