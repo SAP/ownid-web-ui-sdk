@@ -1,6 +1,6 @@
 {
   "name": "ownid-web-ui-sdk",
-  "version": "1.0.0-alpha-0.0.1",
+  "version": "1.0.0-alpha",
   "description": "",
   "keywords": [],
   "main": "dist/sdk.umd.js",
