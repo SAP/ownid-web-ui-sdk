@@ -2,7 +2,7 @@
   "login": {
     "mobileTitle": "Мгновенный вход",
     "desktopTitle": "Мгновенный вход",
-    "desktopSubtitle": "Используйте свой телефон для сканирования и входа без пароля.",
+    "desktopSubtitle": "Пропустить пароль сканируя этот QR код камерой вашего телефона или приложением.",
     "pendingMessage": "Заходим...",
     "pendingButton": "Отмена",
     "doneMessage": ""
@@ -10,7 +10,7 @@
   "login-partial": {
     "mobileTitle": "Мгновенный вход",
     "desktopTitle": "Мгновенный вход",
-    "desktopSubtitle": "Используйте свой телефон для сканирования и входа без пароля.",
+    "desktopSubtitle": "Пропустить пароль сканируя этот QR код камерой вашего телефона или приложением.",
     "pendingMessage": "Заходим...",
     "pendingButton": "Отмена",
     "doneMessage": ""
@@ -58,6 +58,6 @@
     "link": "Для продолжения нажмите клавишу OwnID"
   },
   "common": {
-    "labelText": "Пропустить пароль с OwnID"
+    "labelText": "Пропустить пароль"
   }
 }

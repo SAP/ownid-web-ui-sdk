@@ -34,7 +34,11 @@ export interface IWidgetConfig {
   desktopSubtitle?: string;
   statusInterval?: number;
   partial?: boolean;
-  toggleElement?: HTMLElement;
+  tooltip?: boolean | null | undefined | {
+    targetEl?: string | false | null | undefined;
+    offset?: [number, number];
+  };
+  toggleElement?: HTMLInputElement;
   onLogin?: (response: unknown) => void;
   onRegister?: (response: unknown) => void;
   onLink?: (response: unknown) => void;

@@ -69,7 +69,6 @@ export default class OwnIDUiSdk {
       return null;
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const { gigya } = window;
 

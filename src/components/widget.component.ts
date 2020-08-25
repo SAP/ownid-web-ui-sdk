@@ -39,6 +39,8 @@ export default class WidgetComponent extends BaseComponent {
   private webappResolver: (value?: any) => void = () => {
   };
 
+  private toggleElements: NodeListOf<Element> | undefined;
+
   constructor(
     protected config: IWidgetConfig,
     protected requestService: RequestService,
@@ -91,6 +93,12 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private render() {
+    const styles = document.getElementById('OwnID-common-styles');
+
+    if (!styles) {
+      this.addOwnIDStyleTag('OwnID-common-styles');
+    }
+
     if (this.config.type === WidgetType.Link && this.contexts.find(({ context }) => !context)) {
       this.linked = new LinkedWidget({ href: this.getStartUrl() });
       this.addChild(this.linked);
@@ -132,6 +140,10 @@ export default class WidgetComponent extends BaseComponent {
         return;
       }
       const type = this.config.partial ? `${ this.config.type }-partial` : this.config.type;
+      const isTooltip = !!this.config.partial
+        // @ts-ignore
+        && ![null, false].includes(this.config.tooltip)
+        && !!this.config.toggleElement;
 
       this.qr = new Qr({
         href: this.getStartUrl(),
@@ -139,6 +151,7 @@ export default class WidgetComponent extends BaseComponent {
         subtitle: this.config.desktopSubtitle || TranslationService.texts[lang][type].desktopSubtitle,
         type,
         lang,
+        tooltip: isTooltip,
       });
       this.addChild(this.qr);
 
@@ -343,7 +356,7 @@ export default class WidgetComponent extends BaseComponent {
     checkInput.parentNode!.insertBefore(label, checkInput.nextSibling);
 
     const infoIcon = document.createElement('span');
-    infoIcon.setAttribute('style', 'margin-left:8px;cursor:pointer;position:relative');
+    infoIcon.setAttribute('style', 'margin:8px 0 0 8px;cursor:pointer;position:relative');
     infoIcon.setAttribute('ownid-info-button', '');
 
     infoIcon.innerHTML =
@@ -354,9 +367,16 @@ export default class WidgetComponent extends BaseComponent {
     const aboutTooltip = infoIcon.querySelector('[ownid-about-tooltip]') as HTMLElement;
 
     document.addEventListener('click', (event) => {
-      const clickedInside = infoIcon.contains(event.target as Node);
-      if (!clickedInside) {
+      const clickedInsideInfoIcon = infoIcon.contains(event.target as Node);
+      if (!clickedInsideInfoIcon) {
         aboutTooltip.style.display = 'none';
+      }
+
+      if (this.qr && this.config.element.style.display === 'block') {
+        const clickedInsideQr = this.qr.ref.contains(event.target as Node);
+        if (!clickedInsideQr) {
+          this.config.element.style.display = 'none';
+        }
       }
     });
 
@@ -366,26 +386,38 @@ export default class WidgetComponent extends BaseComponent {
 
     label.parentNode!.insertBefore(infoIcon, label.nextSibling);
 
-    const toggleElements = document.querySelectorAll(checkInput.getAttribute('ownid-toggle-rel') as string);
+    this.toggleElements = document.querySelectorAll(checkInput.getAttribute('ownid-toggle-rel') as string);
 
     checkInput.addEventListener('change', ({ target }) => {
       if ((target as HTMLInputElement).checked) {
-        this.config.element.style.display = 'block';
+        if (this.finalResponse || this.isMobile()) {
+          this.toggleElements?.forEach((toggleElement) => toggleElement.classList.add('ownid-disabled'));
+        } else {
+          this.config.element.style.display = 'block';
 
-        toggleElements.forEach((toggleElement) => {
-          const placeholder = document.createElement('ownid-toggle-placeholder');
-          placeholder.style.display = 'none';
+          let tooltipRefEl = checkInput;
+          let [offsetX, offsetY] = [0, 0];
 
-          toggleElement.parentNode!.insertBefore(placeholder, toggleElement);
-          toggleElement.parentNode!.removeChild(toggleElement);
-        });
+          if (this.config.tooltip && (typeof this.config.tooltip === 'object')) {
+            if (this.config.tooltip.targetEl) {
+              tooltipRefEl = document.querySelector(this.config.tooltip.targetEl) as HTMLElement;
+            }
+            if (this.config.tooltip.offset) {
+              [offsetX, offsetY] = this.config.tooltip.offset
+            }
+          }
+
+          const { x, y, width, height } = tooltipRefEl.getBoundingClientRect();
+
+          this.qr!.ref.style.top = `${ y + (offsetX || (height / 2)) + window.pageYOffset }px`;
+          this.qr!.ref.style.left = `${ x + (offsetX || width) + window.pageXOffset + offsetY + 10 }px`; // 10px is arrow width
+
+          // eslint-disable-next-line no-param-reassign
+          (target as HTMLInputElement).checked = false;
+        }
       } else {
         this.config.element.style.display = 'none';
-
-        document.querySelectorAll('ownid-toggle-placeholder').forEach((element, index) => {
-          element.parentNode!.insertBefore(toggleElements[index], element);
-          element.parentNode!.removeChild(element);
-        });
+        this.toggleElements!.forEach((toggleElement) => toggleElement.classList.remove('ownid-disabled'));
       }
     });
 
@@ -394,6 +426,19 @@ export default class WidgetComponent extends BaseComponent {
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   private callOnSuccess(finalResponse: any): void {
+    const isTooltip = this.config.partial
+      // @ts-ignore
+      && ![null, false].includes(this.config.tooltip)
+      && this.config.toggleElement;
+
+    if (isTooltip) {
+      this.toggleElements?.forEach((toggleElement) => toggleElement.classList.add('ownid-disabled'));
+      this.config.element.style.display = 'none';
+      if (this.config.toggleElement) {
+        this.config.toggleElement.checked = true;
+      }
+    }
+
     switch (this.config.type) {
       case WidgetType.Link:
         return this.config.onLink && this.config.onLink(finalResponse);
@@ -418,6 +463,15 @@ export default class WidgetComponent extends BaseComponent {
     return new Promise((resolve) => {
       this.webappResolver = resolve;
     });
+  }
+
+  private addOwnIDStyleTag(id: string): void {
+    const style = document.createElement('style');
+    style.id = id;
+    style.innerHTML = `.ownid-disabled{opacity:.3;pointer-events:none}
+`;
+
+    document.head.appendChild(style);
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any

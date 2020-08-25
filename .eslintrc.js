@@ -45,6 +45,7 @@ module.exports = {
     'unicorn/no-null': 'off',
     '@typescript-eslint/ban-types': 'warn',
     '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
     'no-plusplus': 'off',
   },
   settings: {

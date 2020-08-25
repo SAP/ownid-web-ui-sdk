@@ -8,7 +8,7 @@ import { eslint } from 'rollup-plugin-eslint';
 import { uglify } from 'rollup-plugin-uglify';
 
 const pkg = require('./package.json');
-const libraryName = 'ownid-web-ui-sdk';
+const libraryName = 'sdk';
 
 export default {
   input: `src/index.ts`,
@@ -29,7 +29,7 @@ export default {
   plugins: [
     // Allow json resolution
     json(),
-    eslint(),
+    //eslint(),
     // Compile TypeScript files
     typescript({ useTsconfigDeclarationDir: true }),
 
