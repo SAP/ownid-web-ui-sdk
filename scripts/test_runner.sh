@@ -1,4 +1,3 @@
-TRAVIS_API_TOKEN=qivICXaHsqQJiBAxxlonnw
 REPO_SLUG=OwnID%2Fautomation
 
 TEST_COMPONENTS=${1:-""}
