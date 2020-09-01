@@ -47,6 +47,7 @@ export interface IWidgetConfig {
   onRegister?: (response: unknown) => void;
   onLink?: (response: unknown) => void;
   onRecover?: (response: unknown) => void;
+  onError?: (error: string) => void;
 }
 
 export interface IPartialConfig {
@@ -60,4 +61,5 @@ export interface IPartialConfig {
   onRegister?: (response: unknown) => void;
   onLink?: (response: unknown) => void;
   onRecover?: (response: unknown) => void;
+  onError?: (error: string) => void;
 }

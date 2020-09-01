@@ -58,6 +58,7 @@
     "jest-resolver-tsconfig-paths": "^0.13.0",
     "jest-trx-results-processor": "^2.0.3",
     "lint-staged": "^10.2.11",
+    "lodash": "^4.17.19",
     "lodash.camelcase": "^4.3.0",
     "prettier-eslint": "^11.0.0",
     "prettier-eslint-cli": "^5.0.0",
@@ -86,7 +87,6 @@
     }
   },
   "dependencies": {
-    "lodash": "^4.17.19",
     "qrcode-generator": "^1.4.4",
     "whatwg-fetch": "^3.3.1"
   },

@@ -176,16 +176,16 @@ export default class WidgetComponent extends BaseComponent {
     return `${prefix}${ConfigurationService.approveUrl.replace(':context', context)}`;
   }
 
-  private setCallStatus() {
+  private setCallStatus(): void {
     this.statusTimeout = window.setTimeout(
       () => this.callStatus(),
       this.config.statusInterval || ConfigurationService.statusTimeout,
     );
   }
 
-  private async callStatus() {
+  private async callStatus(): Promise<void> {
     if (this.isDestroyed || this.contexts.length <= 0) {
-      return () => {};
+      return;
     }
 
     const request = this.contexts.map(({ context, nonce }) => ({
@@ -202,6 +202,11 @@ export default class WidgetComponent extends BaseComponent {
     const statuses = statusResponse.map((x: StatusResponse) => x.status);
     const finishedIndex = statuses.indexOf(ContextStatus.Finished);
     if (finishedIndex >= 0) {
+      if (statusResponse[finishedIndex].payload.error) {
+        this.callOnError(statusResponse[finishedIndex].payload.error);
+        return;
+      }
+
       if (this.config.partial && this.config.type === WidgetType.Register && this.qr) {
         this.qr.showDone();
       }
@@ -482,5 +487,21 @@ export default class WidgetComponent extends BaseComponent {
       error: null,
       data: response,
     });
+  }
+
+  private callOnError(error: string) {
+    const isTooltip =
+      this.config.partial &&
+      // @ts-ignore
+      ![null, false].includes(this.config.tooltip) &&
+      this.config.toggleElement;
+
+    if (isTooltip) {
+      this.config.element.style.display = 'none';
+    }
+
+    if (this.config.onError) {
+      this.config.onError(error);
+    }
   }
 }

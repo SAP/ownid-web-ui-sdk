@@ -88,7 +88,7 @@ describe('widget component', () => {
     });
   });
 
-  it('should render and add chile in desktop mode', () => {
+  it('should render and add child in desktop mode', () => {
     return new Promise(resolve => {
       navigator.userAgent =
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
@@ -561,6 +561,40 @@ describe('callStatus', () => {
       });
     });
   });
+
+  it('should call onRegister with auth only flow', () => {
+    return new Promise(resolve => {
+      const onRegister = jest.fn();
+
+      const toggleElement = document.createElement('input');
+      toggleElement.type = 'checkbox';
+
+      const sut: any = new WidgetComponent(
+        {
+          element: document.createElement('div'),
+          type: WidgetType.Register,
+          partial: true,
+          toggleElement,
+          onRegister
+        } as any,
+        requestService,
+      );
+      sut.contexts = [{ context: "a", nonce: "b" }];
+
+      requestService.post = jest.fn()
+        .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
+
+      sut.qr = {
+        showDone: jest.fn(),
+      };
+
+      sut.callStatus().then(() => {
+        expect(onRegister).toBeCalledWith({ "a": "b" });
+        resolve();
+      });
+    });
+  });
+
 
   it('should call onRegister if type is not set', () => {
     return new Promise(resolve => {
