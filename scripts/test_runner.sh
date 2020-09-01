@@ -1,7 +1,10 @@
+#!bin/bash
+
 REPO_SLUG=OwnID%2Fautomation
 
 TEST_COMPONENTS=${1:-""}
-REPO_BRANCH=${2:-"master"}
+ENV=${2:-"dev"}
+REPO_BRANCH=${3:-"master"}
 
 START_TIME=$(date +"%s")
 
@@ -16,7 +19,7 @@ TRIGGER_BODY="{
     \"message\":\"Triggered for '$TEST_COMPONENTS' test\",
     \"merge_mode\":\"deep_merge_append\",
     \"config\": {
-      \"env\":{\"global\":[\"SCOPE_COMPONENTS=$TEST_COMPONENTS\",\"SCOPE_LEVELS=smoke\"]}
+      \"env\":{\"global\":[\"SCOPE_COMPONENTS=$TEST_COMPONENTS\",\"SCOPE_LEVELS=smoke\", \"APP_ENV=$ENV\"]}
     }
   }
 }"
