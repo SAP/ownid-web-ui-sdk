@@ -147,6 +147,41 @@ describe('widget component', () => {
     });
   });
 
+  it('should render partial in desktop mode with note', () => {
+    return new Promise(resolve => {
+      navigator.userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
+
+      const toggleElement = document.createElement('input');
+      toggleElement.id = 'toggleID';
+      const parent = document.createElement('div');
+      document.body.appendChild(parent);
+      document.body.appendChild(toggleElement);
+
+      const sut = new WidgetComponent(
+        {
+          element: parent,
+          type: WidgetType.Register,
+          URLPrefix: 'url',
+          partial: true,
+          toggleElement,
+          note: 'this is note'
+        },
+        requestService,
+      );
+
+      sut.widgetReady.then(() => {
+        toggleElement.click();
+
+        expect(sut).not.toBeNull();
+        expect(sut['note']).not.toBeNull();
+        expect(parent.children.length).toBe(1);
+        expect(parent.children[0].tagName.toLowerCase()).toEqual('div');
+
+        resolve(true);
+      });
+    });
+  });
+
   it('should not render', () => {
     return new Promise(resolve => {
       navigator.userAgent =

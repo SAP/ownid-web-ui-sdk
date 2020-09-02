@@ -30,6 +30,7 @@ export interface IWidgetConfig {
   data?: unknown;
   URLPrefix?: string;
   mobileTitle?: string;
+  note?: boolean | null | undefined | string;
   desktopTitle?: string;
   desktopSubtitle?: string;
   statusInterval?: number;

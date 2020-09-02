@@ -41,6 +41,8 @@ export default class WidgetComponent extends BaseComponent {
 
   private toggleElements: NodeListOf<Element> | undefined;
 
+  private note: HTMLDivElement | null = null;
+
   constructor(
     protected config: IWidgetConfig,
     protected requestService: RequestService,
@@ -391,12 +393,23 @@ export default class WidgetComponent extends BaseComponent {
 
     label.parentNode!.insertBefore(infoIcon, label.nextSibling);
 
+    if (this.config.type === WidgetType.Register && (this.config.note || this.config.note === undefined)) {
+      this.note = document.createElement('div');
+      this.note.setAttribute('class', 'ownid-note');
+      this.note.style.display = 'none';
+      this.note.textContent = typeof this.config.note ==='string' ? this.config.note : TranslationService.texts[lang].common.noteText;
+      checkInput.parentNode!.parentNode!.insertBefore(this.note, checkInput.parentNode!.nextSibling);
+    }
+
     this.toggleElements = document.querySelectorAll(checkInput.getAttribute('ownid-toggle-rel') as string);
 
     checkInput.addEventListener('change', ({ target }) => {
       if ((target as HTMLInputElement).checked) {
         if (this.finalResponse || this.isMobile()) {
           this.toggleElements?.forEach((toggleElement) => toggleElement.classList.add('ownid-disabled'));
+          if (this.note) {
+            this.note.style.display = 'block';
+          }
         } else {
           setTimeout(() => {
             this.config.element.style.display = 'block';
@@ -423,6 +436,9 @@ export default class WidgetComponent extends BaseComponent {
         }
       } else {
         this.config.element.style.display = 'none';
+        if (this.note) {
+          this.note.style.display = 'none';
+        }
         this.toggleElements!.forEach((toggleElement) => toggleElement.classList.remove('ownid-disabled'));
       }
     });
@@ -443,6 +459,9 @@ export default class WidgetComponent extends BaseComponent {
       this.config.element.style.display = 'none';
       if (this.config.toggleElement) {
         this.config.toggleElement.checked = true;
+      }
+      if (this.note) {
+        this.note.style.display = 'block';
       }
     }
 
@@ -475,7 +494,7 @@ export default class WidgetComponent extends BaseComponent {
   private addOwnIDStyleTag(id: string): void {
     const style = document.createElement('style');
     style.id = id;
-    style.innerHTML = `.ownid-disabled{opacity:.3;pointer-events:none}
+    style.innerHTML = `.ownid-disabled{opacity:0;pointer-events:none;display:none}
 `;
 
     document.head.appendChild(style);
