@@ -19,6 +19,8 @@ export default class WidgetComponent extends BaseComponent {
 
   returnError: string | null = null;
 
+  disabled = true;
+
   private statusTimeout: number | undefined;
 
   private refreshLinkTimeout: number | undefined;
@@ -118,8 +120,13 @@ export default class WidgetComponent extends BaseComponent {
     const lang = this.config.language || ConfigurationService.defaultLanguage;
 
     if (this.config.inline) {
-      const { targetElement, offset } = this.config.inline;
-      this.renderInlineWidget({ lang, targetElement, offset });
+      const { targetElement, offset, additionalElements } = this.config.inline;
+      this.renderInlineWidget({ lang, targetElement, offset, additionalElements });
+    }
+
+    if ((this.config.inline || this.config.toggleElement) &&
+      this.config.type === WidgetType.Register && (this.config.note || this.config.note === undefined)) {
+      this.renderNote(lang);
     }
 
     if (this.isMobile()) {
@@ -408,14 +415,6 @@ export default class WidgetComponent extends BaseComponent {
 
     label.parentNode!.insertBefore(infoIcon, label.nextSibling);
 
-    if (this.config.type === WidgetType.Register && (this.config.note || this.config.note === undefined)) {
-      this.note = document.createElement('div');
-      this.note.setAttribute('class', 'ownid-note');
-      this.note.style.display = 'none';
-      this.note.textContent = typeof this.config.note === 'string' ? this.config.note : TranslationService.texts[lang].common.noteText;
-      checkInput.parentNode!.parentNode!.insertBefore(this.note, checkInput.parentNode!.nextSibling);
-    }
-
     this.toggleElements = document.querySelectorAll(checkInput.getAttribute('ownid-toggle-rel') as string);
 
     checkInput.addEventListener('change', ({ target }) => {
@@ -439,6 +438,8 @@ export default class WidgetComponent extends BaseComponent {
         }
         this.toggleElements!.forEach((toggleElement) => toggleElement.classList.remove('ownid-disabled'));
       }
+
+      this.disabled = (target as HTMLInputElement).checked;
     });
 
     this.toggleQrTooltip(false);
@@ -506,6 +507,8 @@ export default class WidgetComponent extends BaseComponent {
         this.note.style.display = 'block';
       }
     }
+
+    this.disabled = false;
 
     switch (this.config.type) {
       case WidgetType.Link:
@@ -580,7 +583,11 @@ export default class WidgetComponent extends BaseComponent {
       }
 
       if (this.isMobile()) {
-        return this.openWebapp();
+        this.disabled = false;
+        this.inline!.setFinishStatus(true);
+        if (this.note) {
+          this.note.style.display = 'block';
+        }
       } else {
         return this.toggleQrTooltip(true);
       }
@@ -589,5 +596,49 @@ export default class WidgetComponent extends BaseComponent {
 
   private addCallback2GlobalEvent(param: (event: MouseEvent) => void) {
     this.globalEventCallbacks.push(param);
+  }
+
+  private renderNote(lang: string) {
+    this.note = document.createElement('div');
+    this.note.setAttribute('class', 'ownid-note');
+    this.note.style.display = 'none';
+    this.note.textContent = TranslationService.texts[lang].common.noteText;
+
+    if (typeof this.config.note === 'string') {
+      this.note.textContent = this.config.note;
+    }
+
+    let prevElement = this.config.toggleElement ? this.config.toggleElement.parentNode! : this.config.inline!.targetElement;
+    let append = false;
+
+    if (typeof this.config.note === 'object') {
+      this.note.textContent = this.config.note!.text;
+
+      if (this.config.note!.wrapperElement) {
+        prevElement = this.config.note!.wrapperElement;
+        append = true;
+      }
+    }
+
+    if (!this.config.toggleElement) {
+      this.note.textContent += ' ';
+      const undo = document.createElement('span');
+      undo.setAttribute('class', 'ownid-note-undo');
+      undo.textContent = TranslationService.texts[lang].common.undo;
+
+      undo.addEventListener('click', () => {
+        this.note!.style.display = 'none';
+        this.disabled = true;
+        this.inline?.setFinishStatus(false);
+      })
+
+      this.note.appendChild(undo)
+    }
+
+    if (append) {
+      prevElement.appendChild(this.note);
+    } else {
+      prevElement.parentNode!.insertBefore(this.note, prevElement.nextSibling);
+    }
   }
 }

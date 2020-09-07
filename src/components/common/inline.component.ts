@@ -4,6 +4,7 @@ import TranslationService from '../../services/translation.service';
 export type InlineWidgetOptions = {
   targetElement: HTMLElement;
   lang: string;
+  additionalElements?: HTMLElement[];
   offset?: [number, number]
 };
 
@@ -43,16 +44,19 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
   public setFinishStatus(finish: boolean) {
     this.ref.classList.toggle('ownid-inline-widget--finished', finish);
     this.options.targetElement.classList.toggle('ownid-inline-disabled', finish);
+    this.options.additionalElements?.forEach((element: HTMLElement) => element.classList.toggle('ownid-inline-disabled', finish));
   }
 
   private addOwnIDStyleTag(id: string): void {
     const style = document.createElement('style');
     style.id = id;
-    style.innerHTML = `.ownid-inline-widget{color:#0070F2;cursor:pointer;position:absolute;display:flex;font-size:14px;text-decoration}
+    style.textContent = `.ownid-inline-widget{color:#0070F2;cursor:pointer;position:absolute;display:flex;font-size:14px}
 .ownid-inline-widget .ownid-icon{fill:#0070F2}
-.ownid-inline-widget--finished{color:#354A5F;}
+.ownid-inline-widget--finished{color:#354A5F;margin-left:-25px;pointer-events:none}
 .ownid-inline-widget--finished .ownid-icon{fill:#354A5F}
+.ownid-inline-widget--finished:before{content:'';width:25px;height:16px;display:block;background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOC43MDcgNy4yOTNhMSAxIDAgMCAxIDAgMS40MTRsLTggOGExIDEgMCAwIDEtMS40MTQgMGwtMy0zYTEgMSAwIDAgMSAxLjQxNC0xLjQxNEwxMCAxNC41ODZsNy4yOTMtNy4yOTNhMSAxIDAgMCAxIDEuNDE0IDB6IiBmaWxsPSIjMzZhNDFkIi8+PC9zdmc+) repeat center center}
 .ownid-inline-disabled{opacity:0.3;pointer-events:none}
+.ownid-note-undo{color:#0070F2;cursor:pointer}
 `;
 
     document.head.appendChild(style);

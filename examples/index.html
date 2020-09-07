@@ -15,7 +15,7 @@
       height: 30px;
       padding: 0 11px;
       margin-bottom: 8px;
-      width: 400px;
+      width: 330px;
     }
   </style>
   <script>
@@ -24,50 +24,50 @@
         URLPrefix: 'http://localhost:5002/ownid/', // optional. default path is /ownId/
       });
 
-      // var ownIdElem1 = ownid.render({
-      //   type: 'register',
-      //   element: document.querySelector('#ownid'),
-      // });
-      //
-      // ownid.render({
-      //   type: 'login',
-      //   element: document.querySelector('#ownid-login'),
-      //   language: 'ru',
-      // });
-      //
-      // ownid.render({
-      //   type: 'recover',
-      //   element: document.querySelector('#ownid-recover'),
-      //   data: {
-      //     pwrt: 'pwrtString'
-      //   },
-      //   onRecover: (data) => console.log(data)
-      // });
-      //
-      // ownid.renderLinkGigya({
-      //   type: 'link',
-      //   element: document.querySelector('#ownid-link'),
-      // }, '3_s5-gLs4aLp5FXluP8HXs7_JN40XWNlbvYWVCCkbNCqlhW6Sm5Z4tXGGsHcSJYD3W');
-      //
-      // let lang = 'en';
-      //
-      // document.getElementById('destroy')
-      //   .addEventListener('click', () => ownIdElem1.destroy());
-      //
-      // document.getElementById('lang-change')
-      //   .addEventListener('click', () => {
-      //     lang = lang === 'ru' ? 'en' : 'ru';
-      //     ownIdElem1.update({language: lang});
-      //   });
-      //
-      //
-      // // Authenticate only flow
-      // window.authOnlyWidget = ownid.render({
-      //   type: 'register',
-      //   partial: true,
-      //   element: document.getElementById('ownid-toggle-register'),
-      //   toggleElement: document.getElementById('custom-register-check'),
-      // });
+      var ownIdElem1 = ownid.render({
+        type: 'register',
+        element: document.querySelector('#ownid'),
+      });
+
+      ownid.render({
+        type: 'login',
+        element: document.querySelector('#ownid-login'),
+        language: 'ru',
+      });
+
+      ownid.render({
+        type: 'recover',
+        element: document.querySelector('#ownid-recover'),
+        data: {
+          pwrt: 'pwrtString'
+        },
+        onRecover: (data) => console.log(data)
+      });
+
+      ownid.renderLinkGigya({
+        type: 'link',
+        element: document.querySelector('#ownid-link'),
+      }, '3_s5-gLs4aLp5FXluP8HXs7_JN40XWNlbvYWVCCkbNCqlhW6Sm5Z4tXGGsHcSJYD3W');
+
+      let lang = 'en';
+
+      document.getElementById('destroy')
+        .addEventListener('click', () => ownIdElem1.destroy());
+
+      document.getElementById('lang-change')
+        .addEventListener('click', () => {
+          lang = lang === 'ru' ? 'en' : 'ru';
+          ownIdElem1.update({language: lang});
+        });
+
+
+      // Authenticate only flow
+      window.authOnlyWidget = ownid.render({
+        type: 'register',
+        partial: true,
+        element: document.getElementById('ownid-toggle-register'),
+        toggleElement: document.getElementById('custom-register-check'),
+      });
 
 
       // Inline Widget
@@ -75,6 +75,7 @@
         type: 'register',
         inline: {
           targetElement: document.getElementById('inline-password'),
+          additionalElements: [document.getElementById('inline-repeat-password')],
           offset: [0, -10],
         },
         element: document.getElementById('ownid-inline'),
@@ -182,7 +183,7 @@
     </div>
 
     <div class="row">
-      <input class="own-input" type="password" placeholder="repeat password">
+      <input class="own-input" type="password" placeholder="repeat password" id="inline-repeat-password">
     </div>
 
     <div class="row">
