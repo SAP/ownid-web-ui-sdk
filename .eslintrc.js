@@ -47,6 +47,7 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     'no-plusplus': 'off',
+    'consistent-return': 'off',
   },
   settings: {
     'import/parsers': {

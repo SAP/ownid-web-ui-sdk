@@ -8,6 +8,7 @@ import { IPartialConfig, IWidgetConfig, WidgetType } from '../interfaces/i-widge
 import TranslationService from '../services/translation.service';
 import StatusResponse, { ContextStatus } from './status-response';
 import LinkedWidget from './common/linked.component';
+import { find, findIndex } from '../services/helper.service';
 
 export default class WidgetComponent extends BaseComponent {
   widgetReady: Promise<void>;
@@ -36,10 +37,11 @@ export default class WidgetComponent extends BaseComponent {
   private isDestroyed = false;
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  private webappResolver: (value?: any) => void = () => {
-  };
+  private webappResolver: (value?: any) => void = () => {};
 
   private toggleElements: NodeListOf<Element> | undefined;
+
+  private note: HTMLDivElement | null = null;
 
   constructor(
     protected config: IWidgetConfig,
@@ -99,7 +101,7 @@ export default class WidgetComponent extends BaseComponent {
       this.addOwnIDStyleTag('OwnID-common-styles');
     }
 
-    if (this.config.type === WidgetType.Link && this.contexts.find(({ context }) => !context)) {
+    if (this.config.type === WidgetType.Link && find(this.contexts, ({ context }) => !context)) {
       this.linked = new LinkedWidget({ href: this.getStartUrl() });
       this.addChild(this.linked);
       return;
@@ -109,11 +111,11 @@ export default class WidgetComponent extends BaseComponent {
     if (this.isMobile()) {
       if (this.disableMobile) {
         // eslint-disable-next-line no-console
-        console.warn(`Mobile rendering is disabled for ${ this.config.type } widget type`);
+        console.warn(`Mobile rendering is disabled for ${this.config.type} widget type`);
         return;
       }
 
-      const type = this.config.partial ? `${ this.config.type }-partial` : this.config.type;
+      const type = this.config.partial ? `${this.config.type}-partial` : this.config.type;
       const mobileTitle = this.config.mobileTitle || TranslationService.texts[lang][type].mobileTitle;
       this.link = new LinkButton({
         href: this.getStartUrl(),
@@ -136,14 +138,15 @@ export default class WidgetComponent extends BaseComponent {
     } else {
       if (this.disableDesktop) {
         // eslint-disable-next-line no-console
-        console.warn(`Desktop rendering is disabled for ${ this.config.type } widget type`);
+        console.warn(`Desktop rendering is disabled for ${this.config.type} widget type`);
         return;
       }
-      const type = this.config.partial ? `${ this.config.type }-partial` : this.config.type;
-      const isTooltip = !!this.config.partial
+      const type = this.config.partial ? `${this.config.type}-partial` : this.config.type;
+      const isTooltip =
+        !!this.config.partial &&
         // @ts-ignore
-        && ![null, false].includes(this.config.tooltip)
-        && !!this.config.toggleElement;
+        [null, false].indexOf(this.config.tooltip) < 0 &&
+        !!this.config.toggleElement;
 
       this.qr = new Qr({
         href: this.getStartUrl(),
@@ -166,26 +169,25 @@ export default class WidgetComponent extends BaseComponent {
   private getStatusUrl() {
     const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
-    return `${ prefix }${ ConfigurationService.statusUrl }`;
+    return `${prefix}${ConfigurationService.statusUrl}`;
   }
 
   private getApproveUrl(context: string) {
     const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
-    return `${ prefix }${ ConfigurationService.approveUrl.replace(':context', context) }`;
+    return `${prefix}${ConfigurationService.approveUrl.replace(':context', context)}`;
   }
 
-  private setCallStatus() {
+  private setCallStatus(): void {
     this.statusTimeout = window.setTimeout(
       () => this.callStatus(),
       this.config.statusInterval || ConfigurationService.statusTimeout,
     );
   }
 
-  private async callStatus() {
+  private async callStatus(): Promise<void> {
     if (this.isDestroyed || this.contexts.length <= 0) {
-      return () => {
-      };
+      return;
     }
 
     const request = this.contexts.map(({ context, nonce }) => ({
@@ -202,6 +204,11 @@ export default class WidgetComponent extends BaseComponent {
     const statuses = statusResponse.map((x: StatusResponse) => x.status);
     const finishedIndex = statuses.indexOf(ContextStatus.Finished);
     if (finishedIndex >= 0) {
+      if (statusResponse[finishedIndex].payload.error) {
+        this.callOnError(statusResponse[finishedIndex].payload.error);
+        return;
+      }
+
       if (this.config.partial && this.config.type === WidgetType.Register && this.qr) {
         this.qr.showDone();
       }
@@ -249,9 +256,9 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     // remove expired items from contexts array
-    for (let i = this.contexts.length; i--;) {
+    for (let i = this.contexts.length; i--; ) {
       const item = this.contexts[i];
-      if (statusResponse.findIndex((x: StatusResponse) => x.context === item.context) < 0) {
+      if (findIndex(statusResponse, (x: StatusResponse) => x.context === item.context) < 0) {
         this.contexts.splice(i, 1);
       }
     }
@@ -344,7 +351,7 @@ export default class WidgetComponent extends BaseComponent {
   private addInfoIcon(checkInput: HTMLElement): void {
     if (!checkInput.id) {
       // eslint-disable-next-line no-param-reassign
-      checkInput.id = `ownid-toggle-check-${ Math.random() }`;
+      checkInput.id = `ownid-toggle-check-${Math.random()}`;
     }
 
     const lang = this.config.language || ConfigurationService.defaultLanguage;
@@ -362,7 +369,7 @@ export default class WidgetComponent extends BaseComponent {
     infoIcon.innerHTML =
       '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#354a5f"><path d="M.333 7A6.67 6.67 0 0 1 7 .333 6.67 6.67 0 0 1 13.667 7 6.67 6.67 0 0 1 7 13.667 6.67 6.67 0 0 1 .333 7zM7 1.667C4.054 1.667 1.667 4.055 1.667 7S4.054 12.334 7 12.334 12.333 9.946 12.333 7 9.945 1.667 7 1.667zm0 3.667a1 1 0 1 0 0-2 1 1 0 1 0 0 2zm0 1.333c.368 0 .667.298.667.667V10c0 .368-.298.667-.667.667s-.667-.298-.667-.667V7.334c0-.368.298-.667.667-.667z"/></svg>' +
       '<div ownid-about-tooltip style="display: none;position: absolute;width: 220px;background: #FFFFFF;border: 1px solid #D5DADD;box-sizing: border-box;border-radius: 6px;font-size: 12px;line-height: 16px;padding: 16px 12px;bottom: 23px;left: -100px;cursor: default;">' +
-      '<strong style="color: #0070F2">OwnID</strong> is a tool that allows you to register and login to the websites and apps you use everyday.</div>';
+      'Access your account without a password. Your phone is your ID. Learn more at <a style="color:#0070F2;font-weight:bold;text-decoration:none" href="https://ownid.com">OwnID.com</a></div>';
 
     const aboutTooltip = infoIcon.querySelector('[ownid-about-tooltip]') as HTMLElement;
 
@@ -386,37 +393,52 @@ export default class WidgetComponent extends BaseComponent {
 
     label.parentNode!.insertBefore(infoIcon, label.nextSibling);
 
+    if (this.config.type === WidgetType.Register && (this.config.note || this.config.note === undefined)) {
+      this.note = document.createElement('div');
+      this.note.setAttribute('class', 'ownid-note');
+      this.note.style.display = 'none';
+      this.note.textContent = typeof this.config.note ==='string' ? this.config.note : TranslationService.texts[lang].common.noteText;
+      checkInput.parentNode!.parentNode!.insertBefore(this.note, checkInput.parentNode!.nextSibling);
+    }
+
     this.toggleElements = document.querySelectorAll(checkInput.getAttribute('ownid-toggle-rel') as string);
 
     checkInput.addEventListener('change', ({ target }) => {
       if ((target as HTMLInputElement).checked) {
         if (this.finalResponse || this.isMobile()) {
           this.toggleElements?.forEach((toggleElement) => toggleElement.classList.add('ownid-disabled'));
+          if (this.note) {
+            this.note.style.display = 'block';
+          }
         } else {
-          this.config.element.style.display = 'block';
+          setTimeout(() => {
+            this.config.element.style.display = 'block';
+          });
 
           let tooltipRefEl = checkInput;
           let [offsetX, offsetY] = [0, 0];
 
-          if (this.config.tooltip && (typeof this.config.tooltip === 'object')) {
+          if (this.config.tooltip && typeof this.config.tooltip === 'object') {
             if (this.config.tooltip.targetEl) {
               tooltipRefEl = document.querySelector(this.config.tooltip.targetEl) as HTMLElement;
             }
             if (this.config.tooltip.offset) {
-              [offsetX, offsetY] = this.config.tooltip.offset
+              [offsetX, offsetY] = this.config.tooltip.offset;
             }
           }
+          const { left, top, width, height } = tooltipRefEl.getBoundingClientRect();
 
-          const { x, y, width, height } = tooltipRefEl.getBoundingClientRect();
-
-          this.qr!.ref.style.top = `${ y + (offsetX || (height / 2)) + window.pageYOffset }px`;
-          this.qr!.ref.style.left = `${ x + (offsetX || width) + window.pageXOffset + offsetY + 10 }px`; // 10px is arrow width
+          this.qr!.ref.style.top = `${top + (offsetX || height / 2) + window.pageYOffset}px`;
+          this.qr!.ref.style.left = `${left + (offsetX || width) + window.pageXOffset + offsetY + 10}px`; // 10px is arrow width
 
           // eslint-disable-next-line no-param-reassign
           (target as HTMLInputElement).checked = false;
         }
       } else {
         this.config.element.style.display = 'none';
+        if (this.note) {
+          this.note.style.display = 'none';
+        }
         this.toggleElements!.forEach((toggleElement) => toggleElement.classList.remove('ownid-disabled'));
       }
     });
@@ -426,16 +448,20 @@ export default class WidgetComponent extends BaseComponent {
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   private callOnSuccess(finalResponse: any): void {
-    const isTooltip = this.config.partial
+    const isTooltip =
+      this.config.partial &&
       // @ts-ignore
-      && ![null, false].includes(this.config.tooltip)
-      && this.config.toggleElement;
+      [null, false].indexOf(this.config.tooltip) < 0 &&
+      this.config.toggleElement;
 
     if (isTooltip) {
       this.toggleElements?.forEach((toggleElement) => toggleElement.classList.add('ownid-disabled'));
       this.config.element.style.display = 'none';
       if (this.config.toggleElement) {
         this.config.toggleElement.checked = true;
+      }
+      if (this.note) {
+        this.note.style.display = 'block';
       }
     }
 
@@ -468,7 +494,7 @@ export default class WidgetComponent extends BaseComponent {
   private addOwnIDStyleTag(id: string): void {
     const style = document.createElement('style');
     style.id = id;
-    style.innerHTML = `.ownid-disabled{opacity:.3;pointer-events:none}
+    style.innerHTML = `.ownid-disabled{opacity:0;pointer-events:none;display:none}
 `;
 
     document.head.appendChild(style);
@@ -480,5 +506,21 @@ export default class WidgetComponent extends BaseComponent {
       error: null,
       data: response,
     });
+  }
+
+  private callOnError(error: string) {
+    const isTooltip =
+      this.config.partial &&
+      // @ts-ignore
+      [null, false].indexOf(this.config.tooltip) < 0 &&
+      this.config.toggleElement;
+
+    if (isTooltip) {
+      this.config.element.style.display = 'none';
+    }
+
+    if (this.config.onError) {
+      this.config.onError(error);
+    }
   }
 }

@@ -88,7 +88,7 @@ describe('widget component', () => {
     });
   });
 
-  it('should render and add chile in desktop mode', () => {
+  it('should render and add child in desktop mode', () => {
     return new Promise(resolve => {
       navigator.userAgent =
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
@@ -139,6 +139,41 @@ describe('widget component', () => {
         toggleElement.click();
 
         expect(sut).not.toBeNull();
+        expect(parent.children.length).toBe(1);
+        expect(parent.children[0].tagName.toLowerCase()).toEqual('div');
+
+        resolve(true);
+      });
+    });
+  });
+
+  it('should render partial in desktop mode with note', () => {
+    return new Promise(resolve => {
+      navigator.userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
+
+      const toggleElement = document.createElement('input');
+      toggleElement.id = 'toggleID';
+      const parent = document.createElement('div');
+      document.body.appendChild(parent);
+      document.body.appendChild(toggleElement);
+
+      const sut = new WidgetComponent(
+        {
+          element: parent,
+          type: WidgetType.Register,
+          URLPrefix: 'url',
+          partial: true,
+          toggleElement,
+          note: 'this is note'
+        },
+        requestService,
+      );
+
+      sut.widgetReady.then(() => {
+        toggleElement.click();
+
+        expect(sut).not.toBeNull();
+        expect(sut['note']).not.toBeNull();
         expect(parent.children.length).toBe(1);
         expect(parent.children[0].tagName.toLowerCase()).toEqual('div');
 
@@ -561,6 +596,40 @@ describe('callStatus', () => {
       });
     });
   });
+
+  it('should call onRegister with auth only flow', () => {
+    return new Promise(resolve => {
+      const onRegister = jest.fn();
+
+      const toggleElement = document.createElement('input');
+      toggleElement.type = 'checkbox';
+
+      const sut: any = new WidgetComponent(
+        {
+          element: document.createElement('div'),
+          type: WidgetType.Register,
+          partial: true,
+          toggleElement,
+          onRegister
+        } as any,
+        requestService,
+      );
+      sut.contexts = [{ context: "a", nonce: "b" }];
+
+      requestService.post = jest.fn()
+        .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
+
+      sut.qr = {
+        showDone: jest.fn(),
+      };
+
+      sut.callStatus().then(() => {
+        expect(onRegister).toBeCalledWith({ "a": "b" });
+        resolve();
+      });
+    });
+  });
+
 
   it('should call onRegister if type is not set', () => {
     return new Promise(resolve => {

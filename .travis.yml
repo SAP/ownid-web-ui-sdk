@@ -6,6 +6,7 @@ notifications:
       secure: NnuinN7bqGpjYZTBGbOwu/3DgZKFU5BipLftMbSwX1UsBRz+YM6zwRBBwuCSil4WBBk7tPDubVV0KHr4Mlti6OYaeCjRlJ5IKLJI8M1z64W5guVnMzeIfPjor+kElURVlMqyTGm2GQZaIQbvoj7AMRddbHQ2MH7F3jbxJRMGtW5p1cMoBUWtOrYkDKlSclJ5cVlMuZJIOfF+owOyQYXCnKX3Fg3yTRzAn7IczvVxVx2tXudUgFd3ZkuOiv3UhaIaJn/DPvZ7Daj+MQegIUbH+Rj+HKFRwUNr8l/YKBra7q/HInxr1cxgYG3Aiwwy412LPv0XscePYj4FYPB6m2X/Q/UBR+rHWVMjRApzdZND5xjZsVvWvdysB8xtUXzz2M2mIFjcV53CNgtMOHjzBFXbB6YOcr2kdWaqXuVWyGXL6iV40jgHJcCJ7S5DmpVzjw/eBsq4Lj6+lYeFyI8srMOywrXhwAbLLfZVtcUH2fas2YRrG1Svy4vEzUwaQeuBh+8V/bMM24qBWG0a4n2OAw47DXi2VpzroFkiOVxUSSvgo+XxH8dEhGfss3zdsEegWUIt/uKJSRHlCBFlJhKun/1VoT1kKab0ln1mz97yAp7ZmilEs23ev4qjXF173puVY+/j/slUHviUARCGAWRpHXGjsKsZZK9Bqb8vjGrAOHq81T0=
 env:
   global:
+  - secure: lhMsUtTmKwpvAIKtDTnSZiD4LOw2dD/hb7ZmNZIVutTMxU4yXE2T+6qJHNJWsNttHmUVrq6aDqxapWkZ54E70btiRI+ihMvOuPVMKMhZ0Jg0JKZfJDai5V4d/23FgmXuvNydpIZcEiY7UpGsWd7nOGGXasBBCNjU8twcQVk+YE+vHB1PxzO2iIEBCz/mcEFRDh5+tmtj9YlGR85Dz5NBdzOXSYkguW/cwMkrScBLsI4ELGgTzmuaXvXJVoUtd29LICf54r4xjeRyXCUCA8+ncqDFIWLLDoJoCXJnDbSdxAt4TjpwnRYkIKLSnc7jtQH+4riOox7SsIeB5DWqpwfg9SbAfGvoF/VDIjqcT1JYcXQ96111Ok0tAjH9MLf0Fjh2LhslfZQtsy55EIrF/KSyvB+ERJ3bAd7PASg+wYaoYvjBdYbTd/XPKZqB0xUw1pTCYe6ysvKPijQu3Qp4eXbRaOo9g2fGsLwsXp5owh8an9U+C3Jj22CGdicUzjQJN+fRvue0vhVQsv9YriQe084u+KMQRWrigc7l3Yuw8myh4zqYqThEsV4n3/o50piAeaXXWTlJiZ2tTetwH/+m2389bDnM+dMpYz2y7nbBsQ5ZNU4cmc/WJWT/ujq7+z9VOC9X71iuz7+7DL/As6T3upnwKV99un5htOyE3V48BxC51Q0=
   - secure: PSntc0XwZK88U60TsfeN19brrUSiyoKgBEgYYNdkuOS5cDR1wKyoXC15jXrIQXexTqczcc8FJRlimt9VWEkghjGFfz3mHa3vODgN9ronb6IvJ26i/kG3iMT+0XB2a7kug9C/u2Abh+Oui7IUOnmvEpAbd6It194GaBvSY4pNTa4gb8wDzu5z++sdp7cKt0pV9jryI/IqqkaXRsG7HzuzawQW+ctSmnfaMVhONShBvqQ+zNXxXeguAeZ5Zx6tPQtp1DJMxXdzxShdHpYcCbDkEZJuxKAt73jq0l8wtwnN0tgKXQoeJXtSHbpzDqmVjOFH7ikoGBqZHetX3/3cx+9sdpo2c46ZJhLUom2Ckh8ZIgUmx23hgi6kI0A8s7Ab68Vf2rs5Ytrb0OQYjDo1eFr2GsjpGIzPibGjkYxMyRtKcV2s282dM7rP4qUryZuTlYXLu7ZFKSikEkXjEJtU7hlwZU8zUadFpBRj8bbwZLhReJBwR58Uy+R29gz1RmHuZM5vn/L14196lrB0EmjyjvkceV2H2+gpVbI9qoghoP0r2A9/EoogNDTTTHC05KdZ4TkP/OsJCJrgJab9IfVzEnJ10ezD4sEoYwtzbxFJWC9Leo0jUYYdWZZEdehyQcI7oUzi4ewmSpbmCwACRiYHoOYYQEC4hvPVTeIqDAZ/jVEBtdQ=
   - secure: aGDrXmVHa2df9gyFFli0gKksGo2nwq5xKaLhah6FV7n8dPdPLzU6iX2qbLqbtHK/1ATo2KBSS1mgYAbsgV3e1HNF/wg0XS/jhmBCilBrnPjV5KnHqMUwbyPE+L7lfy+WZ3YwoLHzSzVGRyDLoPwz+/lLqMeIDydhG+a1dv3P7KOVgGd3I2QbG8D0G1Uflo/dI+0ZX+RKQbfNMpVrIP/9LJ2XX27fyoORFiMSfP7AT5FRZyrZ7QvP2jZLz2iT2MZeKdWVnkkAMecX3SrqtHlL3DyofX8ZSKKWhUbrc57nIxWAG74/2NirLmTTx5ZKO/3fHptM2MeiaTSQ5hhyjAWv7SiG5rtFgR2higVbKOupiquSpK05OexY4+RS2aBkw+8hcYcfNLzZSY3Ucs/DvBEgRemujvuKs/0b9+oIiXVNnOvON5mySnJx6TKEWa8VtKWAeJFJthVPvTaXpY3EUjPIPCl3glq8WhD9vjDHNWx9m1mwnW8QS7EonXXtuHhq6wRfvSNdhcBYgjUPFcT7i61DoRjNoMbZCYvP3rjaK7pAI03Fsp7m6i2CdBcJzMjsEvsyJq805ICU/sP0LMdEZHnlu5vhcYzsOHLOerRf8BLNmSdJezIUODA02rw6r5H45h9AYnaR4l6ksqdyGb1XMuck2CdxeG7xygA2VC+cTL4p06U=
 
@@ -27,9 +28,23 @@ cache:
 #   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.22.4
 #   - export PATH="$HOME/.yarn/bin:$PATH"
 
+jobs:
+  include:
+    - if: branch=master
+      env:
+        ENV=staging
+    - if: branch=develop
+      env:
+        ENV=dev
+    - if: branch=alpha-rti
+      env:
+        ENV=staging
+
 install:
   - yarn
+
 script:
+  - sh scripts/set-build-num.sh $TRAVIS_BUILD_NUMBER
   - yarn lint
   - yarn test:ci
   - yarn build
@@ -40,18 +55,17 @@ before_deploy:
   - pip install awscli
 
 deploy:
-- provider: script
-  script: sh scripts/publish.sh dev
-  skip_cleanup: true
-  on:
-    branch: develop
-- provider: script
-  script: sh scripts/publish.sh staging
-  skip_cleanup: true
-  on:
-    branch: master
-- provider: script
-  script: sh scripts/publish-prod.sh
-  skip_cleanup: true
-  on:
-    branch: alpha-rti
+  - provider: script
+    script: sh scripts/publish.sh $ENV
+    skip_cleanup: true
+    on:
+      all_branches: true
+      condition: $TRAVIS_BRANCH =~ ^(develop|master)$
+  - provider: script
+    script: sh scripts/publish-prod.sh
+    skip_cleanup: true
+    on:
+      branch: alpha-rti
+
+after_deploy:
+  - bash scripts/test_runner.sh widget $ENV

@@ -8,6 +8,10 @@ import { LogLevel } from './interfaces/i-logger.interfaces';
 const possibleChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 export default class OwnIDUiSdk {
+  // don't change version placeholder
+  // eslint-disable-next-line no-template-curly-in-string
+  version = '${APP_VERSION}';
+
   config = {} as IInitConfig;
 
   isGigyaAdded = false;

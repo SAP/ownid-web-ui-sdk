@@ -30,19 +30,25 @@ export interface IWidgetConfig {
   data?: unknown;
   URLPrefix?: string;
   mobileTitle?: string;
+  note?: boolean | null | undefined | string;
   desktopTitle?: string;
   desktopSubtitle?: string;
   statusInterval?: number;
   partial?: boolean;
-  tooltip?: boolean | null | undefined | {
-    targetEl?: string | false | null | undefined;
-    offset?: [number, number];
-  };
+  tooltip?:
+    | boolean
+    | null
+    | undefined
+    | {
+        targetEl?: string | false | null | undefined;
+        offset?: [number, number];
+      };
   toggleElement?: HTMLInputElement;
   onLogin?: (response: unknown) => void;
   onRegister?: (response: unknown) => void;
   onLink?: (response: unknown) => void;
   onRecover?: (response: unknown) => void;
+  onError?: (error: string) => void;
 }
 
 export interface IPartialConfig {
@@ -56,4 +62,5 @@ export interface IPartialConfig {
   onRegister?: (response: unknown) => void;
   onLink?: (response: unknown) => void;
   onRecover?: (response: unknown) => void;
+  onError?: (error: string) => void;
 }

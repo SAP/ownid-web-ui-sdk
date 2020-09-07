@@ -58,6 +58,7 @@
     "link": "You must click OwnID button before you proceed"
   },
   "common": {
-    "labelText": "Skip the password"
+    "labelText": "Skip the password",
+    "noteText": "The next time you login, Noted.com will recognize your phone and instantly log you in."
   }
 }

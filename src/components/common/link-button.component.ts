@@ -61,7 +61,6 @@ export default class LinkButton extends BaseCommonComponent<LinkButtonOptions> {
     document.head.appendChild(style);
   }
 
-
   private openWindow(): void {
     if (this.disabled) {
       return;

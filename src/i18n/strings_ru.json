@@ -58,6 +58,7 @@
     "link": "Для продолжения нажмите клавишу OwnID"
   },
   "common": {
-    "labelText": "Пропустить пароль"
+    "labelText": "Пропустить пароль",
+    "noteText": "The next time you login, Noted.com will recognize your phone and instantly log you in."
   }
 }
