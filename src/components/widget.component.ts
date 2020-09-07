@@ -145,7 +145,7 @@ export default class WidgetComponent extends BaseComponent {
       const isTooltip =
         !!this.config.partial &&
         // @ts-ignore
-        ![null, false].includes(this.config.tooltip) &&
+        [null, false].indexOf(this.config.tooltip) < 0 &&
         !!this.config.toggleElement;
 
       this.qr = new Qr({
@@ -451,7 +451,7 @@ export default class WidgetComponent extends BaseComponent {
     const isTooltip =
       this.config.partial &&
       // @ts-ignore
-      ![null, false].includes(this.config.tooltip) &&
+      [null, false].indexOf(this.config.tooltip) < 0 &&
       this.config.toggleElement;
 
     if (isTooltip) {
@@ -512,7 +512,7 @@ export default class WidgetComponent extends BaseComponent {
     const isTooltip =
       this.config.partial &&
       // @ts-ignore
-      ![null, false].includes(this.config.tooltip) &&
+      [null, false].indexOf(this.config.tooltip) < 0 &&
       this.config.toggleElement;
 
     if (isTooltip) {
