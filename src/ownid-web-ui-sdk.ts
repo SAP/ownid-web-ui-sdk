@@ -36,7 +36,7 @@ export default class OwnIDUiSdk {
     }
 
     const desktopDisable = config.type === WidgetType.Link;
-    const mobileDisable = config.type === WidgetType.Register && config.partial;
+    const mobileDisable = config.type === WidgetType.Register && config.partial || !!config.inline;
 
     return new WidgetComponent(
       { ...this.config, ...config },

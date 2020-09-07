@@ -28,6 +28,10 @@ export interface IWidgetConfig {
   type: WidgetType;
   language?: Languages;
   data?: unknown;
+  inline?: {
+    targetElement: HTMLElement
+    offset?: [number, number];
+  };
   URLPrefix?: string;
   mobileTitle?: string;
   note?: boolean | null | undefined | string;
@@ -42,6 +46,7 @@ export interface IWidgetConfig {
     | {
         targetEl?: string | false | null | undefined;
         offset?: [number, number];
+        position?: string;
       };
   toggleElement?: HTMLInputElement;
   onLogin?: (response: unknown) => void;

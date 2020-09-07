@@ -9,6 +9,7 @@ import TranslationService from '../services/translation.service';
 import StatusResponse, { ContextStatus } from './status-response';
 import LinkedWidget from './common/linked.component';
 import { find, findIndex } from '../services/helper.service';
+import InlineWidget, { InlineWidgetOptions } from './common/inline.component';
 
 export default class WidgetComponent extends BaseComponent {
   widgetReady: Promise<void>;
@@ -37,11 +38,16 @@ export default class WidgetComponent extends BaseComponent {
   private isDestroyed = false;
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  private webappResolver: (value?: any) => void = () => {};
+  private webappResolver: (value?: any) => void = () => {
+  };
 
   private toggleElements: NodeListOf<Element> | undefined;
 
   private note: HTMLDivElement | null = null;
+
+  private inline: InlineWidget | undefined;
+
+  private globalEventCallbacks: ((event: MouseEvent) => void)[] = [];
 
   constructor(
     protected config: IWidgetConfig,
@@ -64,6 +70,8 @@ export default class WidgetComponent extends BaseComponent {
         if (config.toggleElement) {
           this.addInfoIcon(config.toggleElement);
         }
+
+        document.addEventListener('click', (event) => this.globalEventCallbacks.forEach((callback) => callback(event)));
       },
       (error: Error) => {
         // eslint-disable-next-line no-console
@@ -82,7 +90,7 @@ export default class WidgetComponent extends BaseComponent {
       type: this.config.type || WidgetType.Register,
       data,
       qr: !this.isMobile(),
-      partial: !!this.config.partial,
+      partial: !!this.config.partial || !!this.config.inline,
     };
     const contextResponse = await this.requestService.post(contextUrl, contextData);
 
@@ -108,14 +116,20 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     const lang = this.config.language || ConfigurationService.defaultLanguage;
+
+    if (this.config.inline) {
+      const { targetElement, offset } = this.config.inline;
+      this.renderInlineWidget({ lang, targetElement, offset });
+    }
+
     if (this.isMobile()) {
       if (this.disableMobile) {
         // eslint-disable-next-line no-console
-        console.warn(`Mobile rendering is disabled for ${this.config.type} widget type`);
+        console.warn(`Mobile rendering is disabled for ${ this.config.type } widget type`);
         return;
       }
 
-      const type = this.config.partial ? `${this.config.type}-partial` : this.config.type;
+      const type = this.config.partial ? `${ this.config.type }-partial` : this.config.type;
       const mobileTitle = this.config.mobileTitle || TranslationService.texts[lang][type].mobileTitle;
       this.link = new LinkButton({
         href: this.getStartUrl(),
@@ -138,11 +152,11 @@ export default class WidgetComponent extends BaseComponent {
     } else {
       if (this.disableDesktop) {
         // eslint-disable-next-line no-console
-        console.warn(`Desktop rendering is disabled for ${this.config.type} widget type`);
+        console.warn(`Desktop rendering is disabled for ${ this.config.type } widget type`);
         return;
       }
-      const type = this.config.partial ? `${this.config.type}-partial` : this.config.type;
-      const isTooltip =
+      const type = (this.config.partial || this.config.inline) ? `${ this.config.type }-partial` : this.config.type;
+      const isTooltip = !!this.config.inline ||
         !!this.config.partial &&
         // @ts-ignore
         [null, false].indexOf(this.config.tooltip) < 0 &&
@@ -156,6 +170,15 @@ export default class WidgetComponent extends BaseComponent {
         lang,
         tooltip: isTooltip,
       });
+
+      if (isTooltip) {
+        this.addCallback2GlobalEvent((event) => {
+          if (this.config.element.style.display === 'block' && !this.qr!.ref.contains(event.target as Node)) {
+            this.toggleQrTooltip(false);
+          }
+        });
+      }
+
       this.addChild(this.qr);
 
       this.returnError = TranslationService.texts[lang].errors.qr;
@@ -169,13 +192,13 @@ export default class WidgetComponent extends BaseComponent {
   private getStatusUrl() {
     const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
-    return `${prefix}${ConfigurationService.statusUrl}`;
+    return `${ prefix }${ ConfigurationService.statusUrl }`;
   }
 
   private getApproveUrl(context: string) {
     const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
-    return `${prefix}${ConfigurationService.approveUrl.replace(':context', context)}`;
+    return `${ prefix }${ ConfigurationService.approveUrl.replace(':context', context) }`;
   }
 
   private setCallStatus(): void {
@@ -256,7 +279,7 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     // remove expired items from contexts array
-    for (let i = this.contexts.length; i--; ) {
+    for (let i = this.contexts.length; i--;) {
       const item = this.contexts[i];
       if (findIndex(statusResponse, (x: StatusResponse) => x.context === item.context) < 0) {
         this.contexts.splice(i, 1);
@@ -351,7 +374,7 @@ export default class WidgetComponent extends BaseComponent {
   private addInfoIcon(checkInput: HTMLElement): void {
     if (!checkInput.id) {
       // eslint-disable-next-line no-param-reassign
-      checkInput.id = `ownid-toggle-check-${Math.random()}`;
+      checkInput.id = `ownid-toggle-check-${ Math.random() }`;
     }
 
     const lang = this.config.language || ConfigurationService.defaultLanguage;
@@ -373,17 +396,9 @@ export default class WidgetComponent extends BaseComponent {
 
     const aboutTooltip = infoIcon.querySelector('[ownid-about-tooltip]') as HTMLElement;
 
-    document.addEventListener('click', (event) => {
-      const clickedInsideInfoIcon = infoIcon.contains(event.target as Node);
-      if (!clickedInsideInfoIcon) {
+    this.addCallback2GlobalEvent((event) => {
+      if (aboutTooltip.style.display === 'block' && !infoIcon.contains(event.target as Node)) {
         aboutTooltip.style.display = 'none';
-      }
-
-      if (this.qr && this.config.element.style.display === 'block') {
-        const clickedInsideQr = this.qr.ref.contains(event.target as Node);
-        if (!clickedInsideQr) {
-          this.config.element.style.display = 'none';
-        }
       }
     });
 
@@ -397,7 +412,7 @@ export default class WidgetComponent extends BaseComponent {
       this.note = document.createElement('div');
       this.note.setAttribute('class', 'ownid-note');
       this.note.style.display = 'none';
-      this.note.textContent = typeof this.config.note ==='string' ? this.config.note : TranslationService.texts[lang].common.noteText;
+      this.note.textContent = typeof this.config.note === 'string' ? this.config.note : TranslationService.texts[lang].common.noteText;
       checkInput.parentNode!.parentNode!.insertBefore(this.note, checkInput.parentNode!.nextSibling);
     }
 
@@ -411,31 +426,14 @@ export default class WidgetComponent extends BaseComponent {
             this.note.style.display = 'block';
           }
         } else {
-          setTimeout(() => {
-            this.config.element.style.display = 'block';
-          });
-
-          let tooltipRefEl = checkInput;
-          let [offsetX, offsetY] = [0, 0];
-
-          if (this.config.tooltip && typeof this.config.tooltip === 'object') {
-            if (this.config.tooltip.targetEl) {
-              tooltipRefEl = document.querySelector(this.config.tooltip.targetEl) as HTMLElement;
-            }
-            if (this.config.tooltip.offset) {
-              [offsetX, offsetY] = this.config.tooltip.offset;
-            }
-          }
-          const { left, top, width, height } = tooltipRefEl.getBoundingClientRect();
-
-          this.qr!.ref.style.top = `${top + (offsetX || height / 2) + window.pageYOffset}px`;
-          this.qr!.ref.style.left = `${left + (offsetX || width) + window.pageXOffset + offsetY + 10}px`; // 10px is arrow width
+          this.toggleQrTooltip(true);
 
           // eslint-disable-next-line no-param-reassign
           (target as HTMLInputElement).checked = false;
         }
       } else {
-        this.config.element.style.display = 'none';
+        this.toggleQrTooltip(false);
+
         if (this.note) {
           this.note.style.display = 'none';
         }
@@ -443,20 +441,64 @@ export default class WidgetComponent extends BaseComponent {
       }
     });
 
-    this.config.element.style.display = 'none';
+    this.toggleQrTooltip(false);
+  }
+
+  private toggleQrTooltip(show: boolean) {
+    if (!show) {
+      this.config.element.style.display = 'none';
+      return;
+    }
+
+    setTimeout(() => {
+      this.config.element.style.display = 'block';
+    });
+
+    let tooltipRefEl: HTMLElement = (this.inline?.ref || this.config.toggleElement) as HTMLElement;
+    let [offsetX, offsetY] = [0, 0];
+    let tooltipPosition = this.inline ? 'left' : 'right';
+
+    if (this.config.tooltip && typeof this.config.tooltip === 'object') {
+      if (this.config.tooltip.targetEl) {
+        tooltipRefEl = document.querySelector(this.config.tooltip.targetEl) as HTMLElement;
+      }
+      if (this.config.tooltip.offset) {
+        [offsetX, offsetY] = this.config.tooltip.offset;
+      }
+
+      if (this.config.tooltip.position) {
+        tooltipPosition = this.config.tooltip.position;
+      }
+    }
+
+    this.qr!.ref.classList.add(`ownid-tooltip-wrapper-${ tooltipPosition }`);
+
+    const { left, top, right, height } = tooltipRefEl.getBoundingClientRect();
+
+    this.qr!.ref.style.top = `${ top + (offsetX || height / 2) + window.pageYOffset }px`;
+
+    if (tooltipPosition === 'right') {
+      this.qr!.ref.style.left = `${ right + offsetY + window.pageXOffset + 10 }px`; // 10px is arrow width
+    } else {
+      this.qr!.ref.style.right = `${ window.innerWidth - left + offsetY + window.pageXOffset + 10 }px`; // 10px is arrow width
+    }
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   private callOnSuccess(finalResponse: any): void {
-    const isTooltip =
+    const isTooltip = !!this.config.inline ||
       this.config.partial &&
       // @ts-ignore
       [null, false].indexOf(this.config.tooltip) < 0 &&
       this.config.toggleElement;
 
     if (isTooltip) {
+      this.toggleQrTooltip(false);
+
+      this.inline?.setFinishStatus(true);
+
       this.toggleElements?.forEach((toggleElement) => toggleElement.classList.add('ownid-disabled'));
-      this.config.element.style.display = 'none';
+
       if (this.config.toggleElement) {
         this.config.toggleElement.checked = true;
       }
@@ -509,18 +551,43 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private callOnError(error: string) {
-    const isTooltip =
+    const isTooltip = !!this.config.inline ||
       this.config.partial &&
       // @ts-ignore
       [null, false].indexOf(this.config.tooltip) < 0 &&
       this.config.toggleElement;
 
     if (isTooltip) {
-      this.config.element.style.display = 'none';
+      this.toggleQrTooltip(false);
     }
 
     if (this.config.onError) {
       this.config.onError(error);
     }
+  }
+
+  private renderInlineWidget(options: InlineWidgetOptions) {
+    this.inline = new InlineWidget(options);
+
+    if (!this.isMobile()) {
+      this.toggleQrTooltip(false);
+    }
+
+    this.inline.attachHandler('click', () => {
+      if (this.finalResponse) {
+        this.callOnSuccess(this.finalResponse);
+        return;
+      }
+
+      if (this.isMobile()) {
+        return this.openWebapp();
+      } else {
+        return this.toggleQrTooltip(true);
+      }
+    });
+  }
+
+  private addCallback2GlobalEvent(param: (event: MouseEvent) => void) {
+    this.globalEventCallbacks.push(param);
   }
 }

@@ -57,6 +57,9 @@
     "qr": "You must scan QR code before you proceed",
     "link": "You must click OwnID button before you proceed"
   },
+  "inline": {
+    "message": "Skip the password"
+  },
   "common": {
     "labelText": "Skip the password",
     "noteText": "The next time you login, Noted.com will recognize your phone and instantly log you in."
