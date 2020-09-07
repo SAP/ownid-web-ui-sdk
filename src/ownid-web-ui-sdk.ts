@@ -36,7 +36,7 @@ export default class OwnIDUiSdk {
     }
 
     const desktopDisable = config.type === WidgetType.Link;
-    const mobileDisable = config.type === WidgetType.Register && config.partial || !!config.inline;
+    const mobileDisable = (config.type === WidgetType.Register && config.partial) || !!config.inline;
 
     return new WidgetComponent(
       { ...this.config, ...config },
@@ -48,7 +48,7 @@ export default class OwnIDUiSdk {
 
   async getOwnIDPayload(widget: WidgetComponent): Promise<unknown> {
     if (widget.disabled) {
-      return  Promise.resolve({ error: null, data: null });
+      return Promise.resolve({ error: null, data: null });
     }
 
     if (widget.finalResponse) {

@@ -40,8 +40,7 @@ export default class WidgetComponent extends BaseComponent {
   private isDestroyed = false;
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  private webappResolver: (value?: any) => void = () => {
-  };
+  private webappResolver: (value?: any) => void = () => {};
 
   private toggleElements: NodeListOf<Element> | undefined;
 
@@ -124,19 +123,22 @@ export default class WidgetComponent extends BaseComponent {
       this.renderInlineWidget({ lang, targetElement, offset, additionalElements });
     }
 
-    if ((this.config.inline || this.config.toggleElement) &&
-      this.config.type === WidgetType.Register && (this.config.note || this.config.note === undefined)) {
+    if (
+      (this.config.inline || this.config.toggleElement) &&
+      this.config.type === WidgetType.Register &&
+      (this.config.note || this.config.note === undefined)
+    ) {
       this.renderNote(lang);
     }
 
     if (this.isMobile()) {
       if (this.disableMobile) {
         // eslint-disable-next-line no-console
-        console.warn(`Mobile rendering is disabled for ${ this.config.type } widget type`);
+        console.warn(`Mobile rendering is disabled for ${this.config.type} widget type`);
         return;
       }
 
-      const type = this.config.partial ? `${ this.config.type }-partial` : this.config.type;
+      const type = this.config.partial ? `${this.config.type}-partial` : this.config.type;
       const mobileTitle = this.config.mobileTitle || TranslationService.texts[lang][type].mobileTitle;
       this.link = new LinkButton({
         href: this.getStartUrl(),
@@ -159,15 +161,16 @@ export default class WidgetComponent extends BaseComponent {
     } else {
       if (this.disableDesktop) {
         // eslint-disable-next-line no-console
-        console.warn(`Desktop rendering is disabled for ${ this.config.type } widget type`);
+        console.warn(`Desktop rendering is disabled for ${this.config.type} widget type`);
         return;
       }
-      const type = (this.config.partial || this.config.inline) ? `${ this.config.type }-partial` : this.config.type;
-      const isTooltip = !!this.config.inline ||
-        !!this.config.partial &&
-        // @ts-ignore
-        [null, false].indexOf(this.config.tooltip) < 0 &&
-        !!this.config.toggleElement;
+      const type = this.config.partial || this.config.inline ? `${this.config.type}-partial` : this.config.type;
+      const isTooltip =
+        !!this.config.inline ||
+        (!!this.config.partial &&
+          // @ts-ignore
+          [null, false].indexOf(this.config.tooltip) < 0 &&
+          !!this.config.toggleElement);
 
       this.qr = new Qr({
         href: this.getStartUrl(),
@@ -199,13 +202,13 @@ export default class WidgetComponent extends BaseComponent {
   private getStatusUrl() {
     const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
-    return `${ prefix }${ ConfigurationService.statusUrl }`;
+    return `${prefix}${ConfigurationService.statusUrl}`;
   }
 
   private getApproveUrl(context: string) {
     const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
-    return `${ prefix }${ ConfigurationService.approveUrl.replace(':context', context) }`;
+    return `${prefix}${ConfigurationService.approveUrl.replace(':context', context)}`;
   }
 
   private setCallStatus(): void {
@@ -286,7 +289,7 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     // remove expired items from contexts array
-    for (let i = this.contexts.length; i--;) {
+    for (let i = this.contexts.length; i--; ) {
       const item = this.contexts[i];
       if (findIndex(statusResponse, (x: StatusResponse) => x.context === item.context) < 0) {
         this.contexts.splice(i, 1);
@@ -381,7 +384,7 @@ export default class WidgetComponent extends BaseComponent {
   private addInfoIcon(checkInput: HTMLElement): void {
     if (!checkInput.id) {
       // eslint-disable-next-line no-param-reassign
-      checkInput.id = `ownid-toggle-check-${ Math.random() }`;
+      checkInput.id = `ownid-toggle-check-${Math.random()}`;
     }
 
     const lang = this.config.language || ConfigurationService.defaultLanguage;
@@ -472,26 +475,27 @@ export default class WidgetComponent extends BaseComponent {
       }
     }
 
-    this.qr!.ref.classList.add(`ownid-tooltip-wrapper-${ tooltipPosition }`);
+    this.qr!.ref.classList.add(`ownid-tooltip-wrapper-${tooltipPosition}`);
 
     const { left, top, right, height } = tooltipRefEl.getBoundingClientRect();
 
-    this.qr!.ref.style.top = `${ top + (offsetX || height / 2) + window.pageYOffset }px`;
+    this.qr!.ref.style.top = `${top + (offsetX || height / 2) + window.pageYOffset}px`;
 
     if (tooltipPosition === 'right') {
-      this.qr!.ref.style.left = `${ right + offsetY + window.pageXOffset + 10 }px`; // 10px is arrow width
+      this.qr!.ref.style.left = `${right + offsetY + window.pageXOffset + 10}px`; // 10px is arrow width
     } else {
-      this.qr!.ref.style.right = `${ window.innerWidth - left + offsetY + window.pageXOffset + 10 }px`; // 10px is arrow width
+      this.qr!.ref.style.right = `${window.innerWidth - left + offsetY + window.pageXOffset + 10}px`; // 10px is arrow width
     }
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   private callOnSuccess(finalResponse: any): void {
-    const isTooltip = !!this.config.inline ||
-      this.config.partial &&
-      // @ts-ignore
-      [null, false].indexOf(this.config.tooltip) < 0 &&
-      this.config.toggleElement;
+    const isTooltip =
+      !!this.config.inline ||
+      (this.config.partial &&
+        // @ts-ignore
+        [null, false].indexOf(this.config.tooltip) < 0 &&
+        this.config.toggleElement);
 
     if (isTooltip) {
       this.toggleQrTooltip(false);
@@ -554,11 +558,12 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private callOnError(error: string) {
-    const isTooltip = !!this.config.inline ||
-      this.config.partial &&
-      // @ts-ignore
-      [null, false].indexOf(this.config.tooltip) < 0 &&
-      this.config.toggleElement;
+    const isTooltip =
+      !!this.config.inline ||
+      (this.config.partial &&
+        // @ts-ignore
+        [null, false].indexOf(this.config.tooltip) < 0 &&
+        this.config.toggleElement);
 
     if (isTooltip) {
       this.toggleQrTooltip(false);
@@ -608,7 +613,9 @@ export default class WidgetComponent extends BaseComponent {
       this.note.textContent = this.config.note;
     }
 
-    let prevElement = this.config.toggleElement ? this.config.toggleElement.parentNode! : this.config.inline!.targetElement;
+    let prevElement = this.config.toggleElement
+      ? this.config.toggleElement.parentNode!
+      : this.config.inline!.targetElement;
     let append = false;
 
     if (typeof this.config.note === 'object') {
@@ -630,9 +637,9 @@ export default class WidgetComponent extends BaseComponent {
         this.note!.style.display = 'none';
         this.disabled = true;
         this.inline?.setFinishStatus(false);
-      })
+      });
 
-      this.note.appendChild(undo)
+      this.note.appendChild(undo);
     }
 
     if (append) {
