@@ -43,6 +43,7 @@ module.exports = {
     'promise/catch-or-return': 'off',
     'promise/always-return': 'off',
     'unicorn/no-null': 'off',
+    'unicorn/prefer-includes': 'off',
     '@typescript-eslint/ban-types': 'warn',
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
