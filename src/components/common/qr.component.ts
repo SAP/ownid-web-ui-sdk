@@ -201,6 +201,7 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 .ownid-tooltip-wrapper .ownid-title-spacer{display:none}
 .ownid-tooltip-wrapper .ownid-qr-pane--about-wrapper{display:none}
 .ownid-tooltip-wrapper .ownid-spacer{display:block}
+.ownid-tooltip-wrapper .ownid-subtitle{display:none}
 
 .ownid-tooltip-wrapper [ownid-done]{flex-direction:column}
 .ownid-tooltip-wrapper .ownid-done-text{text-align:center}
