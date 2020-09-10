@@ -5,8 +5,9 @@
   <title>Title</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="../dist/sdk.es5.js"></script>
+  <script src="../dist/sdk.gigya.es5.js"></script>
   <script type="text/javascript" lang="javascript"
-          src="http://cdn.gigya.com/js/gigya.js?apikey=3_4dA7nagT-27tI2ZgZ080PZr_ahnMWgoX5Iv2I-PjM7AkT1aEac8zvz2zpj2V2tmX">
+          src="http://cdn.gigya.com/js/gigya.js?apikey=3_s5-gLs4aLp5FXluP8HXs7_JN40XWNlbvYWVCCkbNCqlhW6Sm5Z4tXGGsHcSJYD3W">
     {
       customEventMap : {
         eventMap: [
@@ -35,69 +36,8 @@
 <script>
   function onGigyaServiceReady() {
     ownid.init({
-      URLPrefix: 'http://localhost:5002/ownid/', // optional. default path is /ownId/
+      URLPrefix: 'http://localhost:5002/ownid/',
     });
-  }
-
-  window.ownIDWidgetStack = [];
-
-  function getOwnIdWrapper() {
-    let ownIDElement = document.getElementById('ownid-wrapper');
-    if (!ownIDElement) {
-      ownIDElement = document.createElement('div');
-      ownIDElement.id = 'ownid-wrapper';
-
-      document.body.appendChild(ownIDElement);
-    }
-
-    return ownIDElement;
-  }
-
-  function renderRegisterWidget() {
-    const pass = document.querySelector('[data-gigya-name="password"]');
-    const repeatPass = document.querySelector('[data-gigya-name="passwordRetype"]');
-
-    ownIDWidgetStack.push(
-      ownid.render({
-        type: 'register',
-        inline: {
-          targetElement: pass,
-          additionalElements: [repeatPass],
-          offset: [0, -10],
-        },
-        element: getOwnIdWrapper(),
-      })
-    );
-
-    // document.getElementsByClassName("gigya-input-submit")[0].addEventListener("click", function(){
-    //   var pw = ownid.generateOwnIDPassword(32);
-    //   document.querySelectorAll("[data-gigya-name='password']")[0].value = pw;
-    //   document.querySelectorAll("[data-gigya-name='passwordRetype']")[0].value = pw;
-    // });
-  }
-
-  function renderLoginWidget(onLogin) {
-    const pass = document.querySelector('[data-gigya-name="password"]');
-
-    ownIDWidgetStack.push(
-      ownid.render({
-        type: 'login',
-        inline: {
-          targetElement: pass,
-          offset: [0, -10],
-        },
-        element: getOwnIdWrapper(),
-        onLogin,
-      })
-    );
-  }
-
-  function destroyOwnIDWidget() {
-    const widget = ownIDWidgetStack.shift();
-
-    if (widget) {
-      widget.destroy();
-    }
   }
 
   function loadScreenSet(startScreen) {
@@ -118,60 +58,32 @@
       },
       onBeforeValidation(event) {
         console.log('onBeforeValidation', event);
-
-        // var pw = ownid.generateOwnIDPassword(32);
-        // event.formData.password = pw;
-        // event.formData.passwordRetype = pw;
-        // document.querySelectorAll("[data-gigya-name='password']")[0].value = pw;
-        // document.querySelectorAll("[data-gigya-name='passwordRetype']")[0].value = pw;
       },
       onFieldChanged(event) {
         console.log('onFieldChanged', event);
-
-        setTimeout(() => ownIDWidgetStack[0].recalculatePosition());
       },
       onAfterScreenLoad(event) {
         console.log('onAfterScreenLoad', event);
 
-        destroyOwnIDWidget();
-
-        if (event.currentScreen === 'gigya-login-screen') {
-          renderLoginWidget(function (e) {
-            console.log(e);
-          });
-        }
-
-        if (event.currentScreen === 'gigya-register-screen') {
-          renderRegisterWidget();
-        }
+       window.ownid.gigya.onAfterScreenLoad(event, (e) => console.log('window.ownid.onAfterScreenLoad', e))
       },
       onHide(event) {
         console.log('onHide', event);
 
-        destroyOwnIDWidget()
+        window.ownid.gigya.onHide();
+
       },
       onSubmit(event) {
-        ownid.getOwnIDPayload(ownIDWidgetStack[0]).then(({data}) => {
-            console.log('onSubmit');
-            if (!data) {
-              return;
-            }
-
-            event.formModel.data.ownIdConnections = [{...data}];
-          }
-        )
+        console.log('onSubmit');
+        return window.ownid.gigya.onSubmit(event).then((e) => console.log('window.ownid.onSubmit', e));
       },
     }
 
     gigya.accounts.showScreenSet(params)
   }
-
-
 </script>
 
 <a href="#" onclick="loadScreenSet('gigya-login-screen')">Login</a>
-
-
 <a href="#" onclick="loadScreenSet('gigya-register-screen')">Registration</a>
 
 <p>sdfdsfdsf</p>

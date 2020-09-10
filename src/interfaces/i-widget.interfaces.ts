@@ -29,7 +29,7 @@ export interface IWidgetConfig {
   language?: Languages;
   data?: unknown;
   inline?: {
-    targetElement: HTMLElement;
+    targetElement: HTMLInputElement;
     additionalElements?: HTMLElement[];
     offset?: [number, number];
   };

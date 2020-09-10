@@ -40,8 +40,7 @@ export default class WidgetComponent extends BaseComponent {
   private isDestroyed = false;
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  private webappResolver: (value?: any) => void = () => {
-  };
+  private webappResolver: (value?: any) => void = () => {};
 
   private toggleElements: NodeListOf<Element> | undefined;
 
@@ -73,7 +72,12 @@ export default class WidgetComponent extends BaseComponent {
           this.addInfoIcon(config.toggleElement);
         }
 
-        document.addEventListener('click', (event) => this.globalEventCallbacks.forEach((callback) => callback(event)));
+        if (!this.isMobile() && (config.toggleElement || config.inline)) {
+          document.addEventListener('click', (event) =>
+            // eslint-disable-next-line promise/no-callback-in-promise
+            this.globalEventCallbacks.forEach((callback) => callback(event)),
+          );
+        }
       },
       (error: Error) => {
         // eslint-disable-next-line no-console
@@ -289,7 +293,7 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     // remove expired items from contexts array
-    for (let i = this.contexts.length; i--;) {
+    for (let i = this.contexts.length; i--; ) {
       const item = this.contexts[i];
       if (findIndex(statusResponse, (x: StatusResponse) => x.context === item.context) < 0) {
         this.contexts.splice(i, 1);
@@ -557,7 +561,7 @@ export default class WidgetComponent extends BaseComponent {
     });
   }
 
-  private callOnError(error: string) {
+  private callOnError(error: string): void {
     const isTooltip =
       !!this.config.inline ||
       (this.config.partial &&
@@ -574,7 +578,7 @@ export default class WidgetComponent extends BaseComponent {
     }
   }
 
-  private renderInlineWidget(options: InlineWidgetOptions) {
+  private renderInlineWidget(options: InlineWidgetOptions): void {
     this.inline = new InlineWidget(options);
 
     if (!this.isMobile()) {
@@ -594,6 +598,11 @@ export default class WidgetComponent extends BaseComponent {
       }
 
       if (this.isMobile()) {
+        if (this.config.type === WidgetType.Login) {
+          this.openWebapp();
+          return;
+        }
+
         this.disabled = false;
         this.inline!.setFinishStatus(true);
         if (this.note) {
@@ -608,11 +617,11 @@ export default class WidgetComponent extends BaseComponent {
     window.addEventListener('scroll', () => this.recalculatePosition());
   }
 
-  private addCallback2GlobalEvent(param: (event: MouseEvent) => void) {
+  private addCallback2GlobalEvent(param: (event: MouseEvent) => void): void {
     this.globalEventCallbacks.push(param);
   }
 
-  private renderNote(lang: string) {
+  private renderNote(lang: string): void {
     this.note = document.createElement('div');
     this.note.setAttribute('class', 'ownid-note');
     this.note.style.display = 'none';
@@ -658,15 +667,15 @@ export default class WidgetComponent extends BaseComponent {
     }
   }
 
-  public recalculatePosition() {
+  public recalculatePosition(): void {
     const lang = this.config.language || ConfigurationService.defaultLanguage;
 
     if (this.inline) {
-      this.inline.calculatePosition(this.inline.ref, { lang, ...this.config.inline! })
+      this.inline.calculatePosition(this.inline.ref, { lang, ...this.config.inline! });
     }
 
     if (this.config.element.style.display === 'block') {
-      this.toggleQrTooltip(true)
+      this.toggleQrTooltip(true);
     }
   }
 }
