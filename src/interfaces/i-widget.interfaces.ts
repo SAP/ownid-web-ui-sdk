@@ -28,17 +28,39 @@ export interface IWidgetConfig {
   type: WidgetType;
   language?: Languages;
   data?: unknown;
+  inline?: {
+    targetElement: HTMLInputElement;
+    additionalElements?: HTMLElement[];
+    offset?: [number, number];
+  };
   URLPrefix?: string;
   mobileTitle?: string;
+  note?:
+    | boolean
+    | null
+    | string
+    | {
+        text: string;
+        wrapperElement?: HTMLElement;
+      };
   desktopTitle?: string;
   desktopSubtitle?: string;
   statusInterval?: number;
   partial?: boolean;
-  toggleElement?: HTMLElement;
+  tooltip?:
+    | boolean
+    | null
+    | {
+        targetEl?: string | false | null | undefined;
+        offset?: [number, number];
+        position?: string;
+      };
+  toggleElement?: HTMLInputElement;
   onLogin?: (response: unknown) => void;
   onRegister?: (response: unknown) => void;
   onLink?: (response: unknown) => void;
   onRecover?: (response: unknown) => void;
+  onError?: (error: string) => void;
 }
 
 export interface IPartialConfig {
@@ -52,4 +74,5 @@ export interface IPartialConfig {
   onRegister?: (response: unknown) => void;
   onLink?: (response: unknown) => void;
   onRecover?: (response: unknown) => void;
+  onError?: (error: string) => void;
 }

@@ -8,6 +8,15 @@
     .row {
       margin: 0 0 16px;
     }
+    .own-input {
+      background: #f5f6f7;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      height: 30px;
+      padding: 0 11px;
+      margin-bottom: 8px;
+      width: 330px;
+    }
   </style>
   <script>
     window.ownidAsyncInit = function () {
@@ -15,58 +24,87 @@
         URLPrefix: 'http://localhost:5002/ownid/', // optional. default path is /ownId/
       });
 
-      var ownIdElem1 = ownid.render({
-        type: 'register',
-        element: document.querySelector('#ownid'),
-      });
+      // var ownIdElem1 = ownid.render({
+      //   type: 'register',
+      //   element: document.querySelector('#ownid'),
+      // });
+      //
+      // ownid.render({
+      //   type: 'login',
+      //   element: document.querySelector('#ownid-login'),
+      //   language: 'ru',
+      // });
+      //
+      // ownid.render({
+      //   type: 'recover',
+      //   element: document.querySelector('#ownid-recover'),
+      //   data: {
+      //     pwrt: 'pwrtString'
+      //   },
+      //   onRecover: (data) => console.log(data)
+      // });
+      //
+      // ownid.renderLinkGigya({
+      //   type: 'link',
+      //   element: document.querySelector('#ownid-link'),
+      // }, '3_s5-gLs4aLp5FXluP8HXs7_JN40XWNlbvYWVCCkbNCqlhW6Sm5Z4tXGGsHcSJYD3W');
+      //
+      // let lang = 'en';
+      //
+      // document.getElementById('destroy')
+      //   .addEventListener('click', () => ownIdElem1.destroy());
+      //
+      // document.getElementById('lang-change')
+      //   .addEventListener('click', () => {
+      //     lang = lang === 'ru' ? 'en' : 'ru';
+      //     ownIdElem1.update({language: lang});
+      //   });
+      //
+      //
+      // // Authenticate only flow
+      // window.authOnlyWidget = ownid.render({
+      //   type: 'register',
+      //   partial: true,
+      //   element: document.getElementById('ownid-toggle-register'),
+      //   toggleElement: document.getElementById('custom-register-check'),
+      // });
+      //
+      //
+      // // Inline register Widget
+      // window.inlineWidget = ownid.render({
+      //   type: 'register',
+      //   inline: {
+      //     targetElement: document.getElementById('inline-password'),
+      //     additionalElements: [document.getElementById('inline-repeat-password')],
+      //     offset: [0, -10],
+      //   },
+      //   element: document.getElementById('ownid-inline'),
+      // });
 
-      ownid.render({
+      // Inline login Widget
+      window.inlineWidget = ownid.render({
         type: 'login',
-        element: document.querySelector('#ownid-login'),
-        language: 'ru',
-      });
-
-      ownid.render({
-        type: 'recover',
-        element: document.querySelector('#ownid-recover'),
-        data: {
-          pwrt: 'pwrtString'
+        inline: {
+          targetElement: document.getElementById('inline-login-password'),
+          offset: [0, -10],
         },
-        onRecover: (data) => console.log(data)
-      });
-
-      ownid.renderLinkGigya({
-        type: 'link',
-        element: document.querySelector('#ownid-link'),
-      }, '3_s5-gLs4aLp5FXluP8HXs7_JN40XWNlbvYWVCCkbNCqlhW6Sm5Z4tXGGsHcSJYD3W');
-
-      let lang = 'en';
-
-      document.getElementById('destroy')
-        .addEventListener('click', () => ownIdElem1.destroy());
-
-      document.getElementById('lang-change')
-        .addEventListener('click', () => {
-          lang = lang === 'ru' ? 'en' : 'ru';
-          ownIdElem1.update({language: lang});
-        });
-
-
-      // Authenticate only flow
-      window.authOnlyWidget = ownid.render({
-        type: 'register',
-        partial: true,
-        element: document.getElementById('ownid-toggle-register'),
-        toggleElement: document.getElementById('custom-register-check'),
+        element: document.getElementById('ownid-inline-login'),
+        onLogin(e) {
+          console.log(e);
+        }
       });
     };
 
     function onSubmit() {
       ownid.getOwnIDPayload(authOnlyWidget).then((data) => console.log(data));
     }
+
+    function onInlineSubmit() {
+      ownid.getOwnIDPayload(inlineWidget).then((data) => console.log(data));
+    }
   </script>
 
-  <script async defer src="../dist/ownid-web-ui-sdk.es5.js"></script>
+  <script async defer src="../dist/sdk.es5.js"></script>
 
   <style>
     body {
@@ -125,7 +163,7 @@
       <input type="checkbox" id="custom-register-check" ownid-toggle-rel="[ownid-toggle]">
     </div>
 
-    <div id="ownid-toggle-register" class="ownid"></div>
+    <div id="ownid-toggle-register"></div>
 
     <div class="row" ownid-toggle>
       <input type="password" placeholder="password">
@@ -142,6 +180,45 @@
 
     <div class="row">
       <button type="button" onclick="onSubmit()">Submit</button>
+    </div>
+  </form>
+
+  <h4 class="">Inline Registration</h4>
+  <form>
+    <div class="row">
+      <input type="name" placeholder="name">
+    </div>
+
+    <div id="ownid-inline"></div>
+
+    <div class="row">
+      <input class="own-input" type="password" placeholder="password" id="inline-password">
+    </div>
+
+    <div class="row">
+      <input class="own-input" type="password" placeholder="repeat password" id="inline-repeat-password">
+    </div>
+
+    <div class="row">
+      <input type="checkbox" id="terms2">
+      <label for="terms2">terms and conditions</label>
+    </div>
+
+    <div class="row">
+      <button type="button" onclick="onInlineSubmit()">Submit</button>
+    </div>
+  </form>
+
+  <h4 class="">Inline Login</h4>
+  <form>
+    <div class="row">
+      <input type="name" placeholder="name">
+    </div>
+
+    <div id="ownid-inline-login"></div>
+
+    <div class="row">
+      <input class="own-input" type="password" placeholder="password" id="inline-login-password">
     </div>
   </form>
 </div>

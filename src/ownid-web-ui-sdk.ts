@@ -8,6 +8,10 @@ import { LogLevel } from './interfaces/i-logger.interfaces';
 const possibleChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 export default class OwnIDUiSdk {
+  // don't change version placeholder
+  // eslint-disable-next-line no-template-curly-in-string
+  version = '${APP_VERSION}';
+
   config = {} as IInitConfig;
 
   isGigyaAdded = false;
@@ -32,7 +36,7 @@ export default class OwnIDUiSdk {
     }
 
     const desktopDisable = config.type === WidgetType.Link;
-    const mobileDisable = config.type === WidgetType.Register && config.partial;
+    const mobileDisable = (config.type === WidgetType.Register && config.partial) || !!config.inline;
 
     return new WidgetComponent(
       { ...this.config, ...config },
@@ -43,6 +47,10 @@ export default class OwnIDUiSdk {
   }
 
   async getOwnIDPayload(widget: WidgetComponent): Promise<unknown> {
+    if (widget.disabled) {
+      return Promise.resolve({ error: null, data: null });
+    }
+
     if (widget.finalResponse) {
       return { error: null, data: widget.finalResponse };
     }
@@ -69,7 +77,6 @@ export default class OwnIDUiSdk {
       return null;
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const { gigya } = window;
 
@@ -86,7 +93,7 @@ export default class OwnIDUiSdk {
 
       if (!this.isGigyaAdded && !gigya) {
         this.isGigyaAdded = true;
-        const src = `https://cdns.gigya.com/js/gigya.js?apikey=${apiKey}`;
+        const src = `https://cdns.gigya.com/js/gigya.js?apikey=${ apiKey }`;
         const scriptElement = document.createElement('script');
         scriptElement.src = src;
         scriptElement.addEventListener('load', createWidgetResolve);

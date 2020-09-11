@@ -6,7 +6,6 @@ declare type LinkButtonOptions = {
 };
 
 export default class LinkedWidget extends BaseCommonComponent<LinkButtonOptions> {
-
   constructor(options: LinkButtonOptions) {
     super(options);
   }

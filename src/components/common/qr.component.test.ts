@@ -11,13 +11,15 @@ describe('ctor -> Render', () => {
       title: 'title',
       subtitle: 'subtitle',
       lang: 'en',
-      type: WidgetType.Register
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
     };
     const sut = new Qr(options);
 
     sut.appendToParent(parent);
 
-    const qrCode = document.querySelector(`.own-id-qr-code`);
+    const qrCode = document.querySelector(`.ownid-qr-code`);
     expect(qrCode).not.toBeNull();
 
     const qrCodeImg = qrCode!.querySelector(`img`);
@@ -32,7 +34,9 @@ describe('ctor -> Render', () => {
       title: 'title',
       subtitle: 'subtitle',
       lang: 'en',
-      type: WidgetType.Register
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
     };
     const sut = new Qr(options);
 
@@ -52,7 +56,9 @@ describe('update', () => {
       title: 'title',
       subtitle: 'subtitle',
       lang: 'en',
-      type: WidgetType.Register
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
     };
     const sut: any = new Qr(options);
     sut.ref = null;
@@ -69,7 +75,9 @@ describe('update', () => {
       title: 'title',
       subtitle: 'subtitle',
       lang: 'en',
-      type: WidgetType.Register
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
     };
     const sut: any = new Qr(options);
 
@@ -87,7 +95,9 @@ describe('update', () => {
       title: 'title',
       subtitle: 'subtitle',
       lang: 'en',
-      type: WidgetType.Register
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
     };
     const sut: any = new Qr(options);
 
@@ -105,7 +115,9 @@ describe('update', () => {
       title: 'title',
       subtitle: 'subtitle',
       lang: 'en',
-      type: WidgetType.Register
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
     };
     const sut: any = new Qr(options);
 
@@ -124,12 +136,14 @@ describe('Destroy()', () => {
       title: 'title',
       subtitle: 'subtitle',
       lang: 'en',
-      type: WidgetType.Register
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
     };
     const qr = new Qr(options);
     qr.appendToParent(parent);
     qr.destroy();
-    expect(document.querySelector(`.own-id-qr-code`)).toBeNull();
+    expect(document.querySelector(`.ownid-qr-code`)).toBeNull();
   });
 });
 
@@ -140,7 +154,9 @@ describe('showSecurityCheck', () => {
       title: 'title',
       subtitle: 'subtitle',
       lang: 'en',
-      type: WidgetType.Register
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
     };
     const qr = new Qr(options);
     qr.appendToParent(parent);
@@ -170,7 +186,9 @@ describe('showPending', () => {
       title: 'title',
       subtitle: 'subtitle',
       lang: 'en',
-      type: WidgetType.Register
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
     };
     const qr: any = new Qr(options);
     qr.appendToParent(parent);
@@ -191,13 +209,15 @@ describe('showPending', () => {
     expect(el!.style.display).toEqual('flex');
   });
 
-  it('should not set display style for pending element', () => {
+  it('should not set flex display style for pending element', () => {
     const options = {
       href: 'https://test-url',
       title: '',
       subtitle: '',
       lang: 'en',
-      type: WidgetType.Register
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
     };
     const qr = new Qr(options);
     qr.appendToParent(parent);
@@ -206,7 +226,7 @@ describe('showPending', () => {
 
     const el: HTMLElement | null = parent.querySelector('[ownid-pending]')
 
-    expect(el!.style.display).toEqual('none');
+    expect(el!.style.display).not.toEqual('flex');
   });
 });
 
@@ -217,7 +237,9 @@ describe('showDone', () => {
       title: 'title',
       subtitle: 'subtitle',
       lang: 'en',
-      type: WidgetType.Register
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
     };
     const qr = new Qr(options);
     qr.appendToParent(parent);
@@ -235,7 +257,9 @@ describe('showDone', () => {
       title: 'title',
       subtitle: 'subtitle',
       lang: 'en',
-      type: WidgetType.Register
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
     };
     const qr = new Qr(options);
     qr.appendToParent(parent);
