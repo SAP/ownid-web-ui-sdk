@@ -9,6 +9,7 @@ import TranslationService from '../services/translation.service';
 import StatusResponse, { ContextStatus } from './status-response';
 import LinkedWidget from './common/linked.component';
 import { find, findIndex } from '../services/helper.service';
+import InlineWidget, { InlineWidgetOptions } from './common/inline.component';
 
 export default class WidgetComponent extends BaseComponent {
   widgetReady: Promise<void>;
@@ -17,6 +18,8 @@ export default class WidgetComponent extends BaseComponent {
   finalResponse: any | null = null;
 
   returnError: string | null = null;
+
+  disabled = true;
 
   private statusTimeout: number | undefined;
 
@@ -43,6 +46,10 @@ export default class WidgetComponent extends BaseComponent {
 
   private note: HTMLDivElement | null = null;
 
+  private inline: InlineWidget | undefined;
+
+  private globalEventCallbacks: ((event: MouseEvent) => void)[] = [];
+
   constructor(
     protected config: IWidgetConfig,
     protected requestService: RequestService,
@@ -64,6 +71,13 @@ export default class WidgetComponent extends BaseComponent {
         if (config.toggleElement) {
           this.addInfoIcon(config.toggleElement);
         }
+
+        if (!this.isMobile() && (config.toggleElement || config.inline)) {
+          document.addEventListener('click', (event) =>
+            // eslint-disable-next-line promise/no-callback-in-promise
+            this.globalEventCallbacks.forEach((callback) => callback(event)),
+          );
+        }
       },
       (error: Error) => {
         // eslint-disable-next-line no-console
@@ -82,7 +96,7 @@ export default class WidgetComponent extends BaseComponent {
       type: this.config.type || WidgetType.Register,
       data,
       qr: !this.isMobile(),
-      partial: !!this.config.partial,
+      partial: !!this.config.partial || !!this.config.inline,
     };
     const contextResponse = await this.requestService.post(contextUrl, contextData);
 
@@ -108,14 +122,27 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     const lang = this.config.language || ConfigurationService.defaultLanguage;
+
+    if (this.config.inline) {
+      this.renderInlineWidget({ lang, ...this.config.inline });
+    }
+
+    if (
+      (this.config.inline || this.config.toggleElement) &&
+      this.config.type === WidgetType.Register &&
+      (this.config.note || this.config.note === undefined)
+    ) {
+      this.renderNote(lang);
+    }
+
     if (this.isMobile()) {
       if (this.disableMobile) {
         // eslint-disable-next-line no-console
-        console.warn(`Mobile rendering is disabled for ${this.config.type} widget type`);
+        console.warn(`Mobile rendering is disabled for ${ this.config.type } widget type`);
         return;
       }
 
-      const type = this.config.partial ? `${this.config.type}-partial` : this.config.type;
+      const type = this.config.partial ? `${ this.config.type }-partial` : this.config.type;
       const mobileTitle = this.config.mobileTitle || TranslationService.texts[lang][type].mobileTitle;
       this.link = new LinkButton({
         href: this.getStartUrl(),
@@ -138,15 +165,16 @@ export default class WidgetComponent extends BaseComponent {
     } else {
       if (this.disableDesktop) {
         // eslint-disable-next-line no-console
-        console.warn(`Desktop rendering is disabled for ${this.config.type} widget type`);
+        console.warn(`Desktop rendering is disabled for ${ this.config.type } widget type`);
         return;
       }
-      const type = this.config.partial ? `${this.config.type}-partial` : this.config.type;
+      const type = this.config.partial || this.config.inline ? `${ this.config.type }-partial` : this.config.type;
       const isTooltip =
-        !!this.config.partial &&
-        // @ts-ignore
-        [null, false].indexOf(this.config.tooltip) < 0 &&
-        !!this.config.toggleElement;
+        !!this.config.inline ||
+        (!!this.config.partial &&
+          // @ts-ignore
+          [null, false].indexOf(this.config.tooltip) < 0 &&
+          !!this.config.toggleElement);
 
       this.qr = new Qr({
         href: this.getStartUrl(),
@@ -156,6 +184,15 @@ export default class WidgetComponent extends BaseComponent {
         lang,
         tooltip: isTooltip,
       });
+
+      if (isTooltip) {
+        this.addCallback2GlobalEvent((event) => {
+          if (this.config.element.style.display === 'block' && !this.qr!.ref.contains(event.target as Node)) {
+            this.toggleQrTooltip(false);
+          }
+        });
+      }
+
       this.addChild(this.qr);
 
       this.returnError = TranslationService.texts[lang].errors.qr;
@@ -169,13 +206,13 @@ export default class WidgetComponent extends BaseComponent {
   private getStatusUrl() {
     const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
-    return `${prefix}${ConfigurationService.statusUrl}`;
+    return `${ prefix }${ ConfigurationService.statusUrl }`;
   }
 
   private getApproveUrl(context: string) {
     const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
-    return `${prefix}${ConfigurationService.approveUrl.replace(':context', context)}`;
+    return `${ prefix }${ ConfigurationService.approveUrl.replace(':context', context) }`;
   }
 
   private setCallStatus(): void {
@@ -351,7 +388,7 @@ export default class WidgetComponent extends BaseComponent {
   private addInfoIcon(checkInput: HTMLElement): void {
     if (!checkInput.id) {
       // eslint-disable-next-line no-param-reassign
-      checkInput.id = `ownid-toggle-check-${Math.random()}`;
+      checkInput.id = `ownid-toggle-check-${ Math.random() }`;
     }
 
     const lang = this.config.language || ConfigurationService.defaultLanguage;
@@ -373,17 +410,9 @@ export default class WidgetComponent extends BaseComponent {
 
     const aboutTooltip = infoIcon.querySelector('[ownid-about-tooltip]') as HTMLElement;
 
-    document.addEventListener('click', (event) => {
-      const clickedInsideInfoIcon = infoIcon.contains(event.target as Node);
-      if (!clickedInsideInfoIcon) {
+    this.addCallback2GlobalEvent((event) => {
+      if (aboutTooltip.style.display === 'block' && !infoIcon.contains(event.target as Node)) {
         aboutTooltip.style.display = 'none';
-      }
-
-      if (this.qr && this.config.element.style.display === 'block') {
-        const clickedInsideQr = this.qr.ref.contains(event.target as Node);
-        if (!clickedInsideQr) {
-          this.config.element.style.display = 'none';
-        }
       }
     });
 
@@ -392,14 +421,6 @@ export default class WidgetComponent extends BaseComponent {
     });
 
     label.parentNode!.insertBefore(infoIcon, label.nextSibling);
-
-    if (this.config.type === WidgetType.Register && (this.config.note || this.config.note === undefined)) {
-      this.note = document.createElement('div');
-      this.note.setAttribute('class', 'ownid-note');
-      this.note.style.display = 'none';
-      this.note.textContent = typeof this.config.note ==='string' ? this.config.note : TranslationService.texts[lang].common.noteText;
-      checkInput.parentNode!.parentNode!.insertBefore(this.note, checkInput.parentNode!.nextSibling);
-    }
 
     this.toggleElements = document.querySelectorAll(checkInput.getAttribute('ownid-toggle-rel') as string);
 
@@ -411,52 +432,82 @@ export default class WidgetComponent extends BaseComponent {
             this.note.style.display = 'block';
           }
         } else {
-          setTimeout(() => {
-            this.config.element.style.display = 'block';
-          });
-
-          let tooltipRefEl = checkInput;
-          let [offsetX, offsetY] = [0, 0];
-
-          if (this.config.tooltip && typeof this.config.tooltip === 'object') {
-            if (this.config.tooltip.targetEl) {
-              tooltipRefEl = document.querySelector(this.config.tooltip.targetEl) as HTMLElement;
-            }
-            if (this.config.tooltip.offset) {
-              [offsetX, offsetY] = this.config.tooltip.offset;
-            }
-          }
-          const { left, top, width, height } = tooltipRefEl.getBoundingClientRect();
-
-          this.qr!.ref.style.top = `${top + (offsetX || height / 2) + window.pageYOffset}px`;
-          this.qr!.ref.style.left = `${left + (offsetX || width) + window.pageXOffset + offsetY + 10}px`; // 10px is arrow width
+          this.toggleQrTooltip(true);
 
           // eslint-disable-next-line no-param-reassign
           (target as HTMLInputElement).checked = false;
         }
       } else {
-        this.config.element.style.display = 'none';
+        this.toggleQrTooltip(false);
+
         if (this.note) {
           this.note.style.display = 'none';
         }
         this.toggleElements!.forEach((toggleElement) => toggleElement.classList.remove('ownid-disabled'));
       }
+
+      this.disabled = (target as HTMLInputElement).checked;
     });
 
-    this.config.element.style.display = 'none';
+    this.toggleQrTooltip(false);
+  }
+
+  private toggleQrTooltip(show: boolean) {
+    if (!show) {
+      this.config.element.style.display = 'none';
+      return;
+    }
+
+    setTimeout(() => {
+      this.config.element.style.display = 'block';
+    });
+
+    let tooltipRefEl: HTMLElement = (this.inline?.ref || this.config.toggleElement) as HTMLElement;
+    let [offsetX, offsetY] = [0, 0];
+    let tooltipPosition = this.inline ? 'left' : 'right';
+
+    if (this.config.tooltip && typeof this.config.tooltip === 'object') {
+      if (this.config.tooltip.targetEl) {
+        tooltipRefEl = document.querySelector(this.config.tooltip.targetEl) as HTMLElement;
+      }
+      if (this.config.tooltip.offset) {
+        [offsetX, offsetY] = this.config.tooltip.offset;
+      }
+
+      if (this.config.tooltip.position) {
+        tooltipPosition = this.config.tooltip.position;
+      }
+    }
+
+    this.qr!.ref.classList.add(`ownid-tooltip-wrapper-${ tooltipPosition }`);
+
+    const { left, top, right, height } = tooltipRefEl.getBoundingClientRect();
+
+    this.qr!.ref.style.top = `${ top + (offsetX || height / 2) + window.pageYOffset }px`;
+
+    if (tooltipPosition === 'right') {
+      this.qr!.ref.style.left = `${ right + offsetY + window.pageXOffset + 10 }px`; // 10px is arrow width
+    } else {
+      this.qr!.ref.style.right = `${ window.innerWidth - left + offsetY + window.pageXOffset + 10 }px`; // 10px is arrow width
+    }
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   private callOnSuccess(finalResponse: any): void {
     const isTooltip =
-      this.config.partial &&
-      // @ts-ignore
-      [null, false].indexOf(this.config.tooltip) < 0 &&
-      this.config.toggleElement;
+      !!this.config.inline ||
+      (this.config.partial &&
+        // @ts-ignore
+        [null, false].indexOf(this.config.tooltip) < 0 &&
+        this.config.toggleElement);
 
     if (isTooltip) {
+      this.toggleQrTooltip(false);
+
+      this.inline?.setFinishStatus(true);
+
       this.toggleElements?.forEach((toggleElement) => toggleElement.classList.add('ownid-disabled'));
-      this.config.element.style.display = 'none';
+
       if (this.config.toggleElement) {
         this.config.toggleElement.checked = true;
       }
@@ -464,6 +515,8 @@ export default class WidgetComponent extends BaseComponent {
         this.note.style.display = 'block';
       }
     }
+
+    this.disabled = false;
 
     switch (this.config.type) {
       case WidgetType.Link:
@@ -508,19 +561,121 @@ export default class WidgetComponent extends BaseComponent {
     });
   }
 
-  private callOnError(error: string) {
+  private callOnError(error: string): void {
     const isTooltip =
-      this.config.partial &&
-      // @ts-ignore
-      [null, false].indexOf(this.config.tooltip) < 0 &&
-      this.config.toggleElement;
+      !!this.config.inline ||
+      (this.config.partial &&
+        // @ts-ignore
+        [null, false].indexOf(this.config.tooltip) < 0 &&
+        this.config.toggleElement);
 
     if (isTooltip) {
-      this.config.element.style.display = 'none';
+      this.toggleQrTooltip(false);
     }
 
     if (this.config.onError) {
       this.config.onError(error);
+    }
+  }
+
+  private renderInlineWidget(options: InlineWidgetOptions): void {
+    this.inline = new InlineWidget(options);
+
+    if (!this.isMobile()) {
+      this.toggleQrTooltip(false);
+    }
+
+    this.config.element.parentNode!.insertBefore(this.inline.ref, this.config.element.nextSibling);
+
+    this.inline.calculatePosition(this.inline.ref, options);
+
+    this.elements.push(this.inline);
+
+    this.inline.attachHandler('click', () => {
+      if (this.finalResponse) {
+        this.callOnSuccess(this.finalResponse);
+        return;
+      }
+
+      if (this.isMobile()) {
+        if (this.config.type === WidgetType.Login) {
+          this.openWebapp();
+          return;
+        }
+
+        this.disabled = false;
+        this.inline!.setFinishStatus(true);
+        if (this.note) {
+          this.note.style.display = 'block';
+        }
+      } else {
+        return this.toggleQrTooltip(true);
+      }
+    });
+
+    window.addEventListener('resize', () => this.recalculatePosition());
+    window.addEventListener('scroll', () => this.recalculatePosition());
+  }
+
+  private addCallback2GlobalEvent(param: (event: MouseEvent) => void): void {
+    this.globalEventCallbacks.push(param);
+  }
+
+  private renderNote(lang: string): void {
+    this.note = document.createElement('div');
+    this.note.setAttribute('class', 'ownid-note');
+    this.note.style.display = 'none';
+    this.note.textContent = TranslationService.texts[lang].common.noteText;
+
+    if (typeof this.config.note === 'string') {
+      this.note.textContent = this.config.note;
+    }
+
+    let prevElement = this.config.toggleElement
+      ? this.config.toggleElement.parentNode!
+      : this.config.inline!.targetElement;
+    let append = false;
+
+    if (typeof this.config.note === 'object') {
+      this.note.textContent = this.config.note!.text;
+
+      if (this.config.note!.wrapperElement) {
+        prevElement = this.config.note!.wrapperElement;
+        append = true;
+      }
+    }
+
+    if (!this.config.toggleElement) {
+      this.note.textContent += ' ';
+      const undo = document.createElement('span');
+      undo.setAttribute('class', 'ownid-note-undo');
+      undo.textContent = TranslationService.texts[lang].common.undo;
+
+      undo.addEventListener('click', () => {
+        this.note!.style.display = 'none';
+        this.disabled = true;
+        this.inline?.setFinishStatus(false);
+      });
+
+      this.note.appendChild(undo);
+    }
+
+    if (append) {
+      prevElement.appendChild(this.note);
+    } else {
+      prevElement.parentNode!.insertBefore(this.note, prevElement.nextSibling);
+    }
+  }
+
+  public recalculatePosition(): void {
+    const lang = this.config.language || ConfigurationService.defaultLanguage;
+
+    if (this.inline) {
+      this.inline.calculatePosition(this.inline.ref, { lang, ...this.config.inline! });
+    }
+
+    if (this.config.element.style.display === 'block') {
+      this.toggleQrTooltip(true);
     }
   }
 }

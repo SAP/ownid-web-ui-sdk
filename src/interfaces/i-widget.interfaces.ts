@@ -28,9 +28,21 @@ export interface IWidgetConfig {
   type: WidgetType;
   language?: Languages;
   data?: unknown;
+  inline?: {
+    targetElement: HTMLInputElement;
+    additionalElements?: HTMLElement[];
+    offset?: [number, number];
+  };
   URLPrefix?: string;
   mobileTitle?: string;
-  note?: boolean | null | undefined | string;
+  note?:
+    | boolean
+    | null
+    | string
+    | {
+        text: string;
+        wrapperElement?: HTMLElement;
+      };
   desktopTitle?: string;
   desktopSubtitle?: string;
   statusInterval?: number;
@@ -38,10 +50,10 @@ export interface IWidgetConfig {
   tooltip?:
     | boolean
     | null
-    | undefined
     | {
         targetEl?: string | false | null | undefined;
         offset?: [number, number];
+        position?: string;
       };
   toggleElement?: HTMLInputElement;
   onLogin?: (response: unknown) => void;

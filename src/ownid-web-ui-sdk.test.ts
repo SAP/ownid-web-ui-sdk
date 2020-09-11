@@ -210,6 +210,7 @@ describe('OwnIDUiSdk instances test', () => {
     })
 
     it('should call widget.openWebapp', () => {
+      widget.disabled = false;
       widget.openWebapp = jest.fn();
 
       sdk.getOwnIDPayload(widget);
@@ -218,6 +219,7 @@ describe('OwnIDUiSdk instances test', () => {
     });
 
     it('should return response', async () => {
+      widget.disabled = false;
       widget.finalResponse = { response: true };
 
       const res = await sdk.getOwnIDPayload(widget);
@@ -226,11 +228,18 @@ describe('OwnIDUiSdk instances test', () => {
     });
 
     it('should return an error', async () => {
+      widget.disabled = false;
       widget.returnError = 'show error';
 
       const res = await sdk.getOwnIDPayload(widget);
 
       expect(res).toEqual({ error: true, message: 'show error' });
+    });
+
+    it('should return an error', async () => {
+      const res = await sdk.getOwnIDPayload(widget);
+
+      expect(res).toEqual({ error: null, data: null });
     });
   });
 

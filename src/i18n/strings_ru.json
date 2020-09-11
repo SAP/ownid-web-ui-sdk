@@ -57,8 +57,12 @@
     "qr": "Для продолжения отсканируйте QR код",
     "link": "Для продолжения нажмите клавишу OwnID"
   },
+  "inline": {
+    "message": "Пропустить пароль"
+  },
   "common": {
     "labelText": "Пропустить пароль",
-    "noteText": "The next time you login, Noted.com will recognize your phone and instantly log you in."
+    "noteText": "The next time you login, we will recognize your phone and instantly log you in.",
+    "undo": "Undo"
   }
 }

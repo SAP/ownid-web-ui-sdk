@@ -1,14 +1,7 @@
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
-  plugins: [
-    'import',
-    '@typescript-eslint',
-    'eslint-comments',
-    'jest',
-    'promise',
-    'unicorn',
-  ],
+  plugins: ['import', '@typescript-eslint', 'eslint-comments', 'jest', 'promise', 'unicorn'],
   extends: [
     'airbnb-typescript/base',
     'plugin:@typescript-eslint/recommended',
@@ -49,6 +42,7 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'off',
     'no-plusplus': 'off',
     'consistent-return': 'off',
+    'template-curly-spacing': ['error', 'always'],
   },
   settings: {
     'import/parsers': {
