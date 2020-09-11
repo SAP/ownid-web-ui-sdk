@@ -36,7 +36,7 @@ export default class OwnIDUiSdk {
     }
 
     const desktopDisable = config.type === WidgetType.Link;
-    const mobileDisable = config.type === WidgetType.Register && config.partial;
+    const mobileDisable = (config.type === WidgetType.Register && config.partial) || !!config.inline;
 
     return new WidgetComponent(
       { ...this.config, ...config },
@@ -47,6 +47,10 @@ export default class OwnIDUiSdk {
   }
 
   async getOwnIDPayload(widget: WidgetComponent): Promise<unknown> {
+    if (widget.disabled) {
+      return Promise.resolve({ error: null, data: null });
+    }
+
     if (widget.finalResponse) {
       return { error: null, data: widget.finalResponse };
     }
@@ -89,7 +93,7 @@ export default class OwnIDUiSdk {
 
       if (!this.isGigyaAdded && !gigya) {
         this.isGigyaAdded = true;
-        const src = `https://cdns.gigya.com/js/gigya.js?apikey=${apiKey}`;
+        const src = `https://cdns.gigya.com/js/gigya.js?apikey=${ apiKey }`;
         const scriptElement = document.createElement('script');
         scriptElement.src = src;
         scriptElement.addEventListener('load', createWidgetResolve);

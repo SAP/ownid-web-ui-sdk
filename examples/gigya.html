@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="../dist/sdk.es5.js"></script>
+  <script src="../dist/sdk.gigya.es5.js"></script>
+  <script type="text/javascript" lang="javascript"
+          src="http://cdn.gigya.com/js/gigya.js?apikey=3_s5-gLs4aLp5FXluP8HXs7_JN40XWNlbvYWVCCkbNCqlhW6Sm5Z4tXGGsHcSJYD3W">
+    {
+      customEventMap : {
+        eventMap: [
+          {
+            events: "afterScreenLoad",
+            method: function (e) {
+              console.log(e);
+            },
+            args: [function (e) {
+              return e
+            }]
+          }
+        ]
+      }
+    }
+  </script>
+  <style>
+    .ownid-tooltip-wrapper,
+    .ownid-inline-widget {
+      z-index: 1000010006;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  function onGigyaServiceReady() {
+    ownid.init({
+      URLPrefix: 'http://localhost:5002/ownid/',
+    });
+  }
+
+  function loadScreenSet(startScreen) {
+    const params = {
+      screenSet: 'Default-RegistrationLogin',
+      startScreen,
+      onError(event) {
+        console.log('onError', event);
+      },
+      onBeforeSubmit(event) {
+        console.log('onBeforeSubmit', event);
+      },
+      onAfterSubmit(event) {
+        console.log('onAfterSubmit', event);
+      },
+      onBeforeScreenLoad(event) {
+        console.log('onBeforeScreenLoad', event);
+      },
+      onBeforeValidation(event) {
+        console.log('onBeforeValidation', event);
+      },
+      onFieldChanged(event) {
+        console.log('onFieldChanged', event);
+      },
+      onAfterScreenLoad(event) {
+        console.log('onAfterScreenLoad', event);
+
+       window.ownid.gigya.onAfterScreenLoad(event, (e) => console.log('window.ownid.onAfterScreenLoad', e))
+      },
+      onHide(event) {
+        console.log('onHide', event);
+
+        window.ownid.gigya.onHide();
+
+      },
+      onSubmit(event) {
+        console.log('onSubmit');
+        return window.ownid.gigya.onSubmit(event).then((e) => console.log('window.ownid.onSubmit', e));
+      },
+    }
+
+    gigya.accounts.showScreenSet(params)
+  }
+</script>
+
+<a href="#" onclick="loadScreenSet('gigya-login-screen')">Login</a>
+<a href="#" onclick="loadScreenSet('gigya-register-screen')">Registration</a>
+
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+<p>sdfdsfdsf</p>
+
+</body>
+</html>
