@@ -446,7 +446,7 @@ export default class WidgetComponent extends BaseComponent {
         this.toggleElements!.forEach((toggleElement) => toggleElement.classList.remove('ownid-disabled'));
       }
 
-      this.disabled = (target as HTMLInputElement).checked;
+      this.disabled = !(target as HTMLInputElement).checked;
     });
 
     this.toggleQrTooltip(false);
