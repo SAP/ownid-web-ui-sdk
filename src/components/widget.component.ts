@@ -97,6 +97,7 @@ export default class WidgetComponent extends BaseComponent {
       data,
       qr: !this.isMobile(),
       partial: !!this.config.partial || !!this.config.inline,
+      language: this.config.language
     };
     const contextResponse = await this.requestService.post(contextUrl, contextData);
 
