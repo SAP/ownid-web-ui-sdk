@@ -9,3 +9,5 @@ git push origin $GIT_TAG
 
 aws s3 cp ./dist $S3PATH --recursive
 
+DISTRIBUTIONID=EDUOQUBKTEHZF
+aws cloudfront create-invalidation --distribution-id $DISTRIBUTIONID --paths "/*"

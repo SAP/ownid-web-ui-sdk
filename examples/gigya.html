@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <title>Title</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="../dist/sdk.es5.js"></script>
-  <script src="../dist/sdk.gigya.es5.js"></script>
+  <script src="../dist/gigya-sdk.es5.js"></script>
   <script type="text/javascript" lang="javascript"
           src="http://cdn.gigya.com/js/gigya.js?apikey=3_s5-gLs4aLp5FXluP8HXs7_JN40XWNlbvYWVCCkbNCqlhW6Sm5Z4tXGGsHcSJYD3W">
     {
@@ -36,7 +35,7 @@
 <script>
   function onGigyaServiceReady() {
     ownid.init({
-      URLPrefix: 'http://localhost:5002/ownid/',
+      URLPrefix: 'https://demo.dev.ownid.com/netcore3/ownid/',
     });
   }
 
@@ -65,17 +64,17 @@
       onAfterScreenLoad(event) {
         console.log('onAfterScreenLoad', event);
 
-       window.ownid.gigya.onAfterScreenLoad(event, (e) => console.log('window.ownid.onAfterScreenLoad', e))
+       window.ownid.gigya.screenSets.onAfterScreenLoad(event, (e) => console.log('window.ownid.onAfterScreenLoad', e))
       },
       onHide(event) {
         console.log('onHide', event);
 
-        window.ownid.gigya.onHide();
+        window.ownid.gigya.screenSets.onHide();
 
       },
       onSubmit(event) {
         console.log('onSubmit');
-        return window.ownid.gigya.onSubmit(event).then((e) => console.log('window.ownid.onSubmit', e));
+        return window.ownid.gigya.screenSets.onSubmit(event).then((e) => console.log('window.ownid.onSubmit', e));
       },
     }
 

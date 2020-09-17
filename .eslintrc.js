@@ -43,6 +43,7 @@ module.exports = {
     'no-plusplus': 'off',
     'consistent-return': 'off',
     'template-curly-spacing': ['error', 'always'],
+    'unicorn/import-index': 'off'
   },
   settings: {
     'import/parsers': {
@@ -52,7 +53,7 @@ module.exports = {
       // use <root>/tsconfig.json
       typescript: {
         alwaysTryTypes: true,
-        directory: './tsconfig.json', // always try to resolve types under `<roo/>@types` directory even it doesn't contain any source code, like `@types/unist`
+        project: './tsconfig.json', // always try to resolve types under `<roo/>@types` directory even it doesn't contain any source code, like `@types/unist`
       },
     },
   },

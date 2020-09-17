@@ -1,5 +1,5 @@
-import RequestService from "../services/request.service";
-import { WidgetType } from "../interfaces/i-widget.interfaces";
+import RequestService from "../../services/request.service";
+import { WidgetType } from "../../interfaces/i-widget.interfaces";
 import GigyaLinkWidgetComponent from "./gigya-link-widget.component";
 
 interface IMyNavigator extends Navigator {

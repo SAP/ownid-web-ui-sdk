@@ -1,21 +1,14 @@
-import WidgetComponent from './components/widget.component';
-import OwnIDUiSdk from './ownid-web-ui-sdk';
-import { WidgetType } from './interfaces/i-widget.interfaces';
-
-interface IOwnIDGigyaUILib extends OwnIDUiSdk {
-  gigya: OwnIDGigyaUILib;
-}
+import WidgetComponent from '../components/widget.component';
+import { WidgetType } from '../interfaces/i-widget.interfaces';
 
 interface IMyWindow extends Window {
-  ownid: IOwnIDGigyaUILib;
-  ownidAsyncInit: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   gigya: any;
 }
 
 declare let window: IMyWindow;
 
-class OwnIDGigyaUILib {
+export default class OwnIDUiSdkGigyaScreenSets {
   private ownIDWidget: WidgetComponent | null = null;
 
   private observer: MutationObserver;
@@ -24,7 +17,7 @@ class OwnIDGigyaUILib {
     this.observer = new MutationObserver(() => this.ownIDWidget?.recalculatePosition());
   }
 
-  getOwnIdWrapper() {
+  getOwnIdWrapper(): HTMLElement {
     let ownIDElement = document.getElementById('ownid-wrapper');
     if (!ownIDElement) {
       ownIDElement = document.createElement('div');
@@ -36,7 +29,7 @@ class OwnIDGigyaUILib {
     return ownIDElement;
   }
 
-  renderInlineRegisterWidget() {
+  renderInlineRegisterWidget(): void {
     const pass = document.querySelector('[data-gigya-name="password"]') as HTMLInputElement;
     const repeatPass = document.querySelector('[data-gigya-name="passwordRetype"]') as HTMLElement;
 
@@ -55,7 +48,7 @@ class OwnIDGigyaUILib {
     });
   }
 
-  renderInlineLoginWidget(callback: () => void) {
+  renderInlineLoginWidget(callback: () => void): void {
     const pass = document.querySelector('[data-gigya-name="password"]') as HTMLInputElement;
 
     this.ownIDWidget = window.ownid!.render({
@@ -77,14 +70,14 @@ class OwnIDGigyaUILib {
     });
   }
 
-  destroyOwnIDWidget() {
+  destroyOwnIDWidget(): void {
     if (this.ownIDWidget) {
       this.ownIDWidget.destroy();
       this.ownIDWidget = null;
     }
   }
 
-  public onAfterScreenLoad(event: { currentScreen: string }, callback: () => void) {
+  public onAfterScreenLoad(event: { currentScreen: string }, callback: () => void): void {
     this.destroyOwnIDWidget();
 
     this.observer.disconnect();
@@ -112,7 +105,7 @@ class OwnIDGigyaUILib {
     });
   }
 
-  public onHide() {
+  public onHide(): void {
     this.destroyOwnIDWidget();
     this.observer.disconnect();
   }
@@ -130,5 +123,3 @@ class OwnIDGigyaUILib {
     return event;
   }
 }
-
-window.ownid.gigya = window.ownid.gigya instanceof OwnIDGigyaUILib ? window.ownid.gigya : new OwnIDGigyaUILib();

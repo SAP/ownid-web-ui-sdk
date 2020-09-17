@@ -15,6 +15,7 @@
     "node": ">=6.0.0"
   },
   "scripts": {
+    "example": "light-server -s . -p 7000 -o /examples/gigya.html",
     "prebuild": "rimraf dist && rimraf out",
     "build2": "tsc && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
     "build": "tsc --module commonjs && rollup -c rollup.config.ts",
@@ -57,6 +58,7 @@
     "jest-config": "^26.2.2",
     "jest-resolver-tsconfig-paths": "^0.13.0",
     "jest-trx-results-processor": "^2.0.3",
+    "light-server": "^2.8.0",
     "lint-staged": "^10.2.11",
     "lodash": "^4.17.19",
     "lodash.camelcase": "^4.3.0",
