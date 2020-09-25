@@ -52,9 +52,9 @@ export default [
         file: 'dist/gigya-sdk.umd.js',
         name: camelCase(gigyaLibraryName),
         format: 'umd',
-        sourceMaps: true,
+        sourcemap: true,
       },
-      { file: 'dist/gigya-sdk.es5.js', format: 'es', sourceMaps: true },
+      { file: 'dist/gigya-sdk.es5.js', format: 'es', sourcemap: true },
     ],
     // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
     external: [],
