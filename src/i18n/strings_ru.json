@@ -58,11 +58,12 @@
     "link": "Для продолжения нажмите клавишу OwnID"
   },
   "inline": {
-    "message": "Пропустить пароль"
+    "message": "Пропустить пароль",
+    "passwordWarn": "Введите пароль для подверждение вашего аккаунта."
   },
   "common": {
     "labelText": "Пропустить пароль",
-    "noteText": "The next time you login, we will recognize your phone and instantly log you in.",
-    "undo": "Undo"
+    "noteText": "При следующем входе мы распознаем ваш телефон и мгновенно выполним вход.",
+    "undo": "Отменить"
   }
 }

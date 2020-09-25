@@ -110,8 +110,8 @@ export default class OwnIDUiSdkGigyaScreenSets {
     this.observer.disconnect();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async onSubmit(event: any) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+  public async onSubmit(event: any): Promise<any> {
     if (this.ownIDWidget) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data } = (await window.ownid.getOwnIDPayload(this.ownIDWidget)) as { data: any };

@@ -109,7 +109,7 @@ export default class WidgetComponent extends BaseComponent {
     this.contexts.push(contextResponse);
   }
 
-  private render() {
+  private render(): void {
     const styles = document.getElementById('OwnID-common-styles');
 
     if (!styles) {
@@ -130,7 +130,7 @@ export default class WidgetComponent extends BaseComponent {
 
     if (
       (this.config.inline || this.config.toggleElement) &&
-      this.config.type === WidgetType.Register &&
+      [WidgetType.Register, WidgetType.Login].indexOf(this.config.type) !== -1 &&
       (this.config.note || this.config.note === undefined)
     ) {
       this.renderNote(lang);
@@ -200,11 +200,11 @@ export default class WidgetComponent extends BaseComponent {
     }
   }
 
-  private getStartUrl() {
+  private getStartUrl(): string {
     return this.contexts[this.contexts.length - 1].url;
   }
 
-  private getStatusUrl() {
+  private getStatusUrl(): string {
     const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
     return `${ prefix }${ ConfigurationService.statusUrl }`;
@@ -304,7 +304,7 @@ export default class WidgetComponent extends BaseComponent {
     return this.setCallStatus();
   }
 
-  private sendApprove(approved: boolean, { context, nonce }: IContextRS) {
+  private sendApprove(approved: boolean, { context, nonce }: IContextRS): void {
     this.requestService.post(this.getApproveUrl(context), {
       context,
       nonce,
@@ -312,7 +312,7 @@ export default class WidgetComponent extends BaseComponent {
     });
   }
 
-  private setRefreshLinkOrQR() {
+  private setRefreshLinkOrQR(): void {
     if (!this.cacheExpiration) {
       return;
     }
@@ -320,7 +320,7 @@ export default class WidgetComponent extends BaseComponent {
     this.refreshLinkTimeout = window.setTimeout(() => this.refreshLinkOrQR(), this.cacheExpiration / 2);
   }
 
-  private refreshLinkOrQR() {
+  private refreshLinkOrQR(): void {
     this.init(this.config).then(
       () => {
         if (this.qr) {
@@ -353,6 +353,7 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private onMessage = (message: MessageEvent) => {
+    // should be a bound property as it will be passed as callback
     if (message.data === 'ownid postMessages enabled') {
       clearTimeout(this.statusTimeout);
     }
@@ -453,7 +454,7 @@ export default class WidgetComponent extends BaseComponent {
     this.toggleQrTooltip(false);
   }
 
-  private toggleQrTooltip(show: boolean) {
+  private toggleQrTooltip(show: boolean): void {
     if (!show) {
       this.config.element.style.display = 'none';
       return;
@@ -512,6 +513,7 @@ export default class WidgetComponent extends BaseComponent {
       if (this.config.toggleElement) {
         this.config.toggleElement.checked = true;
       }
+
       if (this.note) {
         this.note.style.display = 'block';
       }
@@ -523,6 +525,10 @@ export default class WidgetComponent extends BaseComponent {
       case WidgetType.Link:
         return this.config.onLink && this.config.onLink(finalResponse);
       case WidgetType.Login:
+        if (this.config.inline && finalResponse.pubKey) {
+          this.inline!.requirePassword();
+        }
+
         return this.config.onLogin && this.config.onLogin(finalResponse);
       case WidgetType.Recover:
         return this.config.onRecover && this.config.onRecover(finalResponse);
@@ -646,7 +652,7 @@ export default class WidgetComponent extends BaseComponent {
       }
     }
 
-    if (!this.config.toggleElement) {
+    if (!this.config.toggleElement && this.config.type === WidgetType.Register) {
       this.note.textContent += ' ';
       const undo = document.createElement('span');
       undo.setAttribute('class', 'ownid-note-undo');

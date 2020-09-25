@@ -58,7 +58,8 @@
     "link": "You must click OwnID button before you proceed"
   },
   "inline": {
-    "message": "Skip the password"
+    "message": "Skip the password",
+    "passwordWarn": "Enter your password to confirm your account."
   },
   "common": {
     "labelText": "Skip the password",

@@ -43,7 +43,7 @@ module.exports = {
     'no-plusplus': 'off',
     'consistent-return': 'off',
     'template-curly-spacing': ['error', 'always'],
-    'unicorn/import-index': 'off'
+    'unicorn/import-index': 'off',
   },
   settings: {
     'import/parsers': {

@@ -19,7 +19,7 @@ describe('OwnIDUiSdkGigya instances test', () => {
         type: WidgetType.Link,
       };
       sdk
-      // @ts-ignore
+        // @ts-ignore
         .renderLink(params, null)
         .then((windget: GigyaLinkWidgetComponent | null) => {
           expect(windget).toBeNull();
@@ -46,7 +46,7 @@ describe('OwnIDUiSdkGigya instances test', () => {
         },
       };
 
-      window.ownid = {config: params} as any;
+      window.ownid = { config: params } as any;
 
       sdk
         .renderLink(params, '')

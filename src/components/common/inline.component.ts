@@ -53,6 +53,8 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
 .ownid-inline-widget--finished:before{content:'';width:25px;height:16px;display:block;background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOC43MDcgNy4yOTNhMSAxIDAgMCAxIDAgMS40MTRsLTggOGExIDEgMCAwIDEtMS40MTQgMGwtMy0zYTEgMSAwIDAgMSAxLjQxNC0xLjQxNEwxMCAxNC41ODZsNy4yOTMtNy4yOTNhMSAxIDAgMCAxIDEuNDE0IDB6IiBmaWxsPSIjMzZhNDFkIi8+PC9zdmc+) repeat center center}
 .ownid-inline-disabled{opacity:0.3;pointer-events:none}
 .ownid-note-undo{color:#0070F2;cursor:pointer}
+.ownid-inline-required{border-color:#D20A0A}
+.ownid-inline-warn{color:#D20A0A}
 `;
 
     document.head.appendChild(style);
@@ -72,5 +74,23 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
     element.style.top = `${ top + offsetX + targetHeight / 2 - height / 2 + window.pageYOffset }px`;
     // eslint-disable-next-line no-param-reassign
     element.style.left = `${ right + offsetY - width + window.pageXOffset }px`;
+  }
+
+  public requirePassword(): void {
+    this.ref.style.display = 'none';
+
+    this.options.targetElement.classList.remove('ownid-inline-disabled');
+    this.options.targetElement.classList.add('ownid-inline-required');
+    this.options.targetElement.focus();
+
+    this.options.targetElement.addEventListener('input', () =>
+      this.options.targetElement.classList.toggle('ownid-inline-required', !this.options.targetElement.value),
+    );
+
+    const warn = document.createElement('div');
+    warn.classList.add('ownid-inline-warn');
+    warn.textContent = TranslationService.texts[this.options.lang].inline.passwordWarn;
+
+    this.options.targetElement.parentNode!.insertBefore(warn, this.options.targetElement.nextSibling);
   }
 }
