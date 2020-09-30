@@ -19,7 +19,8 @@ pipeline {
     stage('WhiteSource Scan') {
       steps {
         ansiColor('xterm') {
-          nvm('v10.22.0'){
+          nvm('v12.18.4'){
+            sh 'curl -o- -L https://yarnpkg.com/install.sh | bash'
             sh 'yarn install'
             sh 'whitesource yarn'
           }
