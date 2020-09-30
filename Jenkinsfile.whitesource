@@ -20,7 +20,7 @@ pipeline {
       steps {
         ansiColor('xterm') {
           nvm('v12.18.4'){
-            sh 'yarn install'
+            sh 'npm install'
             sh 'whitesource yarn'
           }
         }
