@@ -47,6 +47,14 @@
     "pendingButton": "Отмена",
     "doneMessage": ""
   },
+  "recover-partial": {
+    "mobileTitle": "",
+    "desktopTitle": "Используйте свой телефон для сканирования QR кода для входа",
+    "desktopSubtitle": "",
+    "pendingMessage": "Связывание учетной записи...",
+    "pendingButton": "Отмена",
+    "doneMessage": ""
+  },
   "verification": {
     "title": "Код проверки",
     "message": "Совпадает ли этот код с тем, что вы видите на экране телефоне?",

@@ -47,6 +47,14 @@
     "pendingButton": "Cancel",
     "doneMessage": ""
   },
+  "recover-partial": {
+    "mobileTitle": "",
+    "desktopTitle": "Scan this QR with your phone to login.",
+    "desktopSubtitle": "",
+    "pendingMessage": "Linking your account...",
+    "pendingButton": "Cancel",
+    "doneMessage": ""
+  },
   "verification": {
     "title": "Verification Code",
     "message": "Does the code on your device match this one?",
