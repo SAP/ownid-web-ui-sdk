@@ -19,7 +19,7 @@ pipeline {
     stage('WhiteSource Scan') {
       steps {
         ansiColor('xterm') {
-          nvm('v10.18.1'){
+          nvm('v12.18.4'){
             sh 'yarn install'
             sh 'whitesource yarn'
           }
