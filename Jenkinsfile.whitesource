@@ -20,6 +20,7 @@ pipeline {
       steps {
         ansiColor('xterm') {
           nvm('v12.18.4'){
+            sh 'rm -rf /home/jenkins/.yarn'
             sh 'curl -o- -L https://yarnpkg.com/install.sh | bash'
             sh 'yarn install'
             sh 'whitesource yarn'
