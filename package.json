@@ -1,6 +1,6 @@
 {
   "name": "ownid-web-ui-sdk",
-  "version": "1.0.0-alpha",
+  "version": "1.0.0",
   "description": "",
   "keywords": [],
   "main": "dist/sdk.umd.js",
@@ -91,6 +91,9 @@
   "resolutions": {
     "*/**/dot-prop": "^5.1.1",
     "*/**/serialize-javascript": "^3.1.0",
-    "*/**/lodash": "^4.17.19"
+    "*/**/lodash": "^4.17.19",
+    "*/**/mem": "^4.0.0",
+    "*/**/yargs-parser": "^18.1.1",
+    "*/**/node-fetch": "^2.6.1"
   }
 }
