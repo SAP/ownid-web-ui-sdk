@@ -7,7 +7,7 @@ notifications:
 env:
   global:
   - secure: lhMsUtTmKwpvAIKtDTnSZiD4LOw2dD/hb7ZmNZIVutTMxU4yXE2T+6qJHNJWsNttHmUVrq6aDqxapWkZ54E70btiRI+ihMvOuPVMKMhZ0Jg0JKZfJDai5V4d/23FgmXuvNydpIZcEiY7UpGsWd7nOGGXasBBCNjU8twcQVk+YE+vHB1PxzO2iIEBCz/mcEFRDh5+tmtj9YlGR85Dz5NBdzOXSYkguW/cwMkrScBLsI4ELGgTzmuaXvXJVoUtd29LICf54r4xjeRyXCUCA8+ncqDFIWLLDoJoCXJnDbSdxAt4TjpwnRYkIKLSnc7jtQH+4riOox7SsIeB5DWqpwfg9SbAfGvoF/VDIjqcT1JYcXQ96111Ok0tAjH9MLf0Fjh2LhslfZQtsy55EIrF/KSyvB+ERJ3bAd7PASg+wYaoYvjBdYbTd/XPKZqB0xUw1pTCYe6ysvKPijQu3Qp4eXbRaOo9g2fGsLwsXp5owh8an9U+C3Jj22CGdicUzjQJN+fRvue0vhVQsv9YriQe084u+KMQRWrigc7l3Yuw8myh4zqYqThEsV4n3/o50piAeaXXWTlJiZ2tTetwH/+m2389bDnM+dMpYz2y7nbBsQ5ZNU4cmc/WJWT/ujq7+z9VOC9X71iuz7+7DL/As6T3upnwKV99un5htOyE3V48BxC51Q0=
-  
+
 branches:
   only:
   - master
@@ -43,7 +43,7 @@ install:
 
 script:
   - sh scripts/set-build-num.sh $TRAVIS_BUILD_NUMBER
-  - yarn lint
+  #- yarn lint
   - yarn test:ci
   - yarn build
 
