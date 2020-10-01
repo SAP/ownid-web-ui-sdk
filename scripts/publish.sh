@@ -17,6 +17,6 @@ aws s3 cp ./dist $S3PATH/latest --recursive
 #aws s3 cp ./dist $S3PATH/$FOLDER --recursive
 
 DISTRIBUTIONID=EDUOQUBKTEHZF
-aws cloudfront create-invalidation --distribution-id $DISTRIBUTIONID --paths "/${ENV}/js/latest"
+aws cloudfront create-invalidation --distribution-id $DISTRIBUTIONID --paths "/${ENV}/js/latest/*"
 
 
