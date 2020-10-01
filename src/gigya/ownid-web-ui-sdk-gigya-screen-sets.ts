@@ -71,7 +71,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
         document.cookie = `gac_${window.gigya.thisScript.APIKey}=${statusRS.sessionInfo.cookieValue}; path=/`;
 
         console.log('renderInlineLoginWidget -> window.ownid!.render -> onLogin. document.cookie: ', document.cookie)
-        //window.gigya.accounts.getAccountInfo({ callback });
+        window.gigya.accounts.getAccountInfo({ callback });
       },
     });
   }
