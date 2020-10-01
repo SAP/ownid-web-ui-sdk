@@ -116,8 +116,8 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
           </section>
         </section>
         <section class="ownid-actions">
-          <button ownid-btn="no">${noButton}</button>
-          <button ownid-btn="yes">${yesButton}</button>
+          <button ownid-btn="no" type="button">${noButton}</button>
+          <button ownid-btn="yes" type="button">${yesButton}</button>
         </section>
       </div>
       ${this.pendingTemplate(pendingTexts)}`;
@@ -160,7 +160,7 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
   private addOwnIDStyleTag(id: string): void {
     const style = document.createElement('style');
     style.id = id;
-    style.innerHTML = `[ownid-btn]{min-width:72px;height:36px;background:#fff;border:1px solid #000;border-radius:20px;color:#000;cursor:pointer;outline:0;transition:background-color .2s ease-out,color .2s ease-out}[ownid-btn]:hover{color:#fff;background:#000}@-webkit-keyframes spin{17%{background:0 0;-webkit-box-shadow:none;box-shadow:none}35%{-webkit-transform:rotate(-135deg);transform:rotate(-135deg);width:5px;height:5px;background:#000;border-radius:1px;-webkit-box-shadow:0 0 2px #000;box-shadow:0 0 2px #000}53%{background:0 0;-webkit-box-shadow:none;box-shadow:none}70%{-webkit-transform:rotate(360deg);transform:rotate(360deg);width:20px;height:20px}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes spin{17%{background:0 0;-webkit-box-shadow:none;box-shadow:none}35%{-webkit-transform:rotate(-135deg);transform:rotate(-135deg);width:5px;height:5px;background:#000;border-radius:1px;-webkit-box-shadow:0 0 2px #000;box-shadow:0 0 2px #000}53%{background:0 0;-webkit-box-shadow:none;box-shadow:none}70%{-webkit-transform:rotate(360deg);transform:rotate(360deg);width:20px;height:20px}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}
+    style.innerHTML = `[ownid-btn]{min-width:72px;height:36px;background:#fff;border:1px solid #000;border-radius:20px;color:#000;cursor:pointer;outline:0;transition:background-color .2s ease-out,color .2s ease-out}[ownid-btn]:hover{color:#fff;background:#000}@-webkit-keyframes ownid-spin{17%{background:0 0;-webkit-box-shadow:none;box-shadow:none}35%{-webkit-transform:rotate(-135deg);transform:rotate(-135deg);width:5px;height:5px;background:#000;border-radius:1px;-webkit-box-shadow:0 0 2px #000;box-shadow:0 0 2px #000}53%{background:0 0;-webkit-box-shadow:none;box-shadow:none}70%{-webkit-transform:rotate(360deg);transform:rotate(360deg);width:20px;height:20px}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes ownid-spin{17%{background:0 0;-webkit-box-shadow:none;box-shadow:none}35%{-webkit-transform:rotate(-135deg);transform:rotate(-135deg);width:5px;height:5px;background:#000;border-radius:1px;-webkit-box-shadow:0 0 2px #000;box-shadow:0 0 2px #000}53%{background:0 0;-webkit-box-shadow:none;box-shadow:none}70%{-webkit-transform:rotate(360deg);transform:rotate(360deg);width:20px;height:20px}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}
 .ownid-qr-pane{display:flex;padding:15px;background:#fff;border-radius:10px}
 .ownid-qr-code{margin-right:25px;text-align:center}
 .ownid-qr-pane--titles{display:flex;flex-direction:column;justify-content:space-between;flex:1 1 auto;}
@@ -187,7 +187,7 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 
 [ownid-pending]{display:none;position:absolute;top:0;background:rgba(255,255,255,.95);width:100%;height:100%;flex-direction:column;justify-content:space-around;align-items:center;}
 .ownid-pending--icon{height:40px;display:flex;justify-content:center;align-items: center;}
-.ownid-pending--svg{-webkit-animation:spin 1.77s ease infinite;-moz-animation:spin 1.77s ease infinite;animation:spin 1.77s ease infinite;}
+.ownid-pending--svg{-webkit-animation:ownid-spin 1.77s ease infinite;-moz-animation:ownid-spin 1.77s ease infinite;animation:ownid-spin 1.77s ease infinite;}
 .ownid-pending--title{font-weight:bold}
 
 .ownid-wrapper.ownid-tooltip-wrapper{position:absolute;background:#FFF;border-radius:6px;border:1px solid #D5DADD;box-shadow:0px 0px 2px rgba(131,150,168,0.16),0px 4px 8px rgba(131,150,168,0.16);transform:translateY(-50%)}
@@ -205,6 +205,11 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 
 .ownid-tooltip-wrapper [ownid-done]{flex-direction:column}
 .ownid-tooltip-wrapper .ownid-done-text{text-align:center}
+
+.ownid-tooltip-wrapper .ownid-security-check{width:195px}
+.ownid-tooltip-wrapper .ownid-security-check--pane{flex-direction:column;text-align:center}
+.ownid-tooltip-wrapper .ownid-security-check--pane-pin{margin:16px 0}
+.ownid-tooltip-wrapper [ownid-pending]{border-radius:10px}
 `;
 
     document.head.appendChild(style);
