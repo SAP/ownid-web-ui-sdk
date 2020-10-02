@@ -68,4 +68,14 @@ export default class OwnIDUiSdk {
     }
     return result;
   }
+
+  reRenderWidget(ownIDWidget: WidgetComponent | null): WidgetComponent | null {
+    if (!ownIDWidget) {
+      return null;
+    }
+
+    ownIDWidget.destroy();
+
+    return this.render(ownIDWidget.config);
+  }
 }

@@ -1,9 +1,19 @@
 import WidgetComponent from '../components/widget.component';
-import { WidgetType } from '../interfaces/i-widget.interfaces';
+import { IWidgetConfig, WidgetType } from '../interfaces/i-widget.interfaces';
 
 interface IMyWindow extends Window {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   gigya: any;
+}
+
+interface OnAfterScreenLoadConfig {
+  customScreenSetsIds: {
+    [key: string]: string;
+  };
+  onError: (error: string) => void;
+  widgetConfigs: {
+    [key: string]: IWidgetConfig;
+  }
 }
 
 declare let window: IMyWindow;
@@ -48,7 +58,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
     });
   }
 
-  renderInlineLoginWidget(callback: () => void): void {
+  renderInlineLoginWidget(callback: () => void, config?: OnAfterScreenLoadConfig): void {
     const pass = document.querySelector('[data-gigya-name="password"]') as HTMLInputElement;
 
     this.ownIDWidget = window.ownid!.render({
@@ -58,13 +68,36 @@ export default class OwnIDUiSdkGigyaScreenSets {
         offset: [0, -10],
       },
       element: this.getOwnIdWrapper(),
-      onError(error) {
-        // eslint-disable-next-line no-console
-        console.warn('onError', error);
+      onError: (error) => {
+        let ownIDErrorElement = document.getElementById('ownid-register-error');
+
+        if (!ownIDErrorElement) {
+          ownIDErrorElement = document.createElement('span');
+          ownIDErrorElement.classList.add('gigya-error-msg', 'gigya-error-msg-active');
+          ownIDErrorElement.id = 'ownid-register-error';
+
+          pass?.parentNode?.insertBefore(ownIDErrorElement, pass.nextSibling);
+        }
+
+        ownIDErrorElement.textContent = error;
+        ownIDErrorElement.style.display = 'block';
+
+
+        this.ownIDWidget!.disabled = true;
+        this.ownIDWidget = window.ownid!.reRenderWidget(this.ownIDWidget);
+
+        (document.querySelector('[data-gigya-name="password"]') as HTMLInputElement).value = '';
+        (document.querySelector('[data-gigya-name="passwordRetype"]') as HTMLInputElement).value = '';
+
+        pass.addEventListener('input', () => {
+          ownIDErrorElement!.style.display = pass.value !== '' ? 'none' : 'block';
+        });
+
+        config?.onError(error);
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onLogin(statusRS: any) {
-        document.cookie = `gac_${window.gigya.thisScript.APIKey}=${statusRS.sessionInfo.cookieValue}; path=/`;
+        document.cookie = `gac_${ window.gigya.thisScript.APIKey }=${ statusRS.sessionInfo.cookieValue }; path=/`;
         window.gigya.accounts.getAccountInfo({ callback });
       },
     });
@@ -77,22 +110,22 @@ export default class OwnIDUiSdkGigyaScreenSets {
     }
   }
 
-  public onAfterScreenLoad(event: { currentScreen: string }, callback: () => void): void {
+  public onAfterScreenLoad(event: { currentScreen: string }, callback: () => void, config?: OnAfterScreenLoadConfig): void {
     this.destroyOwnIDWidget();
 
     this.observer.disconnect();
 
     this.observer.observe(document.getElementById(event.currentScreen)!, {
-      attributes: true,
+      attributes: false,
       childList: true,
       subtree: true,
     });
 
-    if (event.currentScreen === 'gigya-login-screen') {
-      this.renderInlineLoginWidget(callback);
+    if (event.currentScreen === 'gigya-login-screen' || event.currentScreen === config?.customScreenSetsIds.login) {
+      this.renderInlineLoginWidget(callback, config);
     }
 
-    if (event.currentScreen === 'gigya-register-screen') {
+    if (event.currentScreen === 'gigya-register-screen' || event.currentScreen === config?.customScreenSetsIds.registration) {
       this.renderInlineRegisterWidget();
     }
 

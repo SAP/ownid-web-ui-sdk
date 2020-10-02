@@ -51,7 +51,7 @@ export default class WidgetComponent extends BaseComponent {
   private globalEventCallbacks: ((event: MouseEvent) => void)[] = [];
 
   constructor(
-    protected config: IWidgetConfig,
+    public config: IWidgetConfig,
     protected requestService: RequestService,
     protected disableDesktop: boolean = false,
     protected disableMobile: boolean = false,
