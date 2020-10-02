@@ -43,8 +43,8 @@ install:
 
 script:
   - sh scripts/set-build-num.sh $TRAVIS_BUILD_NUMBER
-  #- yarn lint
-  #- yarn test:ci
+  - yarn lint
+  - yarn test:ci
   - yarn build
 
 before_deploy:

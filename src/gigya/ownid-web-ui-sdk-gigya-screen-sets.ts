@@ -64,13 +64,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onLogin(statusRS: any) {
-        console.log('renderInlineLoginWidget -> window.ownid!.render -> onLogin. statusRS: ', statusRS)
-        console.log('renderInlineLoginWidget -> window.ownid!.render -> onLogin. callback: ', callback)
-        console.log('renderInlineLoginWidget -> window.ownid!.render -> onLogin. window.gigya.thisScript.APIKey: ', window.gigya.thisScript.APIKey)
-        console.log('renderInlineLoginWidget -> window.ownid!.render -> onLogin. statusRS.sessionInfo.cookieValue: ', statusRS.sessionInfo.cookieValue)
         document.cookie = `gac_${window.gigya.thisScript.APIKey}=${statusRS.sessionInfo.cookieValue}; path=/`;
-
-        console.log('renderInlineLoginWidget -> window.ownid!.render -> onLogin. document.cookie: ', document.cookie)
         window.gigya.accounts.getAccountInfo({ callback });
       },
     });
