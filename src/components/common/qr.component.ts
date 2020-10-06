@@ -181,7 +181,7 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 .ownid-security-check--pane-header{font-size: 14px;line-height: 20px}
 .ownid-security-check--pane-title{font-weight: bold}
 .ownid-security-check--pane-message{margin-top: 4px}
-.ownid-actions{padding:15px;background:#fff;border-radius:10px}
+.ownid-actions{padding:15px;background:#fff;border-radius:10px;white-space:nowrap}
 [ownid-btn]+[ownid-btn]{margin-left:16px}
 .ownid-wrapper{position:relative}
 
