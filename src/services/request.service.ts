@@ -6,7 +6,7 @@ export default class RequestService {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async post(url: string, data = {}): Promise<any> {
-    this.logger?.logInfo(`request: ${url}`);
+    this.logger?.logInfo(`request: ${ url }`);
 
     const response = await fetch(url, {
       method: 'POST',

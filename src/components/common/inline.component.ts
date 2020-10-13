@@ -13,6 +13,10 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
     super(options);
   }
 
+  private showInfo = false;
+
+  private infoTooltipEl: HTMLElement | undefined;
+
   protected render(options: InlineWidgetOptions): HTMLElement {
     const styles = document.getElementById('ownid-inline-widget-styles');
 
@@ -22,14 +26,27 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
 
     const element = document.createElement('div');
 
-    const { message } = TranslationService.texts[options.lang].inline;
+    const { message, info } = TranslationService.texts[options.lang].inline;
 
     element.classList.add('ownid-inline-widget');
-    element.innerHTML = `${message}&nbsp;<svg class="ownid-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20"><path d="M4.16 8.322a1.25 1.25 0 0 1-.891-.371c-.492-.5-.492-1.286 0-1.776L9.108.368c.492-.5 1.3-.5 1.782 0s.492 1.286 0 1.776L5.052 7.95a1.25 1.25 0 0 1-.891.371zm7.116-1.286a1.25 1.25 0 0 1-.891-.371c-.492-.5-.492-1.286 0-1.776l1.662-1.657c.492-.5 1.3-.5 1.782 0s.492 1.286 0 1.776l-1.675 1.67a1.24 1.24 0 0 1-.878.358zm-7.154 7.132a1.25 1.25 0 0 1-.891-.371c-.492-.5-.492-1.286 0-1.776l4.242-4.23c.492-.5 1.3-.5 1.782 0s.492 1.286 0 1.776l-4.242 4.23a1.23 1.23 0 0 1-.891.371zm2.9 2.877a1.25 1.25 0 0 1-.891-.371c-.492-.5-.492-1.286 0-1.776l1.795-1.8c.492-.5 1.3-.5 1.782 0s.492 1.286 0 1.776l-1.795 1.8c-.24.252-.56.37-.9.37zm4.708-4.695a1.25 1.25 0 0 1-.891-.371c-.492-.5-.492-1.286 0-1.776l4.1-4.096c.492-.5 1.3-.5 1.782 0s.492 1.286 0 1.776l-4.1 4.096c-.24.252-.56.37-.9.37zM1.25 11.2A1.25 1.25 0 0 0 2.5 9.965a1.25 1.25 0 1 0-2.5 0 1.25 1.25 0 0 0 1.25 1.246zM9.906 20a1.25 1.25 0 0 1-.891-.371c-.492-.5-.492-1.286 0-1.776l5.944-5.925c.492-.5 1.3-.5 1.782 0s.492 1.286 0 1.776l-5.944 5.926a1.25 1.25 0 0 1-.891.371zm8.844-8.815a1.25 1.25 0 1 0-1.25-1.246 1.25 1.25 0 0 0 1.25 1.246z"></path></svg>
+
+    element.innerHTML = `${ message }&nbsp;<svg class="ownid-info-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#354a5f" fill-rule="evenodd" viewBox="-1 0 18 18"><path d="M.333 7A6.67 6.67 0 0 1 7 .333 6.67 6.67 0 0 1 13.667 7 6.67 6.67 0 0 1 7 13.667 6.67 6.67 0 0 1 .333 7zM7 1.667C4.055 1.667 1.667 4.055 1.667 7S4.055 12.333 7 12.333 12.334 9.946 12.334 7 9.946 1.667 7 1.667zm0 3.666a1 1 0 1 0 0-2 1 1 0 1 0 0 2zm0 1.334c.368 0 .667.298.667.667V10c0 .368-.298.667-.667.667A.67.67 0 0 1 6.333 10V7.333c0-.368.298-.667.667-.667z"/></svg>
 `;
 
     options.targetElement.addEventListener('input', () => {
       element.style.display = options.targetElement.value !== '' ? 'none' : 'flex';
+    });
+
+    const svg = element.querySelector('svg.ownid-info-icon');
+    this.infoTooltipEl = document.createElement('div');
+    this.infoTooltipEl.classList.add('ownid-info-tooltip');
+    this.infoTooltipEl.innerHTML = `${ info }`.replace(/\n/g, '<br />');
+
+    document.body.appendChild(this.infoTooltipEl);
+
+    svg!.addEventListener('click', (e) => {
+      this.toggleInfoTooltip(!this.showInfo);
+      e.stopPropagation();
     });
 
     return element;
@@ -43,20 +60,36 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
     );
   }
 
+  public toggleInfoTooltip(show: boolean): void {
+    this.showInfo = show;
+
+    if (!show) {
+      this.infoTooltipEl!.style.display = 'none';
+      return;
+    }
+
+    this.infoTooltipEl!.style.display = 'block';
+    const tooltipRefEl = this.ref.querySelector('svg.ownid-info-icon')!;
+    const { top, left, width } = tooltipRefEl.getBoundingClientRect();
+    const rect = this.infoTooltipEl!.getBoundingClientRect();
+    this.infoTooltipEl!.style.top = `${ top + window.pageYOffset - 4 - rect.height }px`;
+    this.infoTooltipEl!.style.left = `${ left - rect.width + width + window.pageXOffset }px`;
+  }
+
   private addOwnIDStyleTag(id: string): void {
     const style = document.createElement('style');
     style.id = id;
     style.textContent = `.ownid-inline-widget{color:#0070F2;cursor:pointer;position:absolute;display:flex;font-size:14px}
-.ownid-inline-widget .ownid-icon{fill:#0070F2}
-.ownid-inline-widget--finished{color:#354A5F;margin-left:-25px;pointer-events:none}
-.ownid-inline-widget--finished .ownid-icon{fill:#354A5F}
-.ownid-inline-widget--finished:before{content:'';width:25px;height:16px;display:block;background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOC43MDcgNy4yOTNhMSAxIDAgMCAxIDAgMS40MTRsLTggOGExIDEgMCAwIDEtMS40MTQgMGwtMy0zYTEgMSAwIDAgMSAxLjQxNC0xLjQxNEwxMCAxNC41ODZsNy4yOTMtNy4yOTNhMSAxIDAgMCAxIDEuNDE0IDB6IiBmaWxsPSIjMzZhNDFkIi8+PC9zdmc+) repeat center center}
-.ownid-inline-disabled{opacity:0.3;pointer-events:none}
+.ownid-inline-widget .ownid-info-icon{fill:#0070F2}
+.ownid-inline-widget--finished {color:#000;margin-left:-25px;pointer-events:none;opacity:1}
+.ownid-inline-widget--finished .ownid-info-icon{fill:#000;pointer-events:initial;opacity:1;cursor:pointer;}
+.ownid-inline-widget--finished:before{content:'';opacity:1;width:25px;height:16px;display:block;background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOC43MDcgNy4yOTNhMSAxIDAgMCAxIDAgMS40MTRsLTggOGExIDEgMCAwIDEtMS40MTQgMGwtMy0zYTEgMSAwIDAgMSAxLjQxNC0xLjQxNEwxMCAxNC41ODZsNy4yOTMtNy4yOTNhMSAxIDAgMCAxIDEuNDE0IDB6IiBmaWxsPSIjMzZhNDFkIi8+PC9zdmc+) repeat center center}
+.ownid-inline-disabled {opacity:0.3;pointer-events:none}
 .ownid-note-undo{color:#0070F2;cursor:pointer}
 .ownid-inline-required{border-color:#D20A0A}
 .ownid-inline-warn{color:#D20A0A}
+.ownid-info-tooltip{width:280px;display:none;position:absolute;background:#FFF;border-radius:6px;border:1px solid #D5DADD;box-shadow:0px 0px 2px rgba(131,150,168,0.16),0px 4px 8px rgba(131,150,168,0.16);box-sizing: border-box;font-style: normal;font-weight: normal;font-size: 12px;line-height: 18px;padding:12px;}
 `;
-
     document.head.appendChild(style);
   }
 
@@ -71,9 +104,9 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
     const { width, height } = element.getBoundingClientRect();
 
     // eslint-disable-next-line no-param-reassign
-    element.style.top = `${top + offsetX + targetHeight / 2 - height / 2 + window.pageYOffset}px`;
+    element.style.top = `${ top + offsetX + targetHeight / 2 - height / 2 + window.pageYOffset }px`;
     // eslint-disable-next-line no-param-reassign
-    element.style.left = `${right + offsetY - width + window.pageXOffset}px`;
+    element.style.left = `${ right + offsetY - width + window.pageXOffset }px`;
   }
 
   public requirePassword(): void {
