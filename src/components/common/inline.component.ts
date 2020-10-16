@@ -38,11 +38,19 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
     });
 
     const svg = element.querySelector('svg.ownid-info-icon');
-    this.infoTooltipEl = document.createElement('div');
-    this.infoTooltipEl.classList.add('ownid-info-tooltip');
-    this.infoTooltipEl.innerHTML = `${ info }`.replace(/\n/g, '<br />');
 
-    document.body.appendChild(this.infoTooltipEl);
+    const tooltip = document.querySelector('.ownid-info-tooltip');
+
+    if(tooltip)
+    {
+      this.infoTooltipEl = tooltip as HTMLElement;
+    }
+    else {
+      this.infoTooltipEl = document.createElement('div');
+      this.infoTooltipEl.classList.add('ownid-info-tooltip');
+      this.infoTooltipEl.innerHTML = `${ info }`.replace(/\n/g, '<br />');
+      document.body.appendChild(this.infoTooltipEl);
+    }
 
     svg!.addEventListener('click', (e) => {
       this.toggleInfoTooltip(!this.showInfo);
