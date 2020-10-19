@@ -2,7 +2,7 @@
 REPO_SLUG=OwnID%2Fautomation
 REPO_BRANCH=${3:-"development"}
 COMPONENT=${1:-"all"}
-LEVEL="regression"
+LEVEL="smoke"
 STAGE=${2:-"dev"}
 TESTRAIL="false"
 SLACK="true"
