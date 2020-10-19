@@ -37,7 +37,7 @@ export default class OwnIDUiSdkGigya {
 
       if (!this.isGigyaAdded && !gigya) {
         this.isGigyaAdded = true;
-        const src = `https://cdns.gigya.com/js/gigya.js?apikey=${apiKey}`;
+        const src = `https://cdns.gigya.com/js/gigya.js?apikey=${ apiKey }`;
         const scriptElement = document.createElement('script');
         scriptElement.src = src;
         scriptElement.addEventListener('load', createWidgetResolve);

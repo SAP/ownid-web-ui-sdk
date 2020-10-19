@@ -67,7 +67,8 @@
   },
   "inline": {
     "message": "Skip the password",
-    "passwordWarn": "Enter your password to confirm your account."
+    "passwordWarn": "Enter your password to confirm your account.",
+    "info": "Access your account without a password.\nAn encrypted key will be created on your phone and automatically log you in from now on."
   },
   "common": {
     "labelText": "Skip the password",
