@@ -1,25 +1,24 @@
-#!bin/bash
-
+#!/bin/bash
 REPO_SLUG=OwnID%2Fautomation
+REPO_BRANCH=${3:-"development"}
+COMPONENT=${1:-"all"}
+LEVEL="regression"
+STAGE=${2:-"dev"}
+TESTRAIL="false"
+SLACK="true"
 
-TEST_COMPONENTS=${1:-""}
-ENV=${2:-"dev"}
-REPO_BRANCH=${3:-"master"}
 
 START_TIME=$(date +"%s")
 
-printf "Triggering test automation for component \e[1m'%s'\e[0m in branch '%s'\n" "$TEST_COMPONENTS" "$REPO_BRANCH"
-if [ "$TEST_COMPONENTS" == "" ]; then
-  printf "\e[33;1mWarning: Test component was not specified, automation will run all components in scope!\e[0m\n"
-fi
+printf "Triggering test automation for component \e[1m'%s'\e[0m in branch '%s'\n" "$COMPONENT" "$REPO_BRANCH"
 
 TRIGGER_BODY="{
   \"request\": {
     \"branch\": \"$REPO_BRANCH\",
-    \"message\":\"Triggered for '$TEST_COMPONENTS' test\",
+    \"message\":\"Travis deploy triggered '$COMPONENT' checks\",
     \"merge_mode\":\"deep_merge_append\",
     \"config\": {
-      \"env\":{\"global\":[\"SCOPE_COMPONENTS=$TEST_COMPONENTS\",\"SCOPE_LEVELS=smoke\", \"APP_ENV=$ENV\"]}
+      \"env\":{\"global\":[\"LEVEL=$LEVEL\",\"SCOPE_COMPONENTS=$COMPONENT\", \"APP_ENV=$STAGE\", \"TESTRAIL_REPORT=$TESTRAIL\", \"SLACK_REPORT=$SLACK\"]}
     }
   }
 }"
