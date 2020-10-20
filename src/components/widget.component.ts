@@ -244,6 +244,7 @@ export default class WidgetComponent extends BaseComponent {
     if (finishedIndex >= 0) {
       if (statusResponse[finishedIndex].payload.error) {
         this.callOnError(statusResponse[finishedIndex].payload.error);
+        this.reCreateWidget();
         return;
       }
 
