@@ -30,8 +30,9 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
 
     element.classList.add('ownid-inline-widget');
 
-    element.innerHTML = `${message}&nbsp;<svg class="ownid-info-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#354a5f" fill-rule="evenodd" viewBox="-1 0 18 18"><path d="M.333 7A6.67 6.67 0 0 1 7 .333 6.67 6.67 0 0 1 13.667 7 6.67 6.67 0 0 1 7 13.667 6.67 6.67 0 0 1 .333 7zM7 1.667C4.055 1.667 1.667 4.055 1.667 7S4.055 12.333 7 12.333 12.334 9.946 12.334 7 9.946 1.667 7 1.667zm0 3.666a1 1 0 1 0 0-2 1 1 0 1 0 0 2zm0 1.334c.368 0 .667.298.667.667V10c0 .368-.298.667-.667.667A.67.67 0 0 1 6.333 10V7.333c0-.368.298-.667.667-.667z"/></svg>
-`;
+    element.innerHTML = `${message}&nbsp;<svg class="ownid-info-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#354a5f" fill-rule="evenodd" viewBox="-1 0 18 18"><path d="M.333 7A6.67 6.67 0 0 1 7 .333 6.67 6.67 0 0 1 13.667 7 6.67 6.67 0 0 1 7 13.667 6.67 6.67 0 0 1 .333 7zM7 1.667C4.055 1.667 1.667 4.055 1.667 7S4.055 12.333 7 12.333 12.334 9.946 12.334 7 9.946 1.667 7 1.667zm0 3.666a1 1 0 1 0 0-2 1 1 0 1 0 0 2zm0 1.334c.368 0 .667.298.667.667V10c0 .368-.298.667-.667.667A.67.67 0 0 1 6.333 10V7.333c0-.368.298-.667.667-.667z"/></svg>`;
+
+    element.style.height = `${options.targetElement.offsetHeight}px`;
 
     options.targetElement.addEventListener('input', () => {
       element.style.display = options.targetElement.value !== '' ? 'none' : 'flex';
@@ -85,7 +86,7 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
   private addOwnIDStyleTag(id: string): void {
     const style = document.createElement('style');
     style.id = id;
-    style.textContent = `.ownid-inline-widget{color:#0070F2;cursor:pointer;position:absolute;display:flex;font-size:14px}
+    style.textContent = `.ownid-inline-widget{color:#0070F2;cursor:pointer;position:absolute;display:flex;align-items:center;font-size:14px;padding:0 10px}
 .ownid-inline-widget .ownid-info-icon{fill:#0070F2}
 .ownid-inline-widget--finished {color:#000;margin-left:-25px;pointer-events:none;opacity:1}
 .ownid-inline-widget--finished .ownid-info-icon{fill:#000;pointer-events:initial;opacity:1;cursor:pointer;}
@@ -112,7 +113,12 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
     // eslint-disable-next-line no-param-reassign
     element.style.top = `${top + offsetX + targetHeight / 2 - height / 2 + window.pageYOffset}px`;
     // eslint-disable-next-line no-param-reassign
-    element.style.left = `${right + offsetY - width + window.pageXOffset}px`;
+    element.style.left = `${right + offsetY - width + window.pageXOffset + 10}px`; // 10 px padding
+
+    if (offsetY < 0) {
+      // eslint-disable-next-line no-param-reassign
+      element.style.paddingRight = `${-offsetY}px`;
+    }
   }
 
   public requirePassword(): void {
