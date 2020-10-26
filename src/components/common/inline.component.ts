@@ -132,9 +132,17 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
       this.options.targetElement.classList.toggle('ownid-inline-required', !this.options.targetElement.value),
     );
 
+    this.displayWarn(TranslationService.texts[this.options.lang].inline.passwordWarn);
+  }
+
+  public noAccount(): void {
+    this.displayWarn(TranslationService.texts[this.options.lang].inline.noAccount);
+  }
+
+  private displayWarn(message: string): void {
     const warn = document.createElement('div');
     warn.classList.add('ownid-inline-warn');
-    warn.textContent = TranslationService.texts[this.options.lang].inline.passwordWarn;
+    warn.textContent = message;
 
     this.options.targetElement.parentNode!.insertBefore(warn, this.options.targetElement.nextSibling);
   }

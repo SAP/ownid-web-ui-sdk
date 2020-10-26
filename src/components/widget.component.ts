@@ -1,3 +1,4 @@
+import { IUserHandler } from '../interfaces/i-user-handler.interfaces';
 import { BaseComponent } from './base.component';
 import LinkButton from './common/link-button.component';
 import Qr from './common/qr.component';
@@ -10,6 +11,7 @@ import StatusResponse, { ContextStatus } from './status-response';
 import LinkedWidget from './common/linked.component';
 import { find, findIndex } from '../services/helper.service';
 import InlineWidget, { InlineWidgetOptions } from './common/inline.component';
+import UserHandler from './user-handler';
 
 export default class WidgetComponent extends BaseComponent {
   widgetReady: Promise<void>;
@@ -50,6 +52,8 @@ export default class WidgetComponent extends BaseComponent {
 
   private globalEventCallbacks: ((event: MouseEvent) => void)[] = [];
 
+  protected userHandler: IUserHandler;
+
   constructor(
     public config: IWidgetConfig,
     protected requestService: RequestService,
@@ -57,6 +61,8 @@ export default class WidgetComponent extends BaseComponent {
     protected disableMobile: boolean = false,
   ) {
     super(config);
+
+    this.userHandler = config.userHandler || new UserHandler();
 
     this.widgetReady = this.init(config).then(
       () => {
@@ -495,6 +501,20 @@ export default class WidgetComponent extends BaseComponent {
     }
   }
 
+  private setFinishStatus(isFinished: boolean) {
+    this.inline?.setFinishStatus(isFinished);
+
+    this.toggleElements?.forEach((toggleElement) => toggleElement.classList.add('ownid-disabled'));
+
+    if (this.config.toggleElement) {
+      this.config.toggleElement.checked = isFinished;
+    }
+
+    if (this.note) {
+      this.note.style.display = isFinished ? 'block' : 'none';
+    }
+  }
+
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   private callOnSuccess(finalResponse: any): void {
     const isTooltip =
@@ -506,18 +526,7 @@ export default class WidgetComponent extends BaseComponent {
 
     if (isTooltip) {
       this.toggleQrTooltip(false);
-
-      this.inline?.setFinishStatus(true);
-
-      this.toggleElements?.forEach((toggleElement) => toggleElement.classList.add('ownid-disabled'));
-
-      if (this.config.toggleElement) {
-        this.config.toggleElement.checked = true;
-      }
-
-      if (this.note) {
-        this.note.style.display = 'block';
-      }
+      this.setFinishStatus(true);
     }
 
     this.disabled = false;
@@ -527,7 +536,20 @@ export default class WidgetComponent extends BaseComponent {
         return this.config.onLink && this.config.onLink(finalResponse);
       case WidgetType.Login:
         if (this.config.inline && finalResponse.pubKey) {
-          this.inline!.requirePassword();
+          if (!this.config.inline.userIdElement?.value) {
+            this.inline!.noAccount();
+          } else {
+            this.userHandler.isUserExists(this.config.inline.userIdElement?.value).then((exists) => {
+              if (exists) {
+                this.inline!.requirePassword();
+              } else {
+                this.inline!.noAccount();
+                if (isTooltip) {
+                  this.setFinishStatus(false);
+                }
+              }
+            });
+          }
         }
 
         return this.config.onLogin && this.config.onLogin(finalResponse);
