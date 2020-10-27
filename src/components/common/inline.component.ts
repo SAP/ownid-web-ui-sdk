@@ -30,12 +30,14 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
 
     element.classList.add('ownid-inline-widget');
 
-    element.innerHTML = `${message}&nbsp;<svg class="ownid-info-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#354a5f" fill-rule="evenodd" viewBox="-1 0 18 18"><path d="M.333 7A6.67 6.67 0 0 1 7 .333 6.67 6.67 0 0 1 13.667 7 6.67 6.67 0 0 1 7 13.667 6.67 6.67 0 0 1 .333 7zM7 1.667C4.055 1.667 1.667 4.055 1.667 7S4.055 12.333 7 12.333 12.334 9.946 12.334 7 9.946 1.667 7 1.667zm0 3.666a1 1 0 1 0 0-2 1 1 0 1 0 0 2zm0 1.334c.368 0 .667.298.667.667V10c0 .368-.298.667-.667.667A.67.67 0 0 1 6.333 10V7.333c0-.368.298-.667.667-.667z"/></svg>`;
+    element.innerHTML = `${message}&nbsp;<svg class="ownid-info-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#354a5f" fill-rule="evenodd" viewBox="0 0 14 14"><path d="M.333 7A6.67 6.67 0 0 1 7 .333 6.67 6.67 0 0 1 13.667 7 6.67 6.67 0 0 1 7 13.667 6.67 6.67 0 0 1 .333 7zM7 1.667C4.055 1.667 1.667 4.055 1.667 7S4.055 12.333 7 12.333 12.334 9.946 12.334 7 9.946 1.667 7 1.667zm0 3.666a1 1 0 1 0 0-2 1 1 0 1 0 0 2zm0 1.334c.368 0 .667.298.667.667V10c0 .368-.298.667-.667.667A.67.67 0 0 1 6.333 10V7.333c0-.368.298-.667.667-.667z"/></svg>`;
 
     element.style.height = `${options.targetElement.offsetHeight}px`;
 
-    options.targetElement.addEventListener('input', () => {
-      element.style.display = options.targetElement.value !== '' ? 'none' : 'flex';
+    options.targetElement.addEventListener('input', (e) => {
+      if ((e as InputEvent).inputType) {
+        element.style.display = options.targetElement.value !== '' ? 'none' : 'flex';
+      }
     });
 
     const svg = element.querySelector('svg.ownid-info-icon');
