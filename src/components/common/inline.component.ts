@@ -89,7 +89,7 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
     const style = document.createElement('style');
     style.id = id;
     style.textContent = `.ownid-inline-widget{color:#0070F2;cursor:pointer;position:absolute;display:flex;align-items:center;font-size:14px;padding:0 10px}
-.ownid-inline-widget .ownid-info-icon{fill:#0070F2}
+.ownid-inline-widget .ownid-info-icon{fill:#0070F2;padding:10px 10px 10px 5px;margin:0 -10px 0 -5px}
 .ownid-inline-widget--finished {color:#000;margin-left:-25px;pointer-events:none;opacity:1}
 .ownid-inline-widget--finished .ownid-info-icon{fill:#000;pointer-events:initial;opacity:1;cursor:pointer;}
 .ownid-inline-widget--finished:before{content:'';opacity:1;width:25px;height:16px;display:block;background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOC43MDcgNy4yOTNhMSAxIDAgMCAxIDAgMS40MTRsLTggOGExIDEgMCAwIDEtMS40MTQgMGwtMy0zYTEgMSAwIDAgMSAxLjQxNC0xLjQxNEwxMCAxNC41ODZsNy4yOTMtNy4yOTNhMSAxIDAgMCAxIDEuNDE0IDB6IiBmaWxsPSIjMzZhNDFkIi8+PC9zdmc+) repeat center center}
