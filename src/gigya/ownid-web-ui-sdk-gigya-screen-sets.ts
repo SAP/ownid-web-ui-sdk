@@ -96,7 +96,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onLogin(statusRS: any) {
-        document.cookie = `gac_${ window.gigya.thisScript.APIKey }=${ statusRS.sessionInfo.cookieValue }; path=/`;
+        document.cookie = `gac_${window.gigya.thisScript.APIKey}=${statusRS.sessionInfo.cookieValue}; path=/`;
         window.gigya.accounts.getAccountInfo({ callback });
       },
     });

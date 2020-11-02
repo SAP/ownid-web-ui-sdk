@@ -2,6 +2,7 @@ import { IWidgetConfig } from '../interfaces/i-widget.interfaces';
 import RequestService from '../services/request.service';
 import GigyaLinkWidgetComponent from './components/gigya-link-widget.component';
 import OwnIDUiSdkGigyaScreenSets from './ownid-web-ui-sdk-gigya-screen-sets';
+import GigyaWidgetComponent from './components/gigya-widget.component';
 
 export default class OwnIDUiSdkGigya {
   screenSets = new OwnIDUiSdkGigyaScreenSets();
@@ -9,6 +10,18 @@ export default class OwnIDUiSdkGigya {
   isGigyaAdded = false;
 
   async renderLink(config: IWidgetConfig, apiKey: string): Promise<GigyaLinkWidgetComponent | null> {
+    return this.render(config, apiKey, GigyaLinkWidgetComponent);
+  }
+
+  async renderGigyaOwnIdWidget(config: IWidgetConfig, apiKey: string): Promise<GigyaWidgetComponent | null> {
+    return this.render(config, apiKey, GigyaWidgetComponent);
+  }
+
+  private async render<T>(
+    config: IWidgetConfig,
+    apiKey: string,
+    Widget: { new (config: IWidgetConfig, requestService: RequestService): T },
+  ): Promise<T | null> {
     if (!config.element) {
       // eslint-disable-next-line no-console
       console.error(`Parent element wasn't found on the page`);
@@ -24,7 +37,7 @@ export default class OwnIDUiSdkGigya {
       return null;
     }
 
-    return new Promise<GigyaLinkWidgetComponent | null>((resolve) => {
+    return new Promise<T | null>((resolve) => {
       const createWidgetResolve = () => {
         if (!window.ownid || !window.ownid.config) {
           // eslint-disable-next-line no-console
@@ -32,12 +45,12 @@ export default class OwnIDUiSdkGigya {
           resolve(null);
         }
 
-        resolve(new GigyaLinkWidgetComponent({ ...window.ownid.config, ...config }, new RequestService()));
+        resolve(new Widget({ ...window.ownid.config, ...config }, new RequestService()));
       };
 
       if (!this.isGigyaAdded && !gigya) {
         this.isGigyaAdded = true;
-        const src = `https://cdns.gigya.com/js/gigya.js?apikey=${ apiKey }`;
+        const src = `https://cdns.gigya.com/js/gigya.js?apikey=${apiKey}`;
         const scriptElement = document.createElement('script');
         scriptElement.src = src;
         scriptElement.addEventListener('load', createWidgetResolve);

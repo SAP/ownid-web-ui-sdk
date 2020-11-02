@@ -31,6 +31,6 @@ export default abstract class BaseCommonComponent<T> implements ICommonComponent
   }
 
   public destroy(): void {
-    this.ref.parentNode!.removeChild(this.ref);
+    this.ref.parentNode?.removeChild(this.ref);
   }
 }

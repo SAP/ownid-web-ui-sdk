@@ -1,3 +1,4 @@
+import { IUserHandler } from './i-user-handler.interfaces';
 import { ILogger, LogLevel } from './i-logger.interfaces';
 
 export enum WidgetType {
@@ -26,10 +27,12 @@ export interface IInitConfig {
 export interface IWidgetConfig {
   element: HTMLElement;
   type: WidgetType;
+  userHandler?: IUserHandler;
   language?: Languages;
   data?: unknown;
   inline?: {
     targetElement: HTMLInputElement;
+    userIdElement?: HTMLInputElement;
     additionalElements?: HTMLElement[];
     offset?: [number, number];
   };

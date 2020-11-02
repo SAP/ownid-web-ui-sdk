@@ -46,6 +46,7 @@ describe('OwnIDUiSdkGigya instances test', () => {
         },
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       window.ownid = { config: params } as any;
 
       sdk
@@ -101,4 +102,38 @@ describe('OwnIDUiSdkGigya instances test', () => {
         .catch(() => reject);
     });
   });
+
+  it('renderGigyaOwnIdWidget should call internal render method', () =>
+    new Promise((resolve) => {
+      const params = {
+        element: document.createElement('div'),
+        type: WidgetType.Login,
+      };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const gigyaSdk = new OwnIDUiSdkGigya() as any;
+      gigyaSdk.render = jest.fn();
+      gigyaSdk.renderGigyaOwnIdWidget(params, 'api_key').then(() => {
+        expect(gigyaSdk.render).toBeCalled();
+        resolve();
+      });
+    }));
+
+  it('render should fail if no element was provided', () =>
+    new Promise((resolve) => {
+      const params = {
+        element: null,
+        type: WidgetType.Login,
+      };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const gigyaSdk = new OwnIDUiSdkGigya() as any;
+      // eslint-disable-next-line no-console
+      console.error = jest.fn();
+
+      gigyaSdk.renderGigyaOwnIdWidget(params, 'api_key').then(() => {
+        // eslint-disable-next-line no-console
+        expect(console.error).toBeCalledWith(`Parent element wasn't found on the page`);
+
+        resolve();
+      });
+    }));
 });
