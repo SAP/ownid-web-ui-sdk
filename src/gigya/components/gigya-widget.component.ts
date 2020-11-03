@@ -5,7 +5,8 @@ import GigyaUserHandler from './gigya-user-handler';
 
 export default class GigyaWidgetComponent extends WidgetComponent {
   constructor(config: IWidgetConfig, requestService: RequestService) {
-    super(config, requestService);
+    const mobileDisable = !!config.inline;
+    super(config, requestService, false, mobileDisable);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const allConfig: any = config;
