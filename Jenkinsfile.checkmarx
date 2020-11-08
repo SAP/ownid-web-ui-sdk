@@ -26,7 +26,7 @@ pipeline {
           $class: 'CxScanBuilder',
           avoidDuplicateProjectScans: true,
           comment: '',
-          credentialsId: 'nvt-sap-io-checkmarx',
+          credentialsId: 'OwnIDDevOps',
           excludeFolders: '',
           excludeOpenSourceFolders: '',
           exclusionsSetting: 'global',
@@ -47,6 +47,7 @@ pipeline {
           sastEnabled: true,
           serverUrl: 'https://cx.wdf.sap.corp',
           sourceEncoding: '1',
+          useOwnServerCredentials: true,
           // username: '',
           vulnerabilityThresholdResult: 'FAILURE'
         ])
