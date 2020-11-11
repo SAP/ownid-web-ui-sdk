@@ -14,5 +14,5 @@ echo Prod B update
 S3PATH=s3://cdn-b.ownid.com/js
 aws s3 cp ./dist $S3PATH --recursive
 
-DISTRIBUTIONID=EDUOQUBKTEHZF
-aws cloudfront create-invalidation --distribution-id $DISTRIBUTIONID --paths "/*"
+echo Cache invalidation
+aws cloudfront create-invalidation --distribution-id EDUOQUBKTEHZF --paths "/js/*"

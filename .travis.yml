@@ -12,7 +12,7 @@ branches:
   only:
     - master
     - develop
-    - alpha-rti
+    - /^release\/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])).*$/
 
 language: node_js
 node_js:
@@ -32,8 +32,8 @@ jobs:
       env: ENV=staging
     - if: branch=develop
       env: ENV=dev
-    - if: branch=alpha-rti
-      env: ENV=staging
+    - if: branch =~ ^release\/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])).*$
+      env: ENV=prod
 
 install:
   - yarn
@@ -51,16 +51,17 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: sh scripts/publish.sh $ENV
+    script: sh scripts/deploy.sh $ENV
     skip_cleanup: true
     on:
       all_branches: true
       condition: $TRAVIS_BRANCH =~ ^(develop|master)$
   - provider: script
-    script: sh scripts/publish-prod.sh
+    script: sh scripts/deploy-prod.sh
     skip_cleanup: true
     on:
-      branch: alpha-rti
+      all_branches: true
+      condition: $TRAVIS_BRANCH =~ ^release\/.*$
 
 after_deploy:
   - bash scripts/test_runner.sh widget $ENV
