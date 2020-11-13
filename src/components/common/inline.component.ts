@@ -123,13 +123,13 @@ input.ownid-skip-password::-webkit-credentials-auto-fill-button{margin-right:${
     const { width, height } = element.getBoundingClientRect();
 
     // eslint-disable-next-line no-param-reassign
-    element.style.top = `${top + offsetX + targetHeight / 2 - height / 2 + window.pageYOffset}px`;
+    element.style.top = `${top + offsetY + targetHeight / 2 - height / 2 + window.pageYOffset}px`;
     // eslint-disable-next-line no-param-reassign
-    element.style.left = `${right + offsetY - width + window.pageXOffset + 10}px`; // 10 px padding
+    element.style.left = `${right + offsetX - width + window.pageXOffset + 10}px`; // 10 px padding
 
-    if (offsetY < 0) {
+    if (offsetX < 0) {
       // eslint-disable-next-line no-param-reassign
-      element.style.paddingRight = `${-offsetY}px`;
+      element.style.paddingRight = `${-offsetX}px`;
     }
   }
 

@@ -21,7 +21,7 @@
   <script>
     window.ownidAsyncInit = function () {
       ownid.init({
-        URLPrefix: 'https://demo.dev.ownid.com/netcore3/ownid/', // optional. default path is /ownId/
+        URLPrefix: 'http://localhost:5002/ownid/', // optional. default path is /ownId/
       });
 
       // var ownIdElem1 = ownid.render({
@@ -85,8 +85,10 @@
       window.inlineWidget = ownid.render({
         type: 'login',
         inline: {
+          userIdElement: document.getElementById('inline-email'),
           targetElement: document.getElementById('inline-login-password'),
-          offset: [0, -10],
+          offset: [-10, 0],
+          credentialsAutoFillButtonOffset: 180
         },
         element: document.getElementById('ownid-inline-login'),
         onLogin(e) {
@@ -212,7 +214,7 @@
   <h4 class="">Inline Login</h4>
   <form>
     <div class="row">
-      <input type="name" placeholder="name">
+      <input type="name" placeholder="name" id="inline-email">
     </div>
 
     <div id="ownid-inline-login"></div>
