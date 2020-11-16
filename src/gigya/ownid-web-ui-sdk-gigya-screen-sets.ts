@@ -129,8 +129,10 @@ export default class OwnIDUiSdkGigyaScreenSets {
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onLogin(statusRS: any) {
-        document.cookie = `gac_${window.gigya.thisScript.APIKey}=${statusRS.sessionInfo.cookieValue}; path=/`;
-        window.gigya.accounts.getAccountInfo({ callback });
+        if (statusRS.sessionInfo?.cookieValue) {
+          document.cookie = `gac_${window.gigya.thisScript.APIKey}=${statusRS.sessionInfo.cookieValue}; path=/`;
+          window.gigya.accounts.getAccountInfo({ callback });
+        }
       },
     });
   }
@@ -166,15 +168,15 @@ export default class OwnIDUiSdkGigyaScreenSets {
       event.currentScreen === config?.customScreenSetsIds?.registration
     ) {
       this.renderInlineRegisterWidget(config?.widgetConfigs?.[event.currentScreen]);
-    }
 
-    document.getElementsByClassName('gigya-input-submit')[0].addEventListener('click', () => {
-      if (!this.ownIDWidget?.disabled) {
-        const pw = window.ownid.generateOwnIDPassword(32);
-        (document.querySelector('[data-gigya-name="password"]') as HTMLInputElement).value = pw;
-        (document.querySelector('[data-gigya-name="passwordRetype"]') as HTMLInputElement).value = pw;
-      }
-    });
+      document.getElementsByClassName('gigya-input-submit')[0].addEventListener('click', () => {
+        if (!this.ownIDWidget?.disabled) {
+          const pw = window.ownid.generateOwnIDPassword(32);
+          (document.querySelector('[data-gigya-name="password"]') as HTMLInputElement).value = pw;
+          (document.querySelector('[data-gigya-name="passwordRetype"]') as HTMLInputElement).value = pw;
+        }
+      });
+    }
   }
 
   public onHide(): void {
@@ -188,6 +190,8 @@ export default class OwnIDUiSdkGigyaScreenSets {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data } = (await window.ownid.getOwnIDPayload(this.ownIDWidget)) as { data: any };
       if (data) {
+        // eslint-disable-next-line no-param-reassign
+        event.formModel.data = event.formModel.data || {};
         // eslint-disable-next-line no-param-reassign
         event.formModel.data.ownIdConnections = [{ ...data }];
       }
