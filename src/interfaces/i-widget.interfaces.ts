@@ -35,6 +35,7 @@ export interface IWidgetConfig {
     userIdElement?: HTMLInputElement;
     additionalElements?: HTMLElement[];
     offset?: [number, number];
+    credentialsAutoFillButtonOffset?: number;
   };
   URLPrefix?: string;
   mobileTitle?: string;

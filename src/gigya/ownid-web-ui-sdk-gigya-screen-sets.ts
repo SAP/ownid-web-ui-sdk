@@ -48,7 +48,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
       inline: {
         targetElement: pass,
         additionalElements: [repeatPass],
-        offset: [0, -10],
+        offset: [-10, 0],
       },
       element: this.getOwnIdWrapper(),
       onError(error) {
@@ -65,7 +65,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
       type: WidgetType.Login,
       inline: {
         targetElement: pass,
-        offset: [0, -10],
+        offset: [-10, 0],
       },
       element: this.getOwnIdWrapper(),
       onError: (error) => {

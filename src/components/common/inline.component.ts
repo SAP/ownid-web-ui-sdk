@@ -6,6 +6,7 @@ export type InlineWidgetOptions = {
   lang: string;
   additionalElements?: HTMLElement[];
   offset?: [number, number];
+  credentialsAutoFillButtonOffset?: number;
 };
 
 export default class InlineWidget extends BaseCommonComponent<InlineWidgetOptions> {
@@ -21,7 +22,7 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
     const styles = document.getElementById('ownid-inline-widget-styles');
 
     if (!styles) {
-      this.addOwnIDStyleTag('ownid-inline-widget-styles');
+      this.addOwnIDStyleTag('ownid-inline-widget-styles', options);
     }
 
     const element = document.createElement('div');
@@ -34,9 +35,12 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
 
     element.style.height = `${options.targetElement.offsetHeight}px`;
 
+    options.targetElement.classList.add('ownid-skip-password');
+
     options.targetElement.addEventListener('input', (e) => {
       if ((e as InputEvent).inputType) {
         element.style.display = options.targetElement.value !== '' ? 'none' : 'flex';
+        options.targetElement.classList.toggle('ownid-skip-password', options.targetElement.value === '');
       }
     });
 
@@ -85,7 +89,9 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
     this.infoTooltipEl!.style.left = `${left - rect.width + width + window.pageXOffset}px`;
   }
 
-  private addOwnIDStyleTag(id: string): void {
+  private addOwnIDStyleTag(id: string, options: InlineWidgetOptions): void {
+    const [offsetX] = options.offset || [0, 0];
+
     const style = document.createElement('style');
     style.id = id;
     style.textContent = `.ownid-inline-widget{color:#0070F2;cursor:pointer;position:absolute;display:flex;align-items:center;font-size:14px;padding:0 10px}
@@ -98,6 +104,10 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
 .ownid-inline-required{border-color:#D20A0A}
 .ownid-inline-warn{color:#D20A0A}
 .ownid-info-tooltip{width:280px;display:none;position:absolute;background:#FFF;border-radius:6px;border:1px solid #D5DADD;box-shadow:0px 0px 2px rgba(131,150,168,0.16),0px 4px 8px rgba(131,150,168,0.16);box-sizing: border-box;font-style: normal;font-weight: normal;font-size: 12px;line-height: 18px;padding:12px;}
+
+input.ownid-skip-password::-webkit-credentials-auto-fill-button{margin-right:${
+      options.credentialsAutoFillButtonOffset || 155 + offsetX
+    }px;}
 `;
     document.head.appendChild(style);
   }
@@ -113,13 +123,13 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
     const { width, height } = element.getBoundingClientRect();
 
     // eslint-disable-next-line no-param-reassign
-    element.style.top = `${top + offsetX + targetHeight / 2 - height / 2 + window.pageYOffset}px`;
+    element.style.top = `${top + offsetY + targetHeight / 2 - height / 2 + window.pageYOffset}px`;
     // eslint-disable-next-line no-param-reassign
-    element.style.left = `${right + offsetY - width + window.pageXOffset + 10}px`; // 10 px padding
+    element.style.left = `${right + offsetX - width + window.pageXOffset + 10}px`; // 10 px padding
 
-    if (offsetY < 0) {
+    if (offsetX < 0) {
       // eslint-disable-next-line no-param-reassign
-      element.style.paddingRight = `${-offsetY}px`;
+      element.style.paddingRight = `${-offsetX}px`;
     }
   }
 
