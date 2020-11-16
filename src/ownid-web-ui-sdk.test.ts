@@ -5,7 +5,11 @@ import { ILogger } from './interfaces/i-logger.interfaces';
 import RequestService from './services/request.service';
 
 describe('OwnIDUiSdk instances test', () => {
-  const sdk = new OwnIDUiSdk();
+  let sdk: OwnIDUiSdk;
+
+  beforeEach(() => {
+    sdk = new OwnIDUiSdk();
+  });
 
   // eslint-disable-next-line no-console
   console.error = jest.fn();
@@ -35,7 +39,7 @@ describe('OwnIDUiSdk instances test', () => {
       const params = {
         URLPrefix: 'url',
         logger: {} as ILogger,
-        logLevel: 'info' as 'info',
+        logLevel: 'info' as const,
       };
 
       sdk.init(params);
@@ -129,7 +133,7 @@ describe('OwnIDUiSdk instances test', () => {
       expect(res).toEqual({ error: true, message: 'show error' });
     });
 
-    it('should return an error', async () => {
+    it('should return an error 2', async () => {
       const res = await sdk.getOwnIDPayload(widget);
 
       expect(res).toEqual({ error: null, data: null });
@@ -141,6 +145,33 @@ describe('OwnIDUiSdk instances test', () => {
       const res = sdk.generateOwnIDPassword(10);
 
       expect(res.length).toEqual(10);
+    });
+  });
+
+  describe('reRenderWidget', () => {
+    it('should rerender widget', () => {
+      const ownIDWidget = {} as WidgetComponent;
+
+      ownIDWidget.destroy = jest.fn();
+      sdk.render = jest.fn();
+
+      ownIDWidget.config = {
+        element: {} as HTMLElement,
+        type: WidgetType.Login,
+      };
+
+      sdk.reRenderWidget(ownIDWidget);
+
+      expect(ownIDWidget.destroy).toHaveBeenCalled();
+      expect(sdk.render).toHaveBeenCalledWith(ownIDWidget.config);
+    });
+
+    it('should do nothing if no widget passed', () => {
+      sdk.render = jest.fn();
+
+      sdk.reRenderWidget(null);
+
+      expect(sdk.render).not.toHaveBeenCalled();
     });
   });
 });
