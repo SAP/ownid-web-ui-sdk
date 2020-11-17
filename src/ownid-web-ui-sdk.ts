@@ -1,6 +1,6 @@
 import WidgetComponent from './components/widget.component';
 import RequestService from './services/request.service';
-import { IInitConfig, IWidgetConfig, WidgetType } from './interfaces/i-widget.interfaces';
+import { IInitConfig, IWidgetConfig, IWidgetPayload, WidgetType } from './interfaces/i-widget.interfaces';
 import LoggerDecorator from './services/logger.service';
 import { LogLevel } from './interfaces/i-logger.interfaces';
 
@@ -45,7 +45,7 @@ export default class OwnIDUiSdk {
     );
   }
 
-  async getOwnIDPayload(widget: WidgetComponent): Promise<unknown> {
+  async getOwnIDPayload(widget: WidgetComponent): Promise<IWidgetPayload> {
     if (widget.disabled) {
       return Promise.resolve({ error: null, data: null });
     }

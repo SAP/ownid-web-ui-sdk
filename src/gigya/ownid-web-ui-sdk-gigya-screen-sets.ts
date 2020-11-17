@@ -1,5 +1,5 @@
 import WidgetComponent from '../components/widget.component';
-import { IWidgetConfig, WidgetType } from '../interfaces/i-widget.interfaces';
+import { IWidgetConfig, IWidgetPayload, WidgetType } from '../interfaces/i-widget.interfaces';
 
 interface IMyWindow extends Window {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -197,5 +197,29 @@ export default class OwnIDUiSdkGigyaScreenSets {
       }
     }
     return event;
+  }
+
+  public addEventHandlers(): void {
+    window.gigya.accounts.addEventHandlers({
+      onLogin: async (event: { newUser: boolean }) => {
+        if (!event.newUser && this.ownIDWidget) {
+          const { data }: IWidgetPayload = await window.ownid.getOwnIDPayload(this.ownIDWidget);
+          if (data?.pubKey) {
+            window.gigya.accounts.getAccountInfo({
+              include: 'data',
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              callback: (userData: { data: any }) => {
+                const userDataObj = userData.data || {};
+                const ownIdConnections = userDataObj.ownIdConnections || [];
+
+                ownIdConnections.push(data);
+
+                window.gigya.accounts.setAccountInfo({ data: { ownIdConnections } });
+              },
+            });
+          }
+        }
+      },
+    });
   }
 }
