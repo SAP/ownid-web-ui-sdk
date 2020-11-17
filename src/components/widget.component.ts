@@ -116,6 +116,7 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   private render(): void {
+    this.isDestroyed = false;
     const styles = document.getElementById('OwnID-common-styles');
 
     if (!styles) {
