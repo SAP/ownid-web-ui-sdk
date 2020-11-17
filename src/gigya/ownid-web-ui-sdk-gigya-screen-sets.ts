@@ -1,5 +1,5 @@
 import WidgetComponent from '../components/widget.component';
-import { IWidgetConfig, WidgetType } from '../interfaces/i-widget.interfaces';
+import { IWidgetConfig, IWidgetPayload, WidgetType } from '../interfaces/i-widget.interfaces';
 
 interface IMyWindow extends Window {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -129,8 +129,10 @@ export default class OwnIDUiSdkGigyaScreenSets {
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onLogin(statusRS: any) {
-        document.cookie = `gac_${window.gigya.thisScript.APIKey}=${statusRS.sessionInfo.cookieValue}; path=/`;
-        window.gigya.accounts.getAccountInfo({ callback });
+        if (statusRS.sessionInfo?.cookieValue) {
+          document.cookie = `gac_${window.gigya.thisScript.APIKey}=${statusRS.sessionInfo.cookieValue}; path=/`;
+          window.gigya.accounts.getAccountInfo({ callback });
+        }
       },
     });
   }
@@ -166,15 +168,15 @@ export default class OwnIDUiSdkGigyaScreenSets {
       event.currentScreen === config?.customScreenSetsIds?.registration
     ) {
       this.renderInlineRegisterWidget(config?.widgetConfigs?.[event.currentScreen]);
-    }
 
-    document.getElementsByClassName('gigya-input-submit')[0].addEventListener('click', () => {
-      if (!this.ownIDWidget?.disabled) {
-        const pw = window.ownid.generateOwnIDPassword(32);
-        (document.querySelector('[data-gigya-name="password"]') as HTMLInputElement).value = pw;
-        (document.querySelector('[data-gigya-name="passwordRetype"]') as HTMLInputElement).value = pw;
-      }
-    });
+      document.getElementsByClassName('gigya-input-submit')[0].addEventListener('click', () => {
+        if (!this.ownIDWidget?.disabled) {
+          const pw = window.ownid.generateOwnIDPassword(32);
+          (document.querySelector('[data-gigya-name="password"]') as HTMLInputElement).value = pw;
+          (document.querySelector('[data-gigya-name="passwordRetype"]') as HTMLInputElement).value = pw;
+        }
+      });
+    }
   }
 
   public onHide(): void {
@@ -189,9 +191,35 @@ export default class OwnIDUiSdkGigyaScreenSets {
       const { data } = (await window.ownid.getOwnIDPayload(this.ownIDWidget)) as { data: any };
       if (data) {
         // eslint-disable-next-line no-param-reassign
+        event.formModel.data = event.formModel.data || {};
+        // eslint-disable-next-line no-param-reassign
         event.formModel.data.ownIdConnections = [{ ...data }];
       }
     }
     return event;
+  }
+
+  public addEventHandlers(): void {
+    window.gigya.accounts.addEventHandlers({
+      onLogin: async (event: { newUser: boolean }) => {
+        if (!event.newUser && this.ownIDWidget) {
+          const { data }: IWidgetPayload = await window.ownid.getOwnIDPayload(this.ownIDWidget);
+          if (data?.pubKey) {
+            window.gigya.accounts.getAccountInfo({
+              include: 'data',
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              callback: (userData: { data: any }) => {
+                const userDataObj = userData.data || {};
+                const ownIdConnections = userDataObj.ownIdConnections || [];
+
+                ownIdConnections.push(data);
+
+                window.gigya.accounts.setAccountInfo({ data: { ownIdConnections } });
+              },
+            });
+          }
+        }
+      },
+    });
   }
 }
