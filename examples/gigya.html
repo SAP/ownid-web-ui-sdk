@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Title</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="../dist/gigya-sdk.es5.js"></script>
+
   <script type="text/javascript" lang="javascript"
           src="http://cdn.gigya.com/js/gigya.js?apikey=3_s5-gLs4aLp5FXluP8HXs7_JN40XWNlbvYWVCCkbNCqlhW6Sm5Z4tXGGsHcSJYD3W">
     {
@@ -29,18 +29,20 @@
       z-index: 1000010006;
     }
   </style>
+  <script>
+    window.ownidAsyncInit = function onGigyaServiceReady() {
+      ownid.init({
+        URLPrefix: 'https://demo.dev.ownid.com/netcore3/ownid/',
+      });
+
+      window.ownid.gigya.screenSets.addEventHandlers();
+    }
+  </script>
+  <script async defer src="../dist/gigya-sdk.es5.js"></script>
 </head>
 <body>
 
 <script>
-  function onGigyaServiceReady() {
-    ownid.init({
-      URLPrefix: 'https://demo.dev.ownid.com/netcore3/ownid/',
-    });
-
-    window.ownid.gigya.screenSets.addEventHandlers();
-  }
-
   function loadScreenSet(startScreen) {
     const params = {
       screenSet: 'Default-RegistrationLogin',
