@@ -5,7 +5,13 @@ import Qr from './common/qr.component';
 import ConfigurationService from '../services/configuration.service';
 import { IContextRS } from '../interfaces/i-context.interfaces';
 import RequestService from '../services/request.service';
-import { IPartialConfig, IWidgetConfig, IWidgetPayload, WidgetType } from '../interfaces/i-widget.interfaces';
+import {
+  IFullWidgetConfig,
+  IPartialConfig,
+  IWidgetConfig,
+  IWidgetPayload,
+  WidgetType,
+} from '../interfaces/i-widget.interfaces';
 import TranslationService from '../services/translation.service';
 import StatusResponse, { ContextStatus } from './status-response';
 import LinkedWidget from './common/linked.component';
@@ -55,7 +61,7 @@ export default class WidgetComponent extends BaseComponent {
   protected userHandler: IUserHandler;
 
   constructor(
-    public config: IWidgetConfig,
+    public config: IFullWidgetConfig,
     protected requestService: RequestService,
     protected disableDesktop: boolean = false,
     protected disableMobile: boolean = false,

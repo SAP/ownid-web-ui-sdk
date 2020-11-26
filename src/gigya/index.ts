@@ -1,19 +1,24 @@
 import OwnIDUiSdk from '../ownid-web-ui-sdk';
 import OwnIDUiSdkGigya from './ownid-web-ui-sdk-gigya';
+import OwnIDUiSdkGigyaScreenSets from './ownid-web-ui-sdk-gigya-screen-sets';
 
 interface IMyWindow extends Window {
   ownid: IOwnIDUiSdkGigya;
 }
 
 interface IOwnIDUiSdkGigya extends OwnIDUiSdk {
-  gigya?: OwnIDUiSdkGigya;
+  gigya?: {
+    screenSets: OwnIDUiSdkGigyaScreenSets;
+  };
 }
 
 declare let window: IMyWindow;
 
-window.ownid = window.ownid instanceof OwnIDUiSdk ? window.ownid : new OwnIDUiSdk();
+window.ownid = window.ownid instanceof OwnIDUiSdkGigya ? window.ownid : new OwnIDUiSdkGigya();
 
-window.ownid.gigya = window.ownid.gigya instanceof OwnIDUiSdkGigya ? window.ownid.gigya : new OwnIDUiSdkGigya();
+window.ownid.gigya = {
+  screenSets: new OwnIDUiSdkGigyaScreenSets(),
+};
 
 if (window.ownidAsyncInit) {
   window.ownidAsyncInit();
