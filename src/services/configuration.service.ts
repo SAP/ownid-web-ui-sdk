@@ -9,6 +9,8 @@ export default class ConfigurationService {
 
   static readonly approveUrl = `/:context/approve`;
 
+  static readonly magicLinkUrl = '/magic';
+
   static readonly statusTimeout = 2000;
 
   static readonly defaultLanguage = Languages.en;

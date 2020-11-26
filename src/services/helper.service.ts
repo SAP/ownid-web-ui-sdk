@@ -27,3 +27,25 @@ export function findIndex<T>(collection: T[], predicate: (item: T, index: number
 
   return -1;
 }
+
+export function setCookie(name: string, value: string, lifetime?: number): void {
+  let expires = '';
+  if (lifetime) {
+    const date = new Date();
+    date.setTime(date.getTime() + lifetime);
+    expires = `; expires=${date.toUTCString()}`;
+  }
+  document.cookie = `${name}=${value}${expires}; path=/; SameSite=Strict`;
+}
+
+export function getCookie(name: string): string | null {
+  const nameEQ = `${name}=`;
+  const ca = document.cookie.split(';');
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (let c of ca) {
+    while (c.charAt(0) === ' ') c = c.slice(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.slice(nameEQ.length, c.length);
+  }
+  return null;
+}

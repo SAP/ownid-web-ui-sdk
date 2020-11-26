@@ -22,6 +22,7 @@ export interface IInitConfig {
   statusInterval?: number;
   logger?: ILogger;
   logLevel?: keyof typeof LogLevel;
+  onMagicLinkLogin?: (response: unknown) => void;
 }
 
 export interface IWidgetConfig {
