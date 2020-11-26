@@ -38,9 +38,13 @@ export default class OwnIDUiSdkGigyaScreenSets {
     return ownIDElement;
   }
 
-  renderInlineRegisterWidget(config?: IWidgetConfig): void {
-    const pass = document.querySelector('[data-gigya-name="password"]') as HTMLInputElement;
-    const repeatPass = document.querySelector('[data-gigya-name="passwordRetype"]') as HTMLInputElement;
+  renderInlineRegisterWidget(currentScreen: string, config?: IWidgetConfig): void {
+    const pass = document.querySelector(
+      `[data-screenset-element-id="${currentScreen}"] [data-gigya-name="password"]`,
+    ) as HTMLInputElement;
+    const repeatPass = document.querySelector(
+      `[data-screenset-element-id="${currentScreen}"] [data-gigya-name="passwordRetype"]`,
+    ) as HTMLInputElement;
 
     this.ownIDWidget = window.ownid.render({
       element: this.getOwnIdWrapper(),
@@ -53,12 +57,13 @@ export default class OwnIDUiSdkGigyaScreenSets {
         ...config?.inline,
       },
       onError: (error) => {
-        let ownIDErrorElement = document.getElementById('ownid-register-error');
+        let ownIDErrorElement = document.querySelector(
+          `[data-screenset-element-id="${currentScreen}"] .ownid-register-error`,
+        ) as HTMLSpanElement;
 
         if (!ownIDErrorElement) {
           ownIDErrorElement = document.createElement('span');
-          ownIDErrorElement.classList.add('gigya-error-msg', 'gigya-error-msg-active');
-          ownIDErrorElement.id = 'ownid-register-error';
+          ownIDErrorElement.classList.add('gigya-error-msg', 'gigya-error-msg-active', 'ownid-register-error');
 
           pass?.parentNode?.insertBefore(ownIDErrorElement, pass.nextSibling);
         }
@@ -86,9 +91,13 @@ export default class OwnIDUiSdkGigyaScreenSets {
     });
   }
 
-  renderInlineLoginWidget(callback: () => void, config?: IWidgetConfig): void {
-    const loginID = document.querySelector('[data-gigya-name="loginID"]') as HTMLInputElement;
-    const pass = document.querySelector('[data-gigya-name="password"]') as HTMLInputElement;
+  renderInlineLoginWidget(currentScreen: string, callback: () => void, config?: IWidgetConfig): void {
+    const loginID = document.querySelector(
+      `[data-screenset-element-id="${currentScreen}"] [data-gigya-name="loginID"]`,
+    ) as HTMLInputElement;
+    const pass = document.querySelector(
+      `[data-screenset-element-id="${currentScreen}"] [data-gigya-name="password"]`,
+    ) as HTMLInputElement;
 
     this.ownIDWidget = window.ownid!.render({
       element: this.getOwnIdWrapper(),
@@ -101,12 +110,13 @@ export default class OwnIDUiSdkGigyaScreenSets {
         ...config?.inline,
       },
       onError: (error) => {
-        let ownIDErrorElement = document.getElementById('ownid-login-error');
+        let ownIDErrorElement = document.querySelector(
+          `[data-screenset-element-id="${currentScreen}"] .ownid-register-error`,
+        ) as HTMLSpanElement;
 
         if (!ownIDErrorElement) {
           ownIDErrorElement = document.createElement('span');
-          ownIDErrorElement.classList.add('gigya-error-msg', 'gigya-error-msg-active');
-          ownIDErrorElement.id = 'ownid-login-error';
+          ownIDErrorElement.classList.add('gigya-error-msg', 'gigya-error-msg-active', 'ownid-login-error');
 
           pass?.parentNode?.insertBefore(ownIDErrorElement, pass.nextSibling);
         }
@@ -160,22 +170,28 @@ export default class OwnIDUiSdkGigyaScreenSets {
     });
 
     if (event.currentScreen === 'gigya-login-screen' || event.currentScreen === config?.customScreenSetsIds?.login) {
-      this.renderInlineLoginWidget(callback, config?.widgetConfigs?.[event.currentScreen]);
+      this.renderInlineLoginWidget(event.currentScreen, callback, config?.widgetConfigs?.[event.currentScreen]);
     }
 
     if (
       event.currentScreen === 'gigya-register-screen' ||
       event.currentScreen === config?.customScreenSetsIds?.registration
     ) {
-      this.renderInlineRegisterWidget(config?.widgetConfigs?.[event.currentScreen]);
+      this.renderInlineRegisterWidget(event.currentScreen, config?.widgetConfigs?.[event.currentScreen]);
 
-      document.getElementsByClassName('gigya-input-submit')[0].addEventListener('click', () => {
-        if (!this.ownIDWidget?.disabled) {
-          const pw = window.ownid.generateOwnIDPassword(32);
-          (document.querySelector('[data-gigya-name="password"]') as HTMLInputElement).value = pw;
-          (document.querySelector('[data-gigya-name="passwordRetype"]') as HTMLInputElement).value = pw;
-        }
-      });
+      document
+        .querySelector(`[data-screenset-element-id="${event.currentScreen}"] .gigya-input-submit`)
+        ?.addEventListener('click', () => {
+          if (!this.ownIDWidget?.disabled) {
+            const pw = window.ownid.generateOwnIDPassword(32);
+            (document.querySelector(
+              `[data-screenset-element-id="${event.currentScreen}"] [data-gigya-name="password"]`,
+            ) as HTMLInputElement).value = pw;
+            (document.querySelector(
+              `[data-screenset-element-id="${event.currentScreen}"] [data-gigya-name="passwordRetype"]`,
+            ) as HTMLInputElement).value = pw;
+          }
+        });
     }
   }
 
