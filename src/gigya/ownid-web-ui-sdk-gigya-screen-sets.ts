@@ -40,10 +40,10 @@ export default class OwnIDUiSdkGigyaScreenSets {
 
   renderInlineRegisterWidget(currentScreen: string, config?: IWidgetConfig): void {
     const pass = document.querySelector(
-      `[data-screenset-element-id="${currentScreen}"] [data-gigya-name="password"]`,
+      `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"] [data-gigya-name="password"]`,
     ) as HTMLInputElement;
     const repeatPass = document.querySelector(
-      `[data-screenset-element-id="${currentScreen}"] [data-gigya-name="passwordRetype"]`,
+      `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"] [data-gigya-name="passwordRetype"]`,
     ) as HTMLInputElement;
 
     this.ownIDWidget = window.ownid.render({
@@ -58,7 +58,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
       },
       onError: (error) => {
         let ownIDErrorElement = document.querySelector(
-          `[data-screenset-element-id="${currentScreen}"] .ownid-register-error`,
+          `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"] .ownid-register-error`,
         ) as HTMLSpanElement;
 
         if (!ownIDErrorElement) {
@@ -93,10 +93,10 @@ export default class OwnIDUiSdkGigyaScreenSets {
 
   renderInlineLoginWidget(currentScreen: string, callback: () => void, config?: IWidgetConfig): void {
     const loginID = document.querySelector(
-      `[data-screenset-element-id="${currentScreen}"] [data-gigya-name="loginID"]`,
+      `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"] [data-gigya-name="loginID"]`,
     ) as HTMLInputElement;
     const pass = document.querySelector(
-      `[data-screenset-element-id="${currentScreen}"] [data-gigya-name="password"]`,
+      `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"] [data-gigya-name="password"]`,
     ) as HTMLInputElement;
 
     this.ownIDWidget = window.ownid!.render({
@@ -111,7 +111,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
       },
       onError: (error) => {
         let ownIDErrorElement = document.querySelector(
-          `[data-screenset-element-id="${currentScreen}"] .ownid-register-error`,
+          `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"] .ownid-register-error`,
         ) as HTMLSpanElement;
 
         if (!ownIDErrorElement) {
@@ -180,15 +180,17 @@ export default class OwnIDUiSdkGigyaScreenSets {
       this.renderInlineRegisterWidget(event.currentScreen, config?.widgetConfigs?.[event.currentScreen]);
 
       document
-        .querySelector(`[data-screenset-element-id="${event.currentScreen}"] .gigya-input-submit`)
+        .querySelector(
+          `[data-screenset-element-id="${event.currentScreen}"][data-screenset-roles="instance"] .gigya-input-submit`,
+        )
         ?.addEventListener('click', () => {
           if (!this.ownIDWidget?.disabled) {
             const pw = window.ownid.generateOwnIDPassword(32);
             (document.querySelector(
-              `[data-screenset-element-id="${event.currentScreen}"] [data-gigya-name="password"]`,
+              `[data-screenset-element-id="${event.currentScreen}"][data-screenset-roles="instance"] [data-gigya-name="password"]`,
             ) as HTMLInputElement).value = pw;
             (document.querySelector(
-              `[data-screenset-element-id="${event.currentScreen}"] [data-gigya-name="passwordRetype"]`,
+              `[data-screenset-element-id="${event.currentScreen}"][data-screenset-roles="instance"] [data-gigya-name="passwordRetype"]`,
             ) as HTMLInputElement).value = pw;
           }
         });
