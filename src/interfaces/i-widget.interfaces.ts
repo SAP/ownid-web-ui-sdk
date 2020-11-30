@@ -29,7 +29,10 @@ export interface IWidgetConfig {
   type: WidgetType;
   userHandler?: IUserHandler;
   language?: Languages;
-  data?: unknown;
+  data?: {
+    pwrt?: string;
+    jwt?: string;
+  };
   inline?: {
     targetElement: HTMLInputElement;
     userIdElement?: HTMLInputElement;
@@ -69,7 +72,10 @@ export interface IWidgetConfig {
 
 export interface IPartialConfig {
   language?: Languages;
-  data?: unknown;
+  data?: {
+    pwrt?: string;
+    jwt?: string;
+  };
   mobileTitle?: string;
   desktopTitle?: string;
   desktopSubtitle?: string;
@@ -87,3 +93,5 @@ export interface IWidgetPayload {
   data?: any;
   message?: string;
 }
+
+export interface IFullWidgetConfig extends IWidgetConfig, IInitConfig {}
