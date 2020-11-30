@@ -2,7 +2,7 @@ import { ILogger } from '../../interfaces/i-logger.interfaces';
 import { IUserHandler } from '../../interfaces/i-user-handler.interfaces';
 
 export default class GigyaUserHandler implements IUserHandler {
-  constructor(private logger: ILogger) {}
+  constructor(private logger?: ILogger) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isUserExists(userId: string): Promise<boolean> {
@@ -13,7 +13,7 @@ export default class GigyaUserHandler implements IUserHandler {
         callback: (response: IIsAvailableLoginIDResponse) => {
           if (response.errorCode !== 0) {
             const errorText = `Gigya.isAvailableLoginID -> ${response.errorCode}: ${response.errorMessage}`;
-            this.logger.logError(errorText);
+            this.logger?.logError(errorText);
             reject(new Error(errorText));
           }
 
