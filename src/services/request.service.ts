@@ -27,4 +27,23 @@ export default class RequestService {
 
     return null;
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public async get(url: string): Promise<any> {
+    this.logger?.logInfo(`request: ${url}`);
+
+    const response = await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'no-cache',
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
+    });
+
+    if (response.status === 200) {
+      return response.json();
+    }
+
+    return null;
+  }
 }

@@ -29,11 +29,16 @@ cache:
 jobs:
   include:
     - if: branch=master
-      env: ENV=staging
+      env:
+        ENV=staging
+        CDN_DISTRIBUITION=E214IYJKJ5GWK4
     - if: branch=develop
-      env: ENV=dev
+      env:
+        ENV=dev
+        CDN_DISTRIBUITION=EDY5NDBNIAUVC
     - if: branch =~ ^release\/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])).*$
-      env: ENV=prod
+      env:
+        ENV=prod
 
 install:
   - yarn
@@ -51,7 +56,7 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: sh scripts/deploy.sh $ENV
+    script: sh scripts/deploy.sh $ENV $CDN_DISTRIBUITION
     skip_cleanup: true
     on:
       all_branches: true
