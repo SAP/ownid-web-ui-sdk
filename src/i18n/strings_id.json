@@ -1,0 +1,79 @@
+{
+  "login" : {
+    "mobileTitle" : "Log In Instan",
+    "desktopTitle" : "Gunakan log in instan",
+    "desktopSubtitle" : "Pindai kode QR untuk masuk.",
+    "pendingMessage" : "Masuk...",
+    "pendingButton" : "Batalkan",
+    "doneMessage" : ""
+  },
+  "login-partial" : {
+    "mobileTitle" : "Log In Instan",
+    "desktopTitle" : "Gunakan log in instan",
+    "desktopSubtitle" : "Pindai kode QR untuk masuk.",
+    "pendingMessage" : "Masuk...",
+    "pendingButton" : "Batalkan",
+    "doneMessage" : ""
+  },
+  "register" : {
+    "mobileTitle" : "Daftar tanpa kata sandi",
+    "desktopTitle" : "Daftar melalui mobile",
+    "desktopSubtitle" : "Lewati kata sandi dengan memindai QR ini menggunakan kamera telepon Anda atau aplikasi.",
+    "pendingMessage" : "Selesai mendaftarkan di telepon Anda",
+    "pendingButton" : "Batalkan",
+    "doneMessage" : ""
+  },
+  "register-partial" : {
+    "mobileTitle" : "Daftar tanpa kata sandi",
+    "desktopTitle" : "Pindai QR ini dengan telepon Anda alih-alih menggunakan kata sandi.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Memuat...",
+    "pendingButton" : "Batalkan",
+    "doneMessage" : "Lewati kata sandi diaktifkan.<br>Selesai mendaftarkan..."
+  },
+  "link" : {
+    "mobileTitle" : "Aktifkan Login Instan",
+    "desktopTitle" : "Aktifkan Login Instan",
+    "desktopSubtitle" : "Gunakan kamera telepon Anda atau aplikasi untuk memindai QR.",
+    "pendingMessage" : "Menautkan akun Anda...",
+    "pendingButton" : "Batalkan",
+    "doneMessage" : ""
+  },
+  "recover" : {
+    "mobileTitle" : "Aktifkan Login Instan",
+    "desktopTitle" : "Aktifkan login instan",
+    "desktopSubtitle" : "Lewati kata sandi dengan memindai QR menggunakan kamera telepon Anda atau aplikasi.",
+    "pendingMessage" : "Menautkan akun Anda...",
+    "pendingButton" : "Batalkan",
+    "doneMessage" : ""
+  },
+  "recover-partial" : {
+    "mobileTitle" : "",
+    "desktopTitle" : "Pindai QR ini dengan telepon Anda untuk masuk.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Menautkan akun Anda...",
+    "pendingButton" : "Batalkan",
+    "doneMessage" : ""
+  },
+  "verification" : {
+    "title" : "Kode Verifikasi",
+    "message" : "Apakah kode di perangkat Anda cocok dengan kode ini?",
+    "yesButton" : "Ya",
+    "noButton" : "Tidak"
+  },
+  "errors" : {
+    "qr" : "Anda harus memindai kode QR sebelum melanjutkan",
+    "link" : "Anda harus mengeklik tombol OwnID sebelum melanjutkan"
+  },
+  "inline" : {
+    "message" : "Lewati kata sandi",
+    "passwordWarn" : "Masukkan kata sandi untuk mengonfirmasi akun Anda.",
+    "noAccount" : "Akun tidak ada, buat akun untuk melanjutkan.",
+    "info" : "Akses akun Anda tanpa kata sandi.\nKunci terenkripsi akan dibuat di telepon Anda dan Anda akan masuk secara otomatis mulai saat ini."
+  },
+  "common" : {
+    "labelText" : "Lewati kata sandi",
+    "noteText" : "Saat Anda masuk lagi, kami akan mengenali telepon Anda dan Anda akan dapat langsung masuk.",
+    "undo" : "Batalkan"
+  }
+}

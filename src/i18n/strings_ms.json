@@ -1,0 +1,79 @@
+{
+  "login" : {
+    "mobileTitle" : "Log Masuk Segera",
+    "desktopTitle" : "Gunakan log masuk segera",
+    "desktopSubtitle" : "Imbas kod QR untuk log masuk.",
+    "pendingMessage" : "Log masuk...",
+    "pendingButton" : "Batal",
+    "doneMessage" : ""
+  },
+  "login-partial" : {
+    "mobileTitle" : "Log Masuk Segera",
+    "desktopTitle" : "Gunakan log masuk segera",
+    "desktopSubtitle" : "Imbas kod QR untuk log masuk.",
+    "pendingMessage" : "Log masuk...",
+    "pendingButton" : "Batal",
+    "doneMessage" : ""
+  },
+  "register" : {
+    "mobileTitle" : "Daftar tanpa kata laluan",
+    "desktopTitle" : "Daftar pada mudah alih",
+    "desktopSubtitle" : "Langkau kata laluan dengan mengimbas QR ini melalui kamera telefon atau aplikasi anda.",
+    "pendingMessage" : "Selesaikan pendaftaran pada telefon anda",
+    "pendingButton" : "Batal",
+    "doneMessage" : ""
+  },
+  "register-partial" : {
+    "mobileTitle" : "Daftar tanpa kata laluan",
+    "desktopTitle" : "Imbas QR ini dengan telefon anda daripada menggunakan kata laluan.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Memuatkan...",
+    "pendingButton" : "Batal",
+    "doneMessage" : "Langkau kata laluan yang didayakan. <br>Selesai mendaftar..."
+  },
+  "link" : {
+    "mobileTitle" : "Dayakan Log Masuk Segera",
+    "desktopTitle" : "Dayakan Log Masuk Segera",
+    "desktopSubtitle" : "Gunakan kamera telefon atau aplikasi anda untuk mengimbas QR.",
+    "pendingMessage" : "Memautkan akaun anda...",
+    "pendingButton" : "Batal",
+    "doneMessage" : ""
+  },
+  "recover" : {
+    "mobileTitle" : "Dayakan Log Masuk Segera",
+    "desktopTitle" : "Dayakan log masuk segera",
+    "desktopSubtitle" : "Langkau kata laluan dengan mengimbas QR melalui kamera telefon atau aplikasi anda.",
+    "pendingMessage" : "Memautkan akaun anda...",
+    "pendingButton" : "Batal",
+    "doneMessage" : ""
+  },
+  "recover-partial" : {
+    "mobileTitle" : "",
+    "desktopTitle" : "Imbas QR ini dengan telefon anda untuk log masuk.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Memautkan akaun anda...",
+    "pendingButton" : "Batal",
+    "doneMessage" : ""
+  },
+  "verification" : {
+    "title" : "Kod Pengesahan",
+    "message" : "Adakah kod pada peranti anda sepadan dengan kod ini?",
+    "yesButton" : "Ya",
+    "noButton" : "Tidak"
+  },
+  "errors" : {
+    "qr" : "Anda mesti mengimbas kod QR sebelum anda meneruskannya",
+    "link" : "Anda mesti mengklik butang OwnID sebelum anda meneruskannya"
+  },
+  "inline" : {
+    "message" : "Langkau kata laluan",
+    "passwordWarn" : "Masukkan kata laluan anda untuk mengesahkan akaun anda.",
+    "noAccount" : "Akaun tidak wujud, cipta akaun untuk meneruskannya.",
+    "info" : "Capai akaun anda tanpa kata laluan.\nKod sulit akan dicipta pada telefon anda dan anda terus dilog masuk secara automatik."
+  },
+  "common" : {
+    "labelText" : "Langkau kata laluan",
+    "noteText" : "Jika anda log masuk selepas ini, kami akan memperakui telefon anda dan anda dilog masuk dengan segera.",
+    "undo" : "Buat Asal"
+  }
+}

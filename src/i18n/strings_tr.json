@@ -1,0 +1,79 @@
+{
+  "login" : {
+    "mobileTitle" : "Anında oturum açma",
+    "desktopTitle" : "Anında oturum açmayı kullan",
+    "desktopSubtitle" : "Oturum açmak için QR kodunu tarayın.",
+    "pendingMessage" : "Oturum açılıyor...",
+    "pendingButton" : "İptal",
+    "doneMessage" : ""
+  },
+  "login-partial" : {
+    "mobileTitle" : "Anında oturum açma",
+    "desktopTitle" : "Anında oturum açmayı kullan",
+    "desktopSubtitle" : "Oturum açmak için QR kodunu tarayın.",
+    "pendingMessage" : "Oturum açılıyor...",
+    "pendingButton" : "İptal",
+    "doneMessage" : ""
+  },
+  "register" : {
+    "mobileTitle" : "Parola olmadan kaydolun",
+    "desktopTitle" : "Mobil cihazda kaydolun",
+    "desktopSubtitle" : "Telefonunuzun kamerasıyla veya bir uygulamayla bu QR kodunu tarayarak parolayı atlayın.",
+    "pendingMessage" : "Telefonunuzda kaydı tamamlayın",
+    "pendingButton" : "İptal",
+    "doneMessage" : ""
+  },
+  "register-partial" : {
+    "mobileTitle" : "Parola olmadan kaydolun",
+    "desktopTitle" : "Parola kullanmak yerine telefonunuzla bu QR kodunu tarayın.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Yükleniyor...",
+    "pendingButton" : "İptal",
+    "doneMessage" : "Parolayı atlama etkinleştirildi.<br>Kaydı tamamlayın..."
+  },
+  "link" : {
+    "mobileTitle" : "Anında oturum açmayı etkinleştir",
+    "desktopTitle" : "Anında oturum açmayı etkinleştir",
+    "desktopSubtitle" : "QR kodu taramak için telefonunuzun kamerasını veya bir uygulamayı kullanın.",
+    "pendingMessage" : "Hesabınız bağlanıyor...",
+    "pendingButton" : "İptal",
+    "doneMessage" : ""
+  },
+  "recover" : {
+    "mobileTitle" : "Anında oturum açmayı etkinleştir",
+    "desktopTitle" : "Anında oturum açmayı etkinleştir",
+    "desktopSubtitle" : "Telefonunuzun kamerasıyla veya bir uygulamayla QR kodunu tarayarak parolayı atlayın.",
+    "pendingMessage" : "Hesabınız bağlanıyor...",
+    "pendingButton" : "İptal",
+    "doneMessage" : ""
+  },
+  "recover-partial" : {
+    "mobileTitle" : "",
+    "desktopTitle" : "Oturum açmak için telefonunuzla bu QR kodunu tarayın.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Hesabınız bağlanıyor...",
+    "pendingButton" : "İptal",
+    "doneMessage" : ""
+  },
+  "verification" : {
+    "title" : "Doğrulama kodu",
+    "message" : "Cihazınızdaki kod bununla eşleşiyor mu?",
+    "yesButton" : "Evet",
+    "noButton" : "Hayır"
+  },
+  "errors" : {
+    "qr" : "Devam etmeden önce QR kodunu taramalısınız",
+    "link" : "Devam etmeden önce OwnID düğmesine tıklamalısınız"
+  },
+  "inline" : {
+    "message" : "Parolayı atla",
+    "passwordWarn" : "Hesabınızı doğrulamak için parolanızı girin.",
+    "noAccount" : "Hesap mevcut değil, devam etmek için bir hesap oluşturun.",
+    "info" : "Parola olmadan hesabınıza erişin.\nTelefonunuzda şifrelenmiş bir anahtar oluşturulacak ve bundan sonra otomatik olarak oturum açacaksınız."
+  },
+  "common" : {
+    "labelText" : "Parolayı atla",
+    "noteText" : "Bir sonraki oturum açma işleminizde telefonunuzu tanıyacağız ve anında oturum açmanızı sağlayacağız.",
+    "undo" : "Geri al"
+  }
+}

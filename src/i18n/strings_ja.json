@@ -1,0 +1,79 @@
+{
+  "login" : {
+    "mobileTitle" : "インスタントログイン",
+    "desktopTitle" : "インスタントログインを使用",
+    "desktopSubtitle" : "QR コードをスキャンしてログインします。",
+    "pendingMessage" : "ログイン中...",
+    "pendingButton" : "キャンセル",
+    "doneMessage" : ""
+  },
+  "login-partial" : {
+    "mobileTitle" : "インスタントログイン",
+    "desktopTitle" : "インスタントログインを使用",
+    "desktopSubtitle" : "QR コードをスキャンしてログインします。",
+    "pendingMessage" : "ログイン中...",
+    "pendingButton" : "キャンセル",
+    "doneMessage" : ""
+  },
+  "register" : {
+    "mobileTitle" : "パスワードなしで登録",
+    "desktopTitle" : "モバイルデバイスで登録",
+    "desktopSubtitle" : "この QR コードを電話のカメラまたはアプリでスキャンして、パスワードをスキップします。",
+    "pendingMessage" : "電話での登録を終了",
+    "pendingButton" : "キャンセル",
+    "doneMessage" : ""
+  },
+  "register-partial" : {
+    "mobileTitle" : "パスワードなしで登録",
+    "desktopTitle" : "パスワードを使用する代わりに、この QR コードを電話でスキャンしてください。",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "ロード中...",
+    "pendingButton" : "キャンセル",
+    "doneMessage" : "パスワードのスキップが有効になりました。<br>登録を終了しています..."
+  },
+  "link" : {
+    "mobileTitle" : "インスタントログインを有効化",
+    "desktopTitle" : "インスタントログインを有効化",
+    "desktopSubtitle" : "電話のカメラまたはアプリを使用して QR コードをスキャンします。",
+    "pendingMessage" : "アカウントをリンクしています...",
+    "pendingButton" : "キャンセル",
+    "doneMessage" : ""
+  },
+  "recover" : {
+    "mobileTitle" : "インスタントログインを有効化",
+    "desktopTitle" : "インスタントログインを有効化",
+    "desktopSubtitle" : "QR コードを電話のカメラまたはアプリでスキャンして、パスワードをスキップします。",
+    "pendingMessage" : "アカウントをリンクしています...",
+    "pendingButton" : "キャンセル",
+    "doneMessage" : ""
+  },
+  "recover-partial" : {
+    "mobileTitle" : "",
+    "desktopTitle" : "この QR コードを電話でスキャンしてログインします。",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "アカウントをリンクしています...",
+    "pendingButton" : "キャンセル",
+    "doneMessage" : ""
+  },
+  "verification" : {
+    "title" : "認証コード",
+    "message" : "デバイスのコードとこのコードが一致しますか?",
+    "yesButton" : "はい",
+    "noButton" : "いいえ"
+  },
+  "errors" : {
+    "qr" : "続行するには QR コードのスキャンが必要です",
+    "link" : "続行するには OwnID ボタンのクリックが必要です"
+  },
+  "inline" : {
+    "message" : "パスワードをスキップ",
+    "passwordWarn" : "パスワードを入力してアカウントを確認します。",
+    "noAccount" : "アカウントが存在しません、アカウントを作成し、続行してください。",
+    "info" : "パスワードなしでアカウントにアクセスします。\n暗号化されたキーが電話に作成され、以降自動でログインできるようになります。"
+  },
+  "common" : {
+    "labelText" : "パスワードをスキップ",
+    "noteText" : "次にログインするときには、電話を認識してインスタントログイン操作が実行されます。",
+    "undo" : "元に戻す"
+  }
+}

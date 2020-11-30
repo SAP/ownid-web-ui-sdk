@@ -1,0 +1,79 @@
+{
+  "login" : {
+    "mobileTitle" : "即时登录",
+    "desktopTitle" : "使用即时登录",
+    "desktopSubtitle" : "扫描二维码进行登录。",
+    "pendingMessage" : "正在登录...",
+    "pendingButton" : "取消",
+    "doneMessage" : ""
+  },
+  "login-partial" : {
+    "mobileTitle" : "即时登录",
+    "desktopTitle" : "使用即时登录",
+    "desktopSubtitle" : "扫描二维码进行登录。",
+    "pendingMessage" : "正在登录...",
+    "pendingButton" : "取消",
+    "doneMessage" : ""
+  },
+  "register" : {
+    "mobileTitle" : "不使用密码进行注册",
+    "desktopTitle" : "在手机上注册",
+    "desktopSubtitle" : "通过使用手机的照相机或应用扫描此二维码来跳过密码。",
+    "pendingMessage" : "在手机上完成注册",
+    "pendingButton" : "取消",
+    "doneMessage" : ""
+  },
+  "register-partial" : {
+    "mobileTitle" : "不使用密码进行注册",
+    "desktopTitle" : "使用手机扫描此二维码来代替使用密码。",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "正在加载...",
+    "pendingButton" : "取消",
+    "doneMessage" : "已启用跳过密码。<br>完成注册..."
+  },
+  "link" : {
+    "mobileTitle" : "启用即时登录",
+    "desktopTitle" : "启用即时登录",
+    "desktopSubtitle" : "使用手机的照相机或应用扫描二维码。",
+    "pendingMessage" : "正在链接账户...",
+    "pendingButton" : "取消",
+    "doneMessage" : ""
+  },
+  "recover" : {
+    "mobileTitle" : "启用即时登录",
+    "desktopTitle" : "启用即时登录",
+    "desktopSubtitle" : "通过使用手机的照相机或应用扫描二维码来跳过密码。",
+    "pendingMessage" : "正在链接账户...",
+    "pendingButton" : "取消",
+    "doneMessage" : ""
+  },
+  "recover-partial" : {
+    "mobileTitle" : "",
+    "desktopTitle" : "使用手机扫描此二维码进行登录。",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "正在链接账户...",
+    "pendingButton" : "取消",
+    "doneMessage" : ""
+  },
+  "verification" : {
+    "title" : "验证码",
+    "message" : "所用设备上的代码是否与此代码匹配？",
+    "yesButton" : "是",
+    "noButton" : "否"
+  },
+  "errors" : {
+    "qr" : "必须先扫描二维码，然后再继续",
+    "link" : "必须先单击 OwnID 按钮，然后再继续"
+  },
+  "inline" : {
+    "message" : "跳过密码",
+    "passwordWarn" : "输入密码以确认账户。",
+    "noAccount" : "账户不存在，创建账户以继续。",
+    "info" : "不使用密码访问账户。\n将会在手机上创建加密密钥，从此以后便会自动登录。"
+  },
+  "common" : {
+    "labelText" : "跳过密码",
+    "noteText" : "下次登录时，将会识别手机并立即登录。",
+    "undo" : "撤消"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "login" : {
+    "mobileTitle" : "즉시 로그인",
+    "desktopTitle" : "즉시 로그인 사용",
+    "desktopSubtitle" : "로그인하려면 QR 코드를 스캔하십시오.",
+    "pendingMessage" : "로그인하는 중...",
+    "pendingButton" : "취소",
+    "doneMessage" : ""
+  },
+  "login-partial" : {
+    "mobileTitle" : "즉시 로그인",
+    "desktopTitle" : "즉시 로그인 사용",
+    "desktopSubtitle" : "로그인하려면 QR 코드를 스캔하십시오.",
+    "pendingMessage" : "로그인하는 중...",
+    "pendingButton" : "취소",
+    "doneMessage" : ""
+  },
+  "register" : {
+    "mobileTitle" : "비밀번호 없이 등록",
+    "desktopTitle" : "모바일에서 등록",
+    "desktopSubtitle" : "전화기의 카메라 또는 앱으로 이 QR을 스캔하여 비밀번호를 스킵하십시오.",
+    "pendingMessage" : "전화기에서 등록을 완료하십시오.",
+    "pendingButton" : "취소",
+    "doneMessage" : ""
+  },
+  "register-partial" : {
+    "mobileTitle" : "비밀번호 없이 등록",
+    "desktopTitle" : "비밀번호를 사용하는 대신 전화기로 이 QR을 스캔하십시오.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "로드하는 중...",
+    "pendingButton" : "취소",
+    "doneMessage" : "비밀번호 스킵이 활성화되었습니다.<br>등록을 종료하는 중..."
+  },
+  "link" : {
+    "mobileTitle" : "즉시 로그인 사용",
+    "desktopTitle" : "즉시 로그인 사용",
+    "desktopSubtitle" : "전화기의 카메라 또는 앱을 사용하여 QR을 스캔하십시오.",
+    "pendingMessage" : "계정 연결 중...",
+    "pendingButton" : "취소",
+    "doneMessage" : ""
+  },
+  "recover" : {
+    "mobileTitle" : "즉시 로그인 사용",
+    "desktopTitle" : "즉시 로그인 사용",
+    "desktopSubtitle" : "전화기의 카메라 또는 앱으로 QR을 스캔하여 비밀번호를 스킵하십시오.",
+    "pendingMessage" : "계정 연결 중...",
+    "pendingButton" : "취소",
+    "doneMessage" : ""
+  },
+  "recover-partial" : {
+    "mobileTitle" : "",
+    "desktopTitle" : "로그인하려면 전화기로 이 QR을 스캔하십시오.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "계정 연결 중...",
+    "pendingButton" : "취소",
+    "doneMessage" : ""
+  },
+  "verification" : {
+    "title" : "인증 코드",
+    "message" : "장치에 표시된 코드가 이 코드와 일치합니까?",
+    "yesButton" : "예",
+    "noButton" : "아니오"
+  },
+  "errors" : {
+    "qr" : "계속하려면 QR 코드를 스캔해야 합니다.",
+    "link" : "계속하려면 OwnID 버튼을 클릭해야 합니다."
+  },
+  "inline" : {
+    "message" : "비밀번호 스킵",
+    "passwordWarn" : "계정을 확인하려면 비밀번호를 입력하십시오.",
+    "noAccount" : "계정이 없습니다. 계속하려면 계정을 생성하십시오.",
+    "info" : "비밀번호 없이 계정에 액세스합니다.\n암호화된 키가 전화기에 생성되며 지금부터는 자동으로 로그인됩니다."
+  },
+  "common" : {
+    "labelText" : "비밀번호 스킵",
+    "noteText" : "다음번에 로그인할 때는 전화기를 인식하여 즉시 로그인합니다.",
+    "undo" : "실행 취소"
+  }
+}
