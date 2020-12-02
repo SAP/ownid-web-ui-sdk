@@ -64,6 +64,7 @@ describe('widget component', () => {
       const parent = document.createElement('div');
       window.clearTimeout = jest.fn();
 
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
           element: parent,
@@ -182,30 +183,28 @@ describe('widget component', () => {
     });
   });
 
-  it('should not render', () => {
-    return new Promise(resolve => {
-      navigator.userAgent =
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
+  it('should not render', (done) => {
+    navigator.userAgent =
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
 
-      // eslint-disable-next-line no-shadow
-      requestService.post = jest
-        .fn()
-        .mockReturnValue(new Promise(resolve => resolve(null)));
+    // eslint-disable-next-line no-shadow
+    requestService.post = jest
+      .fn()
+      .mockReturnValue(new Promise(resolve => resolve(null)));
 
-      const parent = document.createElement('div');
+    const parent = document.createElement('div');
 
-      const sut = new WidgetComponent(
-        {
-          element: parent,
-          type: WidgetType.Login,
-          URLPrefix: 'url',
-        },
-        requestService,
-      );
-      sut.widgetReady.finally(() => {
-        expect(parent.children.length).toBe(0);
-        resolve();
-      });
+    const sut = new WidgetComponent(
+      {
+        element: parent,
+        type: WidgetType.Login,
+        URLPrefix: 'url',
+      },
+      requestService,
+    );
+    sut.widgetReady.finally(() => {
+      expect(parent.children.length).toBe(0);
+      done();
     });
   });
 
@@ -232,7 +231,7 @@ describe('widget component', () => {
         true
       );
       sut.widgetReady.then(() => {
-        expect(console.warn).toBeCalledWith(`Desktop rendering is disabled for ${ type } widget type`);
+        expect(console.warn).toBeCalledWith(`Desktop rendering is disabled for ${type} widget type`);
         expect(parent.children.length).toBe(0);
         resolve();
       });
@@ -264,7 +263,7 @@ describe('widget component', () => {
         true
       );
       sut.widgetReady.then(() => {
-        expect(console.warn).toBeCalledWith(`Mobile rendering is disabled for ${ type } widget type`);
+        expect(console.warn).toBeCalledWith(`Mobile rendering is disabled for ${type} widget type`);
         expect(parent.children.length).toBe(0);
         resolve();
       });
@@ -278,6 +277,7 @@ describe('widget component', () => {
     const parent = document.createElement('div');
     window.clearTimeout = jest.fn();
 
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     const sut: any = new WidgetComponent(
       {
         element: parent,
@@ -318,6 +318,7 @@ describe('callStatus', () => {
   const finishedContextResponse = {
     status: ContextStatus.Finished,
     context: "context1",
+    metadata: "jwt",
     payload: { data: { "a": "b" } }
   };
 
@@ -369,6 +370,7 @@ describe('callStatus', () => {
       navigator.userAgent =
         'Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36';
 
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
           element: document.createElement('div'),
@@ -389,6 +391,7 @@ describe('callStatus', () => {
 
   it('should not schedule status check if we have no contexts to check', () => {
     return new Promise(resolve => {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
           element: document.createElement('div'),
@@ -411,6 +414,7 @@ describe('callStatus', () => {
 
   it('should schedule new status request if no response has been received', () => {
     return new Promise(resolve => {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
           element: document.createElement('div'),
@@ -433,6 +437,7 @@ describe('callStatus', () => {
 
   it('should stop regenerating QR code if any context processing started', () => {
     return new Promise(resolve => {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
           element: document.createElement('div'),
@@ -460,6 +465,7 @@ describe('callStatus', () => {
 
   it('should show pin widget', () => {
     return new Promise(resolve => {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
           element: document.createElement('div'),
@@ -521,6 +527,7 @@ describe('callStatus', () => {
 
   it('should include context to check status request', () => {
     return new Promise(resolve => {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
           element: document.createElement('div'),
@@ -550,7 +557,7 @@ describe('callStatus', () => {
 
       requestService.post = jest.fn()
         .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
-
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
           element: document.createElement('div'),
@@ -563,7 +570,7 @@ describe('callStatus', () => {
       sut.contexts = [{ context: "a", nonce: "b" }];
 
       sut.callStatus().then(() => {
-        expect(onLogin).toBeCalledWith({ "a": "b" });
+        expect(onLogin).toBeCalledWith({ "a": "b" }, "jwt");
         resolve();
       });
     });
@@ -572,12 +579,13 @@ describe('callStatus', () => {
   it('should call onRegister', () => {
     return new Promise(resolve => {
       const onRegister = jest.fn();
-
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
           element: document.createElement('div'),
           type: WidgetType.Register,
           onRegister
+          // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         } as any,
         requestService,
       );
@@ -591,7 +599,7 @@ describe('callStatus', () => {
       };
 
       sut.callStatus().then(() => {
-        expect(onRegister).toBeCalledWith({ "a": "b" });
+        expect(onRegister).toBeCalledWith({ "a": "b" }, "jwt");
         resolve();
       });
     });
@@ -603,7 +611,7 @@ describe('callStatus', () => {
 
       const toggleElement = document.createElement('input');
       toggleElement.type = 'checkbox';
-
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
           element: document.createElement('div'),
@@ -611,6 +619,7 @@ describe('callStatus', () => {
           partial: true,
           toggleElement,
           onRegister
+          // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         } as any,
         requestService,
       );
@@ -624,7 +633,7 @@ describe('callStatus', () => {
       };
 
       sut.callStatus().then(() => {
-        expect(onRegister).toBeCalledWith({ "a": "b" });
+        expect(onRegister).toBeCalledWith({ "a": "b" }, "jwt");
         resolve();
       });
     });
@@ -634,12 +643,13 @@ describe('callStatus', () => {
   it('should call onRegister if type is not set', () => {
     return new Promise(resolve => {
       const onRegister = jest.fn();
-
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
           element: document.createElement('div'),
           URLPrefix: 'url',
           onRegister
+          // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         } as any,
         requestService,
       );
@@ -649,7 +659,7 @@ describe('callStatus', () => {
         .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
 
       sut.callStatus().then(() => {
-        expect(onRegister).toBeCalledWith({ "a": "b" });
+        expect(onRegister).toBeCalledWith({ "a": "b" }, "jwt");
         resolve();
       });
     });
@@ -659,6 +669,7 @@ describe('callStatus', () => {
     return new Promise(resolve => {
       const onLink = jest.fn();
 
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
           element: document.createElement('div'),
@@ -674,7 +685,7 @@ describe('callStatus', () => {
         .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
 
       sut.callStatus('url').then(() => {
-        expect(onLink).toBeCalledWith({ "a": "b" });
+        expect(onLink).toBeCalledWith({ "a": "b" }, "jwt");
         resolve();
       });
     });
@@ -684,6 +695,7 @@ describe('callStatus', () => {
     return new Promise(resolve => {
       const onRecover = jest.fn();
 
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
           element: document.createElement('div'),
@@ -699,7 +711,7 @@ describe('callStatus', () => {
         .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
 
       sut.callStatus('url').then(() => {
-        expect(onRecover).toBeCalledWith({ "a": "b" });
+        expect(onRecover).toBeCalledWith({ "a": "b" }, "jwt");
         resolve();
       });
     });
@@ -707,6 +719,7 @@ describe('callStatus', () => {
 
   it('should call setCallStatus', () => {
     return new Promise(resolve => {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
           element: document.createElement('div'),
@@ -729,10 +742,12 @@ describe('callStatus', () => {
   });
 
   it('should remove elements', () => {
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     const sut: any = new WidgetComponent(
       {
         element: document.createElement('div'),
         onRegister: jest.fn(),
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       } as any,
       requestService,
     );
@@ -776,10 +791,12 @@ describe('callStatus', () => {
   describe('reCreateWidget', () => {
     it('should call destroy and render', () => {
       return new Promise(resolve => {
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         const sut: any = new WidgetComponent(
           {
             element: document.createElement('div'),
             URLPrefix: 'url',
+            // eslint-disable-next-line  @typescript-eslint/no-explicit-any
           } as any,
           requestService,
         );
@@ -800,10 +817,12 @@ describe('callStatus', () => {
 
     it('should call destroy and render and not setCallStatus on desktop', () => {
       return new Promise(resolve => {
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         const sut: any = new WidgetComponent(
           {
             element: document.createElement('div'),
             URLPrefix: 'url',
+            // eslint-disable-next-line  @typescript-eslint/no-explicit-any
           } as any,
           requestService,
         );
@@ -833,10 +852,12 @@ describe('refresh link or qr', () => {
 
   it('log error to console if init fails during link/qr refresh', () => {
     return new Promise(resolve => {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
           element: document.createElement('div'),
           URLPrefix: 'url',
+          // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         } as any,
         requestService,
       );

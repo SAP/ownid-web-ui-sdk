@@ -118,10 +118,11 @@ describe('OwnIDUiSdk instances test', () => {
     it('should return response', async () => {
       widget.disabled = false;
       widget.finalResponse = { response: true };
+      widget.metadata = 'jwt';
 
       const res = await sdk.getOwnIDPayload(widget);
 
-      expect(res).toEqual({ error: null, data: { response: true } });
+      expect(res).toEqual({ error: null, data: { response: true }, metadata: 'jwt' });
     });
 
     it('should return an error', async () => {
@@ -136,7 +137,7 @@ describe('OwnIDUiSdk instances test', () => {
     it('should return an error 2', async () => {
       const res = await sdk.getOwnIDPayload(widget);
 
-      expect(res).toEqual({ error: null, data: null });
+      expect(res).toEqual({ error: null, data: null, metadata: null });
     });
   });
 

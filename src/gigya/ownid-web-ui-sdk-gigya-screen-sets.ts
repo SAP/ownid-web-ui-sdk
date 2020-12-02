@@ -17,10 +17,28 @@ interface OnAfterScreenLoadConfig {
 
 declare let window: IMyWindow;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type IsreensetEvent = any;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type IOwnIdDataRS = any;
+
+type IHandler = (currentScreen: string, data: IOwnIdDataRS, metadata?: string | null) => void;
+
+interface IHandlers {
+  onSuccess?: IHandler;
+}
+
 export default class OwnIDUiSdkGigyaScreenSets {
   private ownIDWidget: WidgetComponent | null = null;
 
   private observer: MutationObserver;
+
+  private handlers: {
+    onSuccess: IHandler[];
+  } = {
+    onSuccess: [],
+  };
 
   constructor() {
     this.observer = new MutationObserver(() => this.ownIDWidget?.recalculatePosition());
@@ -39,11 +57,10 @@ export default class OwnIDUiSdkGigyaScreenSets {
   }
 
   renderInlineRegisterWidget(currentScreen: string, config?: IWidgetConfig): void {
-    const pass = document.querySelector(
-      `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"] [data-gigya-name="password"]`,
-    ) as HTMLInputElement;
+    const screensetSelector = `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"]`;
+    const pass = document.querySelector(`${screensetSelector} [data-gigya-name="password"]`) as HTMLInputElement;
     const repeatPass = document.querySelector(
-      `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"] [data-gigya-name="passwordRetype"]`,
+      `${screensetSelector} [data-gigya-name="passwordRetype"]`,
     ) as HTMLInputElement;
 
     this.ownIDWidget = window.ownid.render({
@@ -57,9 +74,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
         ...config?.inline,
       },
       onError: (error) => {
-        let ownIDErrorElement = document.querySelector(
-          `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"] .ownid-register-error`,
-        ) as HTMLSpanElement;
+        let ownIDErrorElement = document.querySelector(`${screensetSelector} .ownid-register-error`) as HTMLSpanElement;
 
         if (!ownIDErrorElement) {
           ownIDErrorElement = document.createElement('span');
@@ -91,13 +106,10 @@ export default class OwnIDUiSdkGigyaScreenSets {
     });
   }
 
-  renderInlineLoginWidget(currentScreen: string, callback: () => void, config?: IWidgetConfig): void {
-    const loginID = document.querySelector(
-      `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"] [data-gigya-name="loginID"]`,
-    ) as HTMLInputElement;
-    const pass = document.querySelector(
-      `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"] [data-gigya-name="password"]`,
-    ) as HTMLInputElement;
+  renderInlineLoginWidget(currentScreen: string, config?: IWidgetConfig): void {
+    const screensetSelector = `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"]`;
+    const loginID = document.querySelector(`${screensetSelector} [data-gigya-name="loginID"]`) as HTMLInputElement;
+    const pass = document.querySelector(`${screensetSelector} [data-gigya-name="password"]`) as HTMLInputElement;
 
     this.ownIDWidget = window.ownid!.render({
       element: this.getOwnIdWrapper(),
@@ -110,9 +122,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
         ...config?.inline,
       },
       onError: (error) => {
-        let ownIDErrorElement = document.querySelector(
-          `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"] .ownid-register-error`,
-        ) as HTMLSpanElement;
+        let ownIDErrorElement = document.querySelector(`${screensetSelector} .ownid-register-error`) as HTMLSpanElement;
 
         if (!ownIDErrorElement) {
           ownIDErrorElement = document.createElement('span');
@@ -137,11 +147,13 @@ export default class OwnIDUiSdkGigyaScreenSets {
           config.onError(error);
         }
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onLogin(statusRS: any) {
+      onLogin: (statusRS: IOwnIdDataRS, metadata: string | null) => {
         if (statusRS.sessionInfo?.cookieValue) {
           document.cookie = `gac_${window.gigya.thisScript.APIKey}=${statusRS.sessionInfo.cookieValue}; path=/`;
-          window.gigya.accounts.getAccountInfo({ callback });
+          window.gigya.accounts.getAccountInfo({
+            callback: () =>
+              this.handlers.onSuccess.forEach((callback: IHandler) => callback(currentScreen, statusRS, metadata)),
+          });
         }
       },
     });
@@ -154,11 +166,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
     }
   }
 
-  public onAfterScreenLoad(
-    event: { currentScreen: string },
-    callback: () => void,
-    config?: OnAfterScreenLoadConfig,
-  ): void {
+  public onAfterScreenLoad(event: IsreensetEvent, config?: OnAfterScreenLoadConfig): void {
     this.destroyOwnIDWidget();
 
     this.observer.disconnect();
@@ -170,7 +178,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
     });
 
     if (event.currentScreen === 'gigya-login-screen' || event.currentScreen === config?.customScreenSetsIds?.login) {
-      this.renderInlineLoginWidget(event.currentScreen, callback, config?.widgetConfigs?.[event.currentScreen]);
+      this.renderInlineLoginWidget(event.currentScreen, config?.widgetConfigs?.[event.currentScreen]);
     }
 
     if (
@@ -179,21 +187,17 @@ export default class OwnIDUiSdkGigyaScreenSets {
     ) {
       this.renderInlineRegisterWidget(event.currentScreen, config?.widgetConfigs?.[event.currentScreen]);
 
-      document
-        .querySelector(
-          `[data-screenset-element-id="${event.currentScreen}"][data-screenset-roles="instance"] .gigya-input-submit`,
-        )
-        ?.addEventListener('click', () => {
-          if (!this.ownIDWidget?.disabled) {
-            const pw = window.ownid.generateOwnIDPassword(32);
-            (document.querySelector(
-              `[data-screenset-element-id="${event.currentScreen}"][data-screenset-roles="instance"] [data-gigya-name="password"]`,
-            ) as HTMLInputElement).value = pw;
-            (document.querySelector(
-              `[data-screenset-element-id="${event.currentScreen}"][data-screenset-roles="instance"] [data-gigya-name="passwordRetype"]`,
-            ) as HTMLInputElement).value = pw;
-          }
-        });
+      const screensetSelector = `[data-screenset-element-id="${event.currentScreen}"][data-screenset-roles="instance"]`;
+
+      document.querySelector(`${screensetSelector} .gigya-input-submit`)?.addEventListener('click', () => {
+        if (!this.ownIDWidget?.disabled) {
+          const pw = window.ownid.generateOwnIDPassword(32);
+          (document.querySelector(`${screensetSelector} [data-gigya-name="password"]`) as HTMLInputElement).value = pw;
+          (document.querySelector(
+            `${screensetSelector} [data-gigya-name="passwordRetype"]`,
+          ) as HTMLInputElement).value = pw;
+        }
+      });
     }
   }
 
@@ -202,12 +206,11 @@ export default class OwnIDUiSdkGigyaScreenSets {
     this.observer.disconnect();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
-  public async onSubmit(event: any): Promise<any> {
+  public async onSubmit(event: IsreensetEvent): Promise<IsreensetEvent> {
     if (this.ownIDWidget) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data } = (await window.ownid.getOwnIDPayload(this.ownIDWidget)) as { data: any };
+      const { data, metadata } = await window.ownid.getOwnIDPayload(this.ownIDWidget);
       if (data) {
+        this.handlers.onSuccess.forEach((callback: IHandler) => callback(event.currentScreen, data, metadata));
         // eslint-disable-next-line no-param-reassign
         event.formModel.data = event.formModel.data || {};
         // eslint-disable-next-line no-param-reassign
@@ -217,7 +220,11 @@ export default class OwnIDUiSdkGigyaScreenSets {
     return event;
   }
 
-  public addEventHandlers(): void {
+  public addEventHandlers(handlers?: IHandlers): void {
+    if (handlers?.onSuccess) {
+      this.handlers.onSuccess.push(handlers.onSuccess);
+    }
+
     window.gigya.accounts.addEventHandlers({
       onLogin: async (event: { newUser: boolean }) => {
         if (!event.newUser && this.ownIDWidget) {
@@ -225,8 +232,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
           if (data?.pubKey) {
             window.gigya.accounts.getAccountInfo({
               include: 'data',
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              callback: (userData: { data: any }) => {
+              callback: (userData: { data: { ownIdConnections: IOwnIdDataRS[] } }) => {
                 const userDataObj = userData.data || {};
                 const ownIdConnections = userDataObj.ownIdConnections || [];
 

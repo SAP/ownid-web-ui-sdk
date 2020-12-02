@@ -64,10 +64,10 @@ export interface IWidgetConfig {
         position?: string;
       };
   toggleElement?: HTMLInputElement;
-  onLogin?: (response: unknown) => void;
-  onRegister?: (response: unknown) => void;
-  onLink?: (response: unknown) => void;
-  onRecover?: (response: unknown) => void;
+  onLogin?: (response: unknown, metadata: string | null) => void;
+  onRegister?: (response: unknown, metadata: string | null) => void;
+  onLink?: (response: unknown, metadata: string | null) => void;
+  onRecover?: (response: unknown, metadata: string | null) => void;
   onError?: (error: string) => void;
 }
 
@@ -81,10 +81,10 @@ export interface IPartialConfig {
   desktopTitle?: string;
   desktopSubtitle?: string;
   statusInterval?: number;
-  onLogin?: (response: unknown) => void;
-  onRegister?: (response: unknown) => void;
-  onLink?: (response: unknown) => void;
-  onRecover?: (response: unknown) => void;
+  onLogin?: (response: unknown, metadata: string | null) => void;
+  onRegister?: (response: unknown, metadata: string | null) => void;
+  onLink?: (response: unknown, metadata: string | null) => void;
+  onRecover?: (response: unknown, metadata: string | null) => void;
   onError?: (error: string) => void;
 }
 
@@ -92,6 +92,7 @@ export interface IWidgetPayload {
   error: null | true;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any;
+  metadata?: string | null;
   message?: string;
 }
 
