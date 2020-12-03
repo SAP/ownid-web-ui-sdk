@@ -1,0 +1,79 @@
+{
+  "login" : {
+    "mobileTitle" : "Início de sessão instantâneo",
+    "desktopTitle" : "Utilizar o início de sessão instantâneo",
+    "desktopSubtitle" : "Digitalizar o código QR para iniciar a sessão.",
+    "pendingMessage" : "A iniciar a sessão...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "login-partial" : {
+    "mobileTitle" : "Início de sessão instantâneo",
+    "desktopTitle" : "Utilizar o início de sessão instantâneo",
+    "desktopSubtitle" : "Digitalizar o código QR para iniciar a sessão.",
+    "pendingMessage" : "A iniciar a sessão...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "register" : {
+    "mobileTitle" : "Registo sem uma palavra-passe",
+    "desktopTitle" : "Registo no dispositivo móvel",
+    "desktopSubtitle" : "Ignorar a palavra-passe ao digitalizar este QR com a câmara do telefone ou uma aplicação.",
+    "pendingMessage" : "Terminar o registo no telefone",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "register-partial" : {
+    "mobileTitle" : "Registo sem uma palavra-passe",
+    "desktopTitle" : "Digitalizar este QR com o telefone em vez de utilizar uma palavra-passe.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "A carregar...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : "Ignorar a palavra-passe ativado.<br>Terminar registo..."
+  },
+  "link" : {
+    "mobileTitle" : "Ativar início de sessão instantâneo",
+    "desktopTitle" : "Ativar início de sessão instantâneo",
+    "desktopSubtitle" : "Utilizar a câmara do telefone ou uma aplicação para digitalizar o QR.",
+    "pendingMessage" : "A ligar a sua conta...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "recover" : {
+    "mobileTitle" : "Ativar início de sessão instantâneo",
+    "desktopTitle" : "Ativar início de sessão instantâneo",
+    "desktopSubtitle" : "Ignorar a palavra-passe ao digitalizar o QR com a câmara do telefone ou uma aplicação.",
+    "pendingMessage" : "A ligar a sua conta...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "recover-partial" : {
+    "mobileTitle" : "",
+    "desktopTitle" : "Digitalizar este QR com o telefone para iniciar a sessão.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "A ligar a sua conta...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "verification" : {
+    "title" : "Código de verificação",
+    "message" : "O código no seu dispositivo corresponde a este?",
+    "yesButton" : "Sim",
+    "noButton" : "Não"
+  },
+  "errors" : {
+    "qr" : "Tem de digitalizar o código QR antes de continuar",
+    "link" : "Tem de clicar no botão OwnID antes de continuar"
+  },
+  "inline" : {
+    "message" : "Ignorar a palavra-passe",
+    "passwordWarn" : "Introduza a palavra-passe para confirmar a sua conta.",
+    "noAccount" : "A conta não existe, crie uma conta para continuar.",
+    "info" : "Aceda à sua conta sem uma palavra-passe.\nSerá criada uma chave encriptada no seu telefone e inicia a sessão automaticamente a partir de agora."
+  },
+  "common" : {
+    "labelText" : "Ignorar a palavra-passe",
+    "noteText" : "A próxima vez que iniciar a sessão, iremos reconhecer o seu telefone e iniciar a sessão instantaneamente.",
+    "undo" : "Anular"
+  }
+}

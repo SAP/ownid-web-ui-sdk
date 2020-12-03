@@ -1,0 +1,79 @@
+{
+  "login" : {
+    "mobileTitle" : "Đăng nhập nhanh",
+    "desktopTitle" : "Sử dụng đăng nhập nhanh",
+    "desktopSubtitle" : "Quét mã QR để đăng nhập.",
+    "pendingMessage" : "Đang đăng nhập...",
+    "pendingButton" : "Hủy",
+    "doneMessage" : ""
+  },
+  "login-partial" : {
+    "mobileTitle" : "Đăng nhập nhanh",
+    "desktopTitle" : "Sử dụng đăng nhập nhanh",
+    "desktopSubtitle" : "Quét mã QR để đăng nhập.",
+    "pendingMessage" : "Đang đăng nhập...",
+    "pendingButton" : "Hủy",
+    "doneMessage" : ""
+  },
+  "register" : {
+    "mobileTitle" : "Đăng ký không cần mật khẩu",
+    "desktopTitle" : "Đăng ký trên thiết bị di động",
+    "desktopSubtitle" : "Bỏ qua mật khẩu bằng cách quét mã QR này sử dụng camera điện thoại hoặc ứng dụng.",
+    "pendingMessage" : "Hoàn tất đăng ký trên điện thoại của bạn",
+    "pendingButton" : "Hủy",
+    "doneMessage" : ""
+  },
+  "register-partial" : {
+    "mobileTitle" : "Đăng ký không cần mật khẩu",
+    "desktopTitle" : "Quét QR bằng điện thoại thay vì dùng mật khẩu.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Đang tải...",
+    "pendingButton" : "Hủy",
+    "doneMessage" : "Đã kích hoạt bỏ qua mật khẩu.<br>Hoàn tất đăng ký..."
+  },
+  "link" : {
+    "mobileTitle" : "Kích hoạt đăng nhập nhanh",
+    "desktopTitle" : "Kích hoạt đăng nhập nhanh",
+    "desktopSubtitle" : "Sử dụng camera điện thoại hoặc ứng dụng để quét QR.",
+    "pendingMessage" : "Đang liên kết tài khoản của bạn...",
+    "pendingButton" : "Hủy",
+    "doneMessage" : ""
+  },
+  "recover" : {
+    "mobileTitle" : "Kích hoạt đăng nhập nhanh",
+    "desktopTitle" : "Kích hoạt đăng nhập nhanh",
+    "desktopSubtitle" : "Bỏ qua mật khẩu bằng cách quét mã QR sử dụng camera điện thoại hoặc ứng dụng.",
+    "pendingMessage" : "Đang liên kết tài khoản của bạn...",
+    "pendingButton" : "Hủy",
+    "doneMessage" : ""
+  },
+  "recover-partial" : {
+    "mobileTitle" : "",
+    "desktopTitle" : "Quét QR bằng điện thoại để đăng nhập.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Đang liên kết tài khoản của bạn...",
+    "pendingButton" : "Hủy",
+    "doneMessage" : ""
+  },
+  "verification" : {
+    "title" : "Mã xác minh",
+    "message" : "Mã trên thiết bị của bạn có khớp với mã này không?",
+    "yesButton" : "Có",
+    "noButton" : "Không"
+  },
+  "errors" : {
+    "qr" : "Bạn phải quét mã QR trước khi tiếp tục",
+    "link" : "Bạn phải nhấp vào nút OwnID trước khi tiếp tục"
+  },
+  "inline" : {
+    "message" : "Bỏ qua mật khẩu",
+    "passwordWarn" : "Nhập mật khẩu của bạn để xác nhận tài khoản.",
+    "noAccount" : "Tài khoản không tồn tại, tạo một tài khoản để tiếp tục.",
+    "info" : "Truy cập vào tài khoản của bạn không cần mật khẩu.\nKhóa mã hóa sẽ được tạo trên điện thoại và tự động duyệt đăng nhập cho bạn kể từ lúc này."
+  },
+  "common" : {
+    "labelText" : "Bỏ qua mật khẩu",
+    "noteText" : "Lần tới khi bạn đăng nhập, chúng tôi sẽ nhận diện điện thoại của bạn và ngay lập duyệt đăng nhập cho bạn.",
+    "undo" : "Hoàn tác"
+  }
+}

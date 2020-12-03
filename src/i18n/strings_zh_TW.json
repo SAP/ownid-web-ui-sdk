@@ -1,0 +1,79 @@
+{
+  "login" : {
+    "mobileTitle" : "立即登入",
+    "desktopTitle" : "使用立即登入",
+    "desktopSubtitle" : "掃描 QR 代碼以登入。",
+    "pendingMessage" : "登入中...",
+    "pendingButton" : "取消",
+    "doneMessage" : ""
+  },
+  "login-partial" : {
+    "mobileTitle" : "立即登入",
+    "desktopTitle" : "使用立即登入",
+    "desktopSubtitle" : "掃描 QR 代碼以登入。",
+    "pendingMessage" : "登入中...",
+    "pendingButton" : "取消",
+    "doneMessage" : ""
+  },
+  "register" : {
+    "mobileTitle" : "不使用密碼註冊",
+    "desktopTitle" : "在行動裝置上註冊",
+    "desktopSubtitle" : "透過手機相機或應用程式掃描此 QR 以跳過密碼。",
+    "pendingMessage" : "在手機上完成註冊",
+    "pendingButton" : "取消",
+    "doneMessage" : ""
+  },
+  "register-partial" : {
+    "mobileTitle" : "不使用密碼註冊",
+    "desktopTitle" : "使用手機掃描此 QR，取代使用密碼。",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "載入中...",
+    "pendingButton" : "取消",
+    "doneMessage" : "已啟用跳過密碼，<br>完成註冊..."
+  },
+  "link" : {
+    "mobileTitle" : "啟用即時登入",
+    "desktopTitle" : "啟用即時登入",
+    "desktopSubtitle" : "使用手機相機或應用程式掃描 QR。",
+    "pendingMessage" : "正在連結您的帳戶...",
+    "pendingButton" : "取消",
+    "doneMessage" : ""
+  },
+  "recover" : {
+    "mobileTitle" : "啟用即時登入",
+    "desktopTitle" : "啟用即時登入",
+    "desktopSubtitle" : "透過手機相機或應用程式掃描此 QR 以跳過密碼。",
+    "pendingMessage" : "正在連結您的帳戶...",
+    "pendingButton" : "取消",
+    "doneMessage" : ""
+  },
+  "recover-partial" : {
+    "mobileTitle" : "",
+    "desktopTitle" : "使用手機掃描此 QR 以登入。",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "正在連結您的帳戶...",
+    "pendingButton" : "取消",
+    "doneMessage" : ""
+  },
+  "verification" : {
+    "title" : "驗證代碼",
+    "message" : "裝置上的代碼是否與此代碼相符？",
+    "yesButton" : "是",
+    "noButton" : "否"
+  },
+  "errors" : {
+    "qr" : "您必須先掃描 QR 代碼才能繼續",
+    "link" : "您必須先按一下 OwnID 按鈕才能繼續"
+  },
+  "inline" : {
+    "message" : "跳過密碼",
+    "passwordWarn" : "輸入密碼以確認帳戶。",
+    "noAccount" : "帳戶不存在，建立帳戶以繼續。",
+    "info" : "不使用密碼存取帳戶。\n將在手機上建立已加密金鑰，並從現在開始自動將您登入。"
+  },
+  "common" : {
+    "labelText" : "跳過密碼",
+    "noteText" : "下一次登入時，我們會識別您的手機並立即將您登入。",
+    "undo" : "復原"
+  }
+}

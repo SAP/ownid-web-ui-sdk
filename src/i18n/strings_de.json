@@ -1,0 +1,79 @@
+{
+  "login" : {
+    "mobileTitle" : "Direkt-Login",
+    "desktopTitle" : "Direkt-Login verwenden",
+    "desktopSubtitle" : "Scannen Sie den QR-Code, um sich anzumelden.",
+    "pendingMessage" : "Anmeldung läuft ...",
+    "pendingButton" : "Abbrechen",
+    "doneMessage" : ""
+  },
+  "login-partial" : {
+    "mobileTitle" : "Direkt-Login",
+    "desktopTitle" : "Direkt-Login verwenden",
+    "desktopSubtitle" : "Scannen Sie den QR-Code, um sich anzumelden.",
+    "pendingMessage" : "Anmeldung läuft ...",
+    "pendingButton" : "Abbrechen",
+    "doneMessage" : ""
+  },
+  "register" : {
+    "mobileTitle" : "Ohne Kennwort registrieren",
+    "desktopTitle" : "Auf Mobiltelefon registrieren",
+    "desktopSubtitle" : "Überspringen Sie das Kennwort, indem Sie diesen QR-Code mit der Kamera Ihres Telefons oder einer App scannen.",
+    "pendingMessage" : "Registrierung auf Ihrem Telefon abschließen",
+    "pendingButton" : "Abbrechen",
+    "doneMessage" : ""
+  },
+  "register-partial" : {
+    "mobileTitle" : "Ohne Kennwort registrieren",
+    "desktopTitle" : "Scannen Sie diesen QR-Code mit Ihrem Telefon, anstatt ein Kennwort zu verwenden.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Ladevorgang läuft ...",
+    "pendingButton" : "Abbrechen",
+    "doneMessage" : "Überspringen des Kennworts wurde aktiviert.<br>Registrierung abschließen ..."
+  },
+  "link" : {
+    "mobileTitle" : "Direkt-Login aktivieren",
+    "desktopTitle" : "Direkt-Login aktivieren",
+    "desktopSubtitle" : "Scannen Sie den QR-Code mit der Kamera Ihres Telefons oder einer App.",
+    "pendingMessage" : "Ihr Konto wird verknüpft ...",
+    "pendingButton" : "Abbrechen",
+    "doneMessage" : ""
+  },
+  "recover" : {
+    "mobileTitle" : "Direkt-Login aktivieren",
+    "desktopTitle" : "Direkt-Login aktivieren",
+    "desktopSubtitle" : "Überspringen Sie das Kennwort, indem Sie den QR-Code mit der Kamera Ihres Telefons oder einer App scannen.",
+    "pendingMessage" : "Ihr Konto wird verknüpft ...",
+    "pendingButton" : "Abbrechen",
+    "doneMessage" : ""
+  },
+  "recover-partial" : {
+    "mobileTitle" : "",
+    "desktopTitle" : "Scannen Sie diesen QR-Code mit Ihrem Telefon, um sich anzumelden.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Ihr Konto wird verknüpft ...",
+    "pendingButton" : "Abbrechen",
+    "doneMessage" : ""
+  },
+  "verification" : {
+    "title" : "Verifizierungscode",
+    "message" : "Stimmt der Code auf Ihrem Gerät mit diesem Code überein?",
+    "yesButton" : "Ja",
+    "noButton" : "Nein"
+  },
+  "errors" : {
+    "qr" : "Sie müssen den QR-Code scannen, um fortzufahren",
+    "link" : "Sie müssen \"OwnID\" wählen, um fortzufahren"
+  },
+  "inline" : {
+    "message" : "Kennwort überspringen",
+    "passwordWarn" : "Geben Sie Ihr Kennwort ein, um Ihr Konto zu bestätigen.",
+    "noAccount" : "Konto ist nicht vorhanden. Legen Sie ein Konto an, um fortzufahren.",
+    "info" : "Greifen Sie ohne Kennwort auf Ihr Konto zu.\nAuf Ihrem Telefon wird ein verschlüsselter Schlüssel erzeugt, mit dem Sie von nun an automatisch angemeldet werden."
+  },
+  "common" : {
+    "labelText" : "Kennwort überspringen",
+    "noteText" : "Wenn Sie sich das nächste Mal anmelden, wird Ihr Telefon erkannt, und Sie werden direkt angemeldet.",
+    "undo" : "Rückgängig machen"
+  }
+}

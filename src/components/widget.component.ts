@@ -25,6 +25,8 @@ export default class WidgetComponent extends BaseComponent {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   finalResponse: any | null = null;
 
+  metadata: string | null = null;
+
   returnError: string | null = null;
 
   disabled = true;
@@ -165,7 +167,7 @@ export default class WidgetComponent extends BaseComponent {
 
       this.link.attachHandler('click', () => {
         if (this.finalResponse) {
-          this.callOnSuccess(this.finalResponse);
+          this.callOnSuccess(this.finalResponse, this.metadata);
         }
 
         this.setCallStatus();
@@ -269,7 +271,8 @@ export default class WidgetComponent extends BaseComponent {
       this.link?.disableButton();
 
       this.finalResponse = statusResponse[finishedIndex].payload.data;
-      this.callOnSuccess(this.finalResponse);
+      this.metadata = statusResponse[finishedIndex].metadata;
+      this.callOnSuccess(this.finalResponse, this.metadata);
       this.apiReply(this.finalResponse);
     }
 
@@ -523,7 +526,7 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  private callOnSuccess(finalResponse: any): void {
+  private callOnSuccess(finalResponse: any, metadata: string | null): void {
     const isTooltip =
       !!this.config.inline ||
       (this.config.partial &&
@@ -540,7 +543,7 @@ export default class WidgetComponent extends BaseComponent {
 
     switch (this.config.type) {
       case WidgetType.Link:
-        return this.config.onLink && this.config.onLink(finalResponse);
+        return this.config.onLink && this.config.onLink(finalResponse, metadata);
       case WidgetType.Login:
         if (this.config.inline && finalResponse.pubKey) {
           if (!this.config.inline.userIdElement?.value) {
@@ -559,12 +562,12 @@ export default class WidgetComponent extends BaseComponent {
           }
         }
 
-        return this.config.onLogin && this.config.onLogin(finalResponse);
+        return this.config.onLogin && this.config.onLogin(finalResponse, metadata);
       case WidgetType.Recover:
-        return this.config.onRecover && this.config.onRecover(finalResponse);
+        return this.config.onRecover && this.config.onRecover(finalResponse, metadata);
       case WidgetType.Register:
       default:
-        return this.config.onRegister && this.config.onRegister(finalResponse);
+        return this.config.onRegister && this.config.onRegister(finalResponse, metadata);
     }
   }
 
@@ -637,7 +640,7 @@ export default class WidgetComponent extends BaseComponent {
 
     this.inline.attachHandler('click', () => {
       if (this.finalResponse) {
-        this.callOnSuccess(this.finalResponse);
+        this.callOnSuccess(this.finalResponse, this.metadata);
         return;
       }
 

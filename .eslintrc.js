@@ -45,6 +45,7 @@ module.exports = {
     'consistent-return': 'off',
     'unicorn/import-index': 'off',
     'prettier/prettier': 'error',
+    'jest/no-done-callback': 'off',
   },
   settings: {
     'import/parsers': {

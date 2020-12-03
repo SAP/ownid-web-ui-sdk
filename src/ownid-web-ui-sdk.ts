@@ -60,11 +60,11 @@ export default class OwnIDUiSdk {
 
   async getOwnIDPayload(widget: WidgetComponent): Promise<IWidgetPayload> {
     if (widget.disabled) {
-      return Promise.resolve({ error: null, data: null });
+      return Promise.resolve({ error: null, data: null, metadata: null });
     }
 
     if (widget.finalResponse) {
-      return { error: null, data: widget.finalResponse };
+      return { error: null, data: widget.finalResponse, metadata: widget.metadata };
     }
 
     if (widget.returnError) {

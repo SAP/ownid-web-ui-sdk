@@ -1,0 +1,79 @@
+{
+  "login" : {
+    "mobileTitle" : "Logon instantâneo",
+    "desktopTitle" : "Usar logon instantâneo",
+    "desktopSubtitle" : "Escanear o código QR para efetuar logon.",
+    "pendingMessage" : "Efetuando logon...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "login-partial" : {
+    "mobileTitle" : "Logon instantâneo",
+    "desktopTitle" : "Usar logon instantâneo",
+    "desktopSubtitle" : "Escanear o código QR para efetuar logon.",
+    "pendingMessage" : "Efetuando logon...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "register" : {
+    "mobileTitle" : "Registrar sem uma senha",
+    "desktopTitle" : "Registrar no celular",
+    "desktopSubtitle" : "Ignorar a senha ao escanear este QR com esta câmara do telefone ou um app.",
+    "pendingMessage" : "Terminar o registro no seu telefone",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "register-partial" : {
+    "mobileTitle" : "Registrar sem uma senha",
+    "desktopTitle" : "Escanear este QR com seu telefone em vez de usar uma senha.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Carregando...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : "Ignorar a senha ativada.<br>Terminar registro..."
+  },
+  "link" : {
+    "mobileTitle" : "Ativar logon instantâneo",
+    "desktopTitle" : "Ativar logon instantâneo",
+    "desktopSubtitle" : "Usar sua câmara do telefone ou um app para escanear o QR.",
+    "pendingMessage" : "Ligando sua conta...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "recover" : {
+    "mobileTitle" : "Ativar logon instantâneo",
+    "desktopTitle" : "Ativar logon instantâneo",
+    "desktopSubtitle" : "Ignorar a senha ao escanear o QR com esta câmara do telefone ou um app.",
+    "pendingMessage" : "Ligando sua conta...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "recover-partial" : {
+    "mobileTitle" : "",
+    "desktopTitle" : "Escanear este QR com seu telefone para efetuar logon.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Ligando sua conta...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "verification" : {
+    "title" : "Código de verificação",
+    "message" : "O código no seu dispositivo corresponde a este?",
+    "yesButton" : "Sim",
+    "noButton" : "Não"
+  },
+  "errors" : {
+    "qr" : "Você deve escanear o código QR antes de continuar",
+    "link" : "Você deve clicar no botão OwnID antes de continuar"
+  },
+  "inline" : {
+    "message" : "Ignore a senha",
+    "passwordWarn" : "Insira a senha para confirmar a sua conta.",
+    "noAccount" : "A conta não existe, crie uma conta para continuar.",
+    "info" : "Acesse a sua conta sem uma senha.\nUma chave encriptada será criada no seu telefone e efetuará o logon automaticamente a partir de agora."
+  },
+  "common" : {
+    "labelText" : "Ignore a senha",
+    "noteText" : "A próxima vez que você efetuar logon, nós iremos reconhecer seu telefone e você ficará com logon efetuado instantaneamente.",
+    "undo" : "Desfazer"
+  }
+}

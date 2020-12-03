@@ -1,6 +1,7 @@
 export default interface StatusResponse {
   status: ContextStatus;
   context: string;
+  metadata: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: any;
 }

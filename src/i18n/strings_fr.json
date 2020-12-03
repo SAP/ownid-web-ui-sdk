@@ -1,0 +1,79 @@
+{
+  "login" : {
+    "mobileTitle" : "Connexion instantanée",
+    "desktopTitle" : "Utiliser la connexion instantanée",
+    "desktopSubtitle" : "Scannez le code QR pour vous connecter.",
+    "pendingMessage" : "Connexion en cours...",
+    "pendingButton" : "Annuler",
+    "doneMessage" : ""
+  },
+  "login-partial" : {
+    "mobileTitle" : "Connexion instantanée",
+    "desktopTitle" : "Utiliser la connexion instantanée",
+    "desktopSubtitle" : "Scannez le code QR pour vous connecter.",
+    "pendingMessage" : "Connexion en cours...",
+    "pendingButton" : "Annuler",
+    "doneMessage" : ""
+  },
+  "register" : {
+    "mobileTitle" : "Enregistrez-vous sans mot de passe.",
+    "desktopTitle" : "Enregistrez-vous sur mobile.",
+    "desktopSubtitle" : "Ignorez le mot de passe en scannant ce code QR avec l'appareil photo de votre téléphone ou une application.",
+    "pendingMessage" : "Terminez l'enregistrement sur votre téléphone.",
+    "pendingButton" : "Annuler",
+    "doneMessage" : ""
+  },
+  "register-partial" : {
+    "mobileTitle" : "Enregistrez-vous sans mot de passe.",
+    "desktopTitle" : "Scannez ce code QR avec votre téléphone au lieu de saisir un mot de passe.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Chargement en cours...",
+    "pendingButton" : "Annuler",
+    "doneMessage" : "Ignorer le mot de passe : activé.<br>Fin de l'enregistrement..."
+  },
+  "link" : {
+    "mobileTitle" : "Activer la connexion instantanée",
+    "desktopTitle" : "Activer la connexion instantanée",
+    "desktopSubtitle" : "Utilisez l'appareil photo de votre téléphone ou une application pour scanner le code QR.",
+    "pendingMessage" : "Association de votre compte...",
+    "pendingButton" : "Annuler",
+    "doneMessage" : ""
+  },
+  "recover" : {
+    "mobileTitle" : "Activer la connexion instantanée",
+    "desktopTitle" : "Activer la connexion instantanée",
+    "desktopSubtitle" : "Ignorez le mot de passe en scannant le code QR avec l'appareil photo de votre téléphone ou une application.",
+    "pendingMessage" : "Association de votre compte...",
+    "pendingButton" : "Annuler",
+    "doneMessage" : ""
+  },
+  "recover-partial" : {
+    "mobileTitle" : "",
+    "desktopTitle" : "Pour vous connecter, scannez ce code QR avec votre téléphone.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Association de votre compte...",
+    "pendingButton" : "Annuler",
+    "doneMessage" : ""
+  },
+  "verification" : {
+    "title" : "Code de vérification",
+    "message" : "Le code de votre terminal correspond-il à celui-ci ?",
+    "yesButton" : "Oui",
+    "noButton" : "Non"
+  },
+  "errors" : {
+    "qr" : "Vous devez scanner le code QR avant de poursuivre.1",
+    "link" : "Vous devez cliquer sur le bouton OwnID avant de poursuivre."
+  },
+  "inline" : {
+    "message" : "Ignorer le mot de passe",
+    "passwordWarn" : "Saisissez votre mot de passe pour confirmer votre compte.",
+    "noAccount" : "Le compte n'existe pas, créez un compte pour poursuivre.",
+    "info" : "Accédez à votre compte sans mot de passe.\nUne clé chiffrée sera créée sur votre téléphone et vous connectera désormais automatiquement."
+  },
+  "common" : {
+    "labelText" : "Ignorer le mot de passe",
+    "noteText" : "À la prochaine connexion, votre téléphone sera reconnu et vous serez instantanément connecté.",
+    "undo" : "Annuler"
+  }
+}

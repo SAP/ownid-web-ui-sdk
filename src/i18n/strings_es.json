@@ -1,0 +1,79 @@
+{
+  "login" : {
+    "mobileTitle" : "Inicio de sesión instantáneo",
+    "desktopTitle" : "Utilizar inicio de sesión instantáneo",
+    "desktopSubtitle" : "Escanear el código QR para iniciar sesión",
+    "pendingMessage" : "Iniciando sesión...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "login-partial" : {
+    "mobileTitle" : "Inicio de sesión instantáneo",
+    "desktopTitle" : "Utilizar inicio de sesión instantáneo",
+    "desktopSubtitle" : "Escanear el código QR para iniciar sesión",
+    "pendingMessage" : "Iniciando sesión...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "register" : {
+    "mobileTitle" : "Registrar sin contraseña",
+    "desktopTitle" : "Registrar en móvil",
+    "desktopSubtitle" : "Omitir contraseña escaneando este QR con la cámara de su teléfono o una aplicación.",
+    "pendingMessage" : "Finalizar registro en el teléfono",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "register-partial" : {
+    "mobileTitle" : "Registrar sin contraseña",
+    "desktopTitle" : "Escanee este QR con su teléfono en lugar de utilizar una contraseña.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Cargando...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : "Omitir contraseña habilitado.<br>Finalizando registro..."
+  },
+  "link" : {
+    "mobileTitle" : "Habilitar inicio de sesión instantáneo",
+    "desktopTitle" : "Habilitar inicio de sesión instantáneo",
+    "desktopSubtitle" : "Utilizar la cámara del teléfono o una aplicación para escanear el QR.",
+    "pendingMessage" : "Vinculando su cuenta...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "recover" : {
+    "mobileTitle" : "Habilitar inicio de sesión instantáneo",
+    "desktopTitle" : "Habilitar inicio de sesión instantáneo",
+    "desktopSubtitle" : "Omitir contraseña escaneando el QR con la cámara de su teléfono o una aplicación.",
+    "pendingMessage" : "Vinculando su cuenta...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "recover-partial" : {
+    "mobileTitle" : "",
+    "desktopTitle" : "Escanear este QR con su teléfono para iniciar sesión",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Vinculando su cuenta...",
+    "pendingButton" : "Cancelar",
+    "doneMessage" : ""
+  },
+  "verification" : {
+    "title" : "Código de verificación",
+    "message" : "¿Coincide el código de su dispositivo con este?",
+    "yesButton" : "Sí",
+    "noButton" : "No"
+  },
+  "errors" : {
+    "qr" : "Debe escanear el código QR antes de continuar",
+    "link" : "Debe clicar en OwnID antes de continuar"
+  },
+  "inline" : {
+    "message" : "Omitir contraseña",
+    "passwordWarn" : "Introduzca su contraseña para confirmar su cuenta.",
+    "noAccount" : "La cuenta no existe. Cree una cuenta para continuar.",
+    "info" : "Acceder a la cuenta sin una contraseña.\nSe creará una clave cifrada en su teléfono, que le permitirá iniciar sesión automáticamente a partir de ahora."
+  },
+  "common" : {
+    "labelText" : "Omitir contraseña",
+    "noteText" : "La próxima vez que inicie sesión, reconoceremos su teléfono e iniciará sesión instantáneamente.",
+    "undo" : "Deshacer"
+  }
+}
