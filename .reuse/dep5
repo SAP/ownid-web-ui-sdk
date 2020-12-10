@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: OwnID
+Upstream-Contact: Bohdan Donchenko <bohdan.donchenko@sap.com>
+Source: https://github.com/sap/ownid-web-ui-sdk
+
+Files: *
+Copyright: 2020 SAP SE or an SAP affiliate company and OwnID contributors
+License: Apache-2.0
