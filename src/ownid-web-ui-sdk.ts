@@ -74,6 +74,10 @@ export default class OwnIDUiSdk {
     return widget.openWebapp();
   }
 
+  async addOwnIDConnectionOnServer(widget: WidgetComponent, did: string): Promise<IWidgetPayload> {
+    return widget.addOwnIDConnectionOnServer(did);
+  }
+
   generateOwnIDPassword(length: number): string {
     let result = '';
     for (let i = length; i--; ) {

@@ -11,6 +11,8 @@ export default class ConfigurationService {
 
   static readonly magicLinkUrl = '/magic';
 
+  static readonly connectionUrl = '/connections';
+
   static readonly statusTimeout = 2000;
 
   static readonly defaultLanguage = Languages.en;
