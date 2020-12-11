@@ -15,7 +15,7 @@ declare type QrOptions = {
 export default class Qr extends BaseCommonComponent<QrOptions> {
   private qrCodeWrapper: HTMLDivElement | null = null;
 
-  private securityCheckShown = false;
+  public securityCheckShown = false;
 
   private spendingShown = false;
 

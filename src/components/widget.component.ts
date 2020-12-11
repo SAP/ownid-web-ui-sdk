@@ -203,7 +203,11 @@ export default class WidgetComponent extends BaseComponent {
 
       if (isTooltip) {
         this.addCallback2GlobalEvent((event) => {
-          if (this.config.element.style.display === 'block' && !this.qr!.ref.contains(event.target as Node)) {
+          if (
+            this.config.element.style.display === 'block' &&
+            !this.qr!.ref.contains(event.target as Node) &&
+            !this.qr?.securityCheckShown
+          ) {
             this.toggleQrTooltip(false);
           }
         });
