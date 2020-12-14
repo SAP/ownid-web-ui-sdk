@@ -3,7 +3,7 @@ import { BaseComponent } from './base.component';
 import LinkButton from './common/link-button.component';
 import Qr from './common/qr.component';
 import ConfigurationService from '../services/configuration.service';
-import { IContextRS } from '../interfaces/i-context.interfaces';
+import { IContext, IContextRS } from '../interfaces/i-context.interfaces';
 import RequestService from '../services/request.service';
 import {
   IFullWidgetConfig,
@@ -44,6 +44,8 @@ export default class WidgetComponent extends BaseComponent {
   private cacheExpiration: number | undefined;
 
   private contexts: IContextRS[] = [];
+
+  private succeededContext: IContext | undefined;
 
   private postMessagesHandlerAttached = false;
 
@@ -203,7 +205,11 @@ export default class WidgetComponent extends BaseComponent {
 
       if (isTooltip) {
         this.addCallback2GlobalEvent((event) => {
-          if (this.config.element.style.display === 'block' && !this.qr!.ref.contains(event.target as Node)) {
+          if (
+            this.config.element.style.display === 'block' &&
+            !this.qr!.ref.contains(event.target as Node) &&
+            !this.qr?.securityCheckShown
+          ) {
             this.toggleQrTooltip(false);
           }
         });
@@ -219,16 +225,20 @@ export default class WidgetComponent extends BaseComponent {
     return this.contexts[this.contexts.length - 1].url;
   }
 
-  private getStatusUrl(): string {
-    const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
-
-    return `${prefix}${ConfigurationService.statusUrl}`;
+  private getUrlPrefix(): string {
+    return (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
   }
 
-  private getApproveUrl(context: string) {
-    const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
+  private getStatusUrl(): string {
+    return `${this.getUrlPrefix()}${ConfigurationService.statusUrl}`;
+  }
 
-    return `${prefix}${ConfigurationService.approveUrl.replace(':context', context)}`;
+  private getApproveUrl(context: string): string {
+    return `${this.getUrlPrefix()}${ConfigurationService.approveUrl.replace(':context', context)}`;
+  }
+
+  private getAddConnectionUrl(): string {
+    return `${this.getUrlPrefix()}${ConfigurationService.connectionUrl}`;
   }
 
   private setCallStatus(): void {
@@ -267,6 +277,10 @@ export default class WidgetComponent extends BaseComponent {
         this.qr.showDone();
       }
 
+      const { context } = statusResponse[finishedIndex];
+      const { nonce } = this.contexts.find((item) => item.context === context)!;
+
+      this.succeededContext = { context, nonce };
       this.contexts = [];
       this.link?.disableButton();
 
@@ -582,6 +596,17 @@ export default class WidgetComponent extends BaseComponent {
     return new Promise((resolve) => {
       this.webappResolver = resolve;
     });
+  }
+
+  public async addOwnIDConnectionOnServer(did: string): Promise<IWidgetPayload> {
+    if (!this.finalResponse) {
+      return { error: true, message: 'Authorization flow is not finished' };
+    }
+
+    return (await this.requestService.post(this.getAddConnectionUrl(), {
+      ...this.succeededContext,
+      did,
+    })) as IWidgetPayload;
   }
 
   private addOwnIDStyleTag(id: string): void {

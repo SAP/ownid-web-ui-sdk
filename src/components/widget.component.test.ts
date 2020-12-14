@@ -1,6 +1,6 @@
 import WidgetComponent from './widget.component';
 import RequestService from '../services/request.service';
-import { Languages, WidgetType } from '../interfaces/i-widget.interfaces';
+import {IWidgetPayload, Languages, WidgetType} from '../interfaces/i-widget.interfaces';
 import { IContext } from '../interfaces/i-context.interfaces';
 import { ContextStatus } from './status-response';
 
@@ -567,7 +567,7 @@ describe('callStatus', () => {
         },
         requestService,
       );
-      sut.contexts = [{ context: "a", nonce: "b" }];
+      sut.contexts = [{ context: "context1", nonce: "b" }];
 
       sut.callStatus().then(() => {
         expect(onLogin).toBeCalledWith({ "a": "b" }, "jwt");
@@ -589,7 +589,7 @@ describe('callStatus', () => {
         } as any,
         requestService,
       );
-      sut.contexts = [{ context: "a", nonce: "b" }];
+      sut.contexts = [{ context: "context1", nonce: "b" }];
 
       requestService.post = jest.fn()
         .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
@@ -623,7 +623,7 @@ describe('callStatus', () => {
         } as any,
         requestService,
       );
-      sut.contexts = [{ context: "a", nonce: "b" }];
+      sut.contexts = [{ context: "context1", nonce: "b" }];
 
       requestService.post = jest.fn()
         .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
@@ -653,7 +653,7 @@ describe('callStatus', () => {
         } as any,
         requestService,
       );
-      sut.contexts = [{ context: "a", nonce: "b" }];
+      sut.contexts = [{ context: "context1", nonce: "b" }];
 
       requestService.post = jest.fn()
         .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
@@ -679,7 +679,7 @@ describe('callStatus', () => {
         },
         requestService,
       );
-      sut.contexts = [{ context: "a", nonce: "b" }];
+      sut.contexts = [{ context: "context1", nonce: "b" }];
 
       requestService.post = jest.fn()
         .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
@@ -705,7 +705,7 @@ describe('callStatus', () => {
         },
         requestService,
       );
-      sut.contexts = [{ context: "a", nonce: "b" }];
+      sut.contexts = [{ context: "context1", nonce: "b" }];
 
       requestService.post = jest.fn()
         .mockReturnValue(new Promise(resolve => resolve([startedContextResponse, finishedContextResponse])));
@@ -846,7 +846,6 @@ describe('callStatus', () => {
 
 });
 
-
 describe('refresh link or qr', () => {
   let requestService: RequestService;
 
@@ -874,3 +873,57 @@ describe('refresh link or qr', () => {
     });
   });
 });
+
+describe('addOwnIDConnectionOnServer', () => {
+  const requestService = {} as RequestService;
+  // eslint-disable-next-line no-shadow
+  requestService.post = jest
+    .fn()
+    .mockReturnValue(new Promise(resolve => resolve({})));
+
+  it('should return error object if finalResponse is null', () => {
+    return new Promise(resolve => {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const sut: any = new WidgetComponent(
+        {
+          element: document.createElement('div'),
+          URLPrefix: 'url',
+          // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+        } as any,
+        requestService,
+      );
+
+      sut.addOwnIDConnectionOnServer('uid').then((result: IWidgetPayload) => {
+        expect(result?.error).toBe(true);
+        expect(result?.message).not.toBeNull();
+        resolve();
+      });
+    });
+  });
+
+  it('should call server to add connection', () => {
+    return new Promise(resolve => {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const sut: any = new WidgetComponent(
+        {
+          element: document.createElement('div'),
+          URLPrefix: 'url',
+          // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+        } as any,
+        requestService,
+      );
+
+      const succeededContext = {context: '1context', nonce: '2nonce'} as IContext;
+      sut.succeededContext = succeededContext;
+      sut.finalResponse = {};
+
+      sut.addOwnIDConnectionOnServer('uid').then((result: IWidgetPayload) => {
+        expect(result?.error).toBe(undefined);
+        expect(result?.message).toBe(undefined);
+        expect(requestService.post).toBeCalledWith('url/connections', {...succeededContext, did: 'uid'});
+        resolve();
+      });
+    });
+  });
+});
+

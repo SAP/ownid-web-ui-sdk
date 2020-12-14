@@ -141,6 +141,16 @@ describe('OwnIDUiSdk instances test', () => {
     });
   });
 
+  describe('addOwnIDConnectionOnServer', () => {
+    it('should call addOwnIDConnectionOnServer on widget', () => {
+      const widget = {} as WidgetComponent;
+      widget.addOwnIDConnectionOnServer = jest.fn();
+      sdk.addOwnIDConnectionOnServer(widget, 'uid');
+
+      expect(widget.addOwnIDConnectionOnServer).toBeCalledWith('uid');
+    });
+  });
+
   describe('generateOwnIDPassword', () => {
     it('should create random string with defined length', () => {
       const res = sdk.generateOwnIDPassword(10);
