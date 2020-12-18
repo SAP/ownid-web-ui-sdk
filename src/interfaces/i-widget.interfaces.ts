@@ -9,11 +9,25 @@ export enum WidgetType {
 }
 
 export enum Languages {
+  ar = 'ar',
+  de = 'de',
   en = 'en',
-  enGB = 'en-GB',
-  enUS = 'en-US',
-  ru = 'ru',
+  enGB = 'en_GB',
   es = 'es',
+  esMX = 'es_MX',
+  fr = 'fr',
+  id = 'id',
+  ja = 'ja',
+  ko = 'ko',
+  ms = 'ms',
+  pt = 'pt',
+  ptPT = 'pt_PT',
+  ru = 'ru',
+  th = 'th',
+  tr = 'tr',
+  vi = 'vi',
+  zhCN = 'zh_CN',
+  zhTW = 'zh_TW',
 }
 
 export interface IInitConfig {
