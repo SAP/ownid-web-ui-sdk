@@ -1,5 +1,6 @@
 import WidgetComponent from '../components/widget.component';
-import { IWidgetConfig, IWidgetPayload, WidgetType } from '../interfaces/i-widget.interfaces';
+import { IWidgetConfig, IWidgetPayload, Languages, WidgetType } from '../interfaces/i-widget.interfaces';
+import ConfigurationService from '../services/configuration.service';
 
 interface IMyWindow extends Window {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -57,7 +58,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
   }
 
   renderInlineRegisterWidget(currentScreen: string, config?: IWidgetConfig): void {
-    const screensetSelector = `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"]`;
+    const screensetSelector = `[data-screenset-element-id="${currentScreen}"][data-screenset-roles*="instance"]`;
     const pass = document.querySelector(`${screensetSelector} [data-gigya-name="password"]`) as HTMLInputElement;
     const repeatPass = document.querySelector(
       `${screensetSelector} [data-gigya-name="passwordRetype"]`,
@@ -65,14 +66,14 @@ export default class OwnIDUiSdkGigyaScreenSets {
 
     this.ownIDWidget = window.ownid.render({
       element: this.getOwnIdWrapper(),
-      ...config,
-      type: WidgetType.Register,
+      language: this.mapGigyaLanguage(window.gigya.thisScript.globalConf.lang),
       inline: {
         targetElement: pass,
         additionalElements: [repeatPass],
         offset: [-10, 0],
-        ...config?.inline,
       },
+      ...config,
+      type: WidgetType.Register,
       onError: (error) => {
         let ownIDErrorElement = document.querySelector(`${screensetSelector} .ownid-register-error`) as HTMLSpanElement;
 
@@ -107,20 +108,20 @@ export default class OwnIDUiSdkGigyaScreenSets {
   }
 
   renderInlineLoginWidget(currentScreen: string, config?: IWidgetConfig): void {
-    const screensetSelector = `[data-screenset-element-id="${currentScreen}"][data-screenset-roles="instance"]`;
+    const screensetSelector = `[data-screenset-element-id="${currentScreen}"][data-screenset-roles*="instance"]`;
     const loginID = document.querySelector(`${screensetSelector} [data-gigya-name="loginID"]`) as HTMLInputElement;
     const pass = document.querySelector(`${screensetSelector} [data-gigya-name="password"]`) as HTMLInputElement;
 
     this.ownIDWidget = window.ownid!.render({
       element: this.getOwnIdWrapper(),
-      ...config,
-      type: WidgetType.Login,
+      language: this.mapGigyaLanguage(window.gigya.thisScript.globalConf.lang),
       inline: {
         userIdElement: loginID,
         targetElement: pass,
         offset: [-10, 0],
-        ...config?.inline,
       },
+      ...config,
+      type: WidgetType.Login,
       onError: (error) => {
         let ownIDErrorElement = document.querySelector(`${screensetSelector} .ownid-register-error`) as HTMLSpanElement;
 
@@ -159,6 +160,29 @@ export default class OwnIDUiSdkGigyaScreenSets {
     });
   }
 
+  renderInlineRecoverWidget(currentScreen: string, config?: IWidgetConfig): void {
+    const screensetSelector = `[data-screenset-element-id="${currentScreen}"][data-screenset-roles*="instance"]`;
+    const pass = document.querySelector(`${screensetSelector} [data-gigya-name="newPassword"]`) as HTMLInputElement;
+    const repeatPass = document.querySelector(
+      `${screensetSelector} [data-gigya-name="passwordRetype"]`,
+    ) as HTMLInputElement;
+
+    this.ownIDWidget = window.ownid!.render({
+      element: this.getOwnIdWrapper(),
+      language: this.mapGigyaLanguage(window.gigya.thisScript.globalConf.lang),
+      inline: {
+        targetElement: pass,
+        additionalElements: [repeatPass],
+        offset: [-10, 0],
+      },
+      ...config,
+      type: WidgetType.Recover,
+      onRecover: (statusRS: IOwnIdDataRS, metadata: string | null) => {
+        this.handlers.onSuccess.forEach((callback: IHandler) => callback(currentScreen, statusRS, metadata));
+      },
+    });
+  }
+
   destroyOwnIDWidget(): void {
     if (this.ownIDWidget) {
       this.ownIDWidget.destroy();
@@ -177,27 +201,34 @@ export default class OwnIDUiSdkGigyaScreenSets {
       subtree: true,
     });
 
-    if (event.currentScreen === 'gigya-login-screen' || event.currentScreen === config?.customScreenSetsIds?.login) {
-      this.renderInlineLoginWidget(event.currentScreen, config?.widgetConfigs?.[event.currentScreen]);
-    }
+    switch (event.currentScreen) {
+      case 'gigya-reset-password-screen':
+      case config?.customScreenSetsIds?.recover:
+        this.renderInlineRecoverWidget(event.currentScreen, config?.widgetConfigs?.[event.currentScreen]);
+        break;
+      case 'gigya-login-screen':
+      case config?.customScreenSetsIds?.login:
+        this.renderInlineLoginWidget(event.currentScreen, config?.widgetConfigs?.[event.currentScreen]);
+        break;
+      case 'gigya-register-screen':
+      case config?.customScreenSetsIds?.registration:
+        this.renderInlineRegisterWidget(event.currentScreen, config?.widgetConfigs?.[event.currentScreen]);
+        // eslint-disable-next-line  no-case-declarations
+        const screensetSelector = `[data-screenset-element-id="${event.currentScreen}"][data-screenset-roles*="instance"]`;
 
-    if (
-      event.currentScreen === 'gigya-register-screen' ||
-      event.currentScreen === config?.customScreenSetsIds?.registration
-    ) {
-      this.renderInlineRegisterWidget(event.currentScreen, config?.widgetConfigs?.[event.currentScreen]);
-
-      const screensetSelector = `[data-screenset-element-id="${event.currentScreen}"][data-screenset-roles="instance"]`;
-
-      document.querySelector(`${screensetSelector} .gigya-input-submit`)?.addEventListener('click', () => {
-        if (!this.ownIDWidget?.disabled) {
-          const pw = window.ownid.generateOwnIDPassword(32);
-          (document.querySelector(`${screensetSelector} [data-gigya-name="password"]`) as HTMLInputElement).value = pw;
-          (document.querySelector(
-            `${screensetSelector} [data-gigya-name="passwordRetype"]`,
-          ) as HTMLInputElement).value = pw;
-        }
-      });
+        document.querySelector(`${screensetSelector} .gigya-input-submit`)?.addEventListener('click', () => {
+          if (!this.ownIDWidget?.disabled) {
+            const pw = window.ownid.generateOwnIDPassword(32);
+            (document.querySelector(
+              `${screensetSelector} [data-gigya-name="password"]`,
+            ) as HTMLInputElement).value = pw;
+            (document.querySelector(
+              `${screensetSelector} [data-gigya-name="passwordRetype"]`,
+            ) as HTMLInputElement).value = pw;
+          }
+        });
+        break;
+      default:
     }
   }
 
@@ -245,5 +276,12 @@ export default class OwnIDUiSdkGigyaScreenSets {
         }
       },
     });
+  }
+
+  mapGigyaLanguage(gigyaLang: string): Languages {
+    const [lang, cultureLang] = gigyaLang.split('-');
+    const language = cultureLang ? `${lang}_${cultureLang.toUpperCase()}` : lang;
+
+    return language in Languages ? (language as Languages) : ConfigurationService.defaultLanguage;
   }
 }

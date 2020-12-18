@@ -10,6 +10,7 @@ import {
   IPartialConfig,
   IWidgetConfig,
   IWidgetPayload,
+  Languages,
   WidgetType,
 } from '../interfaces/i-widget.interfaces';
 import TranslationService from '../services/translation.service';
@@ -108,12 +109,17 @@ export default class WidgetComponent extends BaseComponent {
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   protected async getContext(contextUrl: string, data: any = null): Promise<void> {
+    const language =
+      this.config.language && this.config.language in Languages
+        ? this.config.language
+        : ConfigurationService.defaultLanguage;
+
     const contextData = {
       type: this.config.type || WidgetType.Register,
       data,
       qr: !this.isMobile(),
       partial: !!this.config.partial || !!this.config.inline,
-      language: this.config.language,
+      language,
     };
     const contextResponse = await this.requestService.post(contextUrl, contextData);
 
@@ -139,10 +145,8 @@ export default class WidgetComponent extends BaseComponent {
       return;
     }
 
-    const lang = this.config.language || ConfigurationService.defaultLanguage;
-
     if (this.config.inline) {
-      this.renderInlineWidget({ lang, ...this.config.inline });
+      this.renderInlineWidget({ language: this.config.language, ...this.config.inline });
     }
 
     if (
@@ -150,7 +154,7 @@ export default class WidgetComponent extends BaseComponent {
       [WidgetType.Register, WidgetType.Login, WidgetType.Recover].indexOf(this.config.type) !== -1 &&
       (this.config.note || this.config.note === undefined)
     ) {
-      this.renderNote(lang);
+      this.renderNote(this.config.language);
     }
 
     if (this.isMobile()) {
@@ -161,7 +165,7 @@ export default class WidgetComponent extends BaseComponent {
       }
 
       const type = this.config.partial ? `${this.config.type}-partial` : this.config.type;
-      const mobileTitle = this.config.mobileTitle || TranslationService.texts[lang][type].mobileTitle;
+      const mobileTitle = this.config.mobileTitle || TranslationService.instant(this.config.language)[type].mobileTitle;
       this.link = new LinkButton({
         href: this.getStartUrl(),
         title: mobileTitle,
@@ -179,7 +183,7 @@ export default class WidgetComponent extends BaseComponent {
       });
 
       this.addChild(this.link);
-      this.returnError = TranslationService.texts[lang].errors.link;
+      this.returnError = TranslationService.instant(this.config.language).errors.link;
     } else {
       if (this.disableDesktop) {
         // eslint-disable-next-line no-console
@@ -196,10 +200,10 @@ export default class WidgetComponent extends BaseComponent {
 
       this.qr = new Qr({
         href: this.getStartUrl(),
-        title: this.config.desktopTitle || TranslationService.texts[lang][type].desktopTitle,
-        subtitle: this.config.desktopSubtitle || TranslationService.texts[lang][type].desktopSubtitle,
+        title: this.config.desktopTitle || TranslationService.instant(this.config.language)[type].desktopTitle,
+        subtitle: this.config.desktopSubtitle || TranslationService.instant(this.config.language)[type].desktopSubtitle,
         type,
-        lang,
+        language: this.config.language,
         tooltip: isTooltip,
       });
 
@@ -217,7 +221,7 @@ export default class WidgetComponent extends BaseComponent {
 
       this.addChild(this.qr);
 
-      this.returnError = TranslationService.texts[lang].errors.qr;
+      this.returnError = TranslationService.instant(this.config.language).errors.qr;
     }
   }
 
@@ -424,11 +428,10 @@ export default class WidgetComponent extends BaseComponent {
       checkInput.id = `ownid-toggle-check-${Math.random()}`;
     }
 
-    const lang = this.config.language || ConfigurationService.defaultLanguage;
     const label = document.createElement('label');
     label.setAttribute('for', checkInput.id);
     label.setAttribute('class', 'ownid-label ownid-toggle');
-    label.textContent = TranslationService.texts[lang].common.labelText;
+    label.textContent = TranslationService.instant(this.config.language).common.labelText;
 
     checkInput.parentNode!.insertBefore(label, checkInput.nextSibling);
 
@@ -693,11 +696,11 @@ export default class WidgetComponent extends BaseComponent {
     this.globalEventCallbacks.push(param);
   }
 
-  private renderNote(lang: string): void {
+  private renderNote(lang?: Languages): void {
     this.note = document.createElement('div');
     this.note.setAttribute('class', 'ownid-note');
     this.note.style.display = 'none';
-    this.note.textContent = TranslationService.texts[lang].common.noteText;
+    this.note.textContent = TranslationService.instant(lang).common.noteText;
 
     if (typeof this.config.note === 'string') {
       this.note.textContent = this.config.note;
@@ -721,7 +724,7 @@ export default class WidgetComponent extends BaseComponent {
       this.note.textContent += ' ';
       const undo = document.createElement('span');
       undo.setAttribute('class', 'ownid-note-undo');
-      undo.textContent = TranslationService.texts[lang].common.undo;
+      undo.textContent = TranslationService.instant(lang).common.undo;
 
       undo.addEventListener('click', () => {
         this.note!.style.display = 'none';
@@ -740,10 +743,8 @@ export default class WidgetComponent extends BaseComponent {
   }
 
   public recalculatePosition(): void {
-    const lang = this.config.language || ConfigurationService.defaultLanguage;
-
     if (this.inline) {
-      this.inline.calculatePosition(this.inline.ref, { lang, ...this.config.inline! });
+      this.inline.calculatePosition(this.inline.ref, { language: this.config.language, ...this.config.inline! });
     }
 
     if (this.config.element.style.display === 'block') {

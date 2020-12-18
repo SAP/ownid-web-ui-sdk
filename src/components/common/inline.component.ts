@@ -1,9 +1,10 @@
 import BaseCommonComponent from './base-common.component';
 import TranslationService from '../../services/translation.service';
+import { Languages } from '../../interfaces/i-widget.interfaces';
 
 export type InlineWidgetOptions = {
   targetElement: HTMLInputElement;
-  lang: string;
+  language?: Languages;
   additionalElements?: HTMLElement[];
   offset?: [number, number];
   credentialsAutoFillButtonOffset?: number;
@@ -27,7 +28,7 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
 
     const element = document.createElement('div');
 
-    const { message, info } = TranslationService.texts[options.lang].inline;
+    const { message, info } = TranslationService.instant(options.language).inline;
 
     element.classList.add('ownid-inline-widget');
 
@@ -144,11 +145,11 @@ input.ownid-skip-password::-webkit-credentials-auto-fill-button{margin-right:${
       this.options.targetElement.classList.toggle('ownid-inline-required', !this.options.targetElement.value),
     );
 
-    this.displayWarn(TranslationService.texts[this.options.lang].inline.passwordWarn);
+    this.displayWarn(TranslationService.instant(this.options.language).inline.passwordWarn);
   }
 
   public noAccount(): void {
-    this.displayWarn(TranslationService.texts[this.options.lang].inline.noAccount);
+    this.displayWarn(TranslationService.instant(this.options.language).inline.noAccount);
   }
 
   private displayWarn(message: string): void {
