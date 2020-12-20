@@ -3,6 +3,11 @@
 ## Description
 OwnID enables your customers to use their phone as a key to instantly login to your websites or apps. Passwords are finally gone.
 
+This component is a widget that you can add to your website to include OwnID in your register and login pages. For the server, OwnID offers server-sdk-net project that has integration to SAP CDC (Gigya) but it is also possible to use the server SDK to integrate with other Identity Management System. 
+
+Evaluation is possible even without any back-end implementation. You can follow the developer-tutorial (see example code below) to set your environment. This is using OwnID back-end that already include the SAP CDC (Gigya) integration. Later on you can provide your SAP CDC (Gigya) credentials to set your production environment or you can take OwnID server SDK and implement the integration to your Identity Management System.
+
+
 ## Documentation
 
 OwnID Documentation you can find on our [Documentation](https://docs.ownid.com) page
