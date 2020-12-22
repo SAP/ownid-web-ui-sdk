@@ -1,79 +1,79 @@
 {
-  "login": {
-    "mobileTitle": "Instant Log In",
-    "desktopTitle": "Use instant log in",
-    "desktopSubtitle": "Scan the QR code to login.",
-    "pendingMessage": "Logging in...",
-    "pendingButton": "Cancel",
-    "doneMessage": ""
+  "login" : {
+    "mobileTitle" : "Instant Log In",
+    "desktopTitle" : "Use instant log in",
+    "desktopSubtitle" : "Scan the QR code to login.",
+    "pendingMessage" : "Logging in...",
+    "pendingButton" : "Cancel",
+    "doneMessage" : ""
   },
-  "login-partial": {
-    "mobileTitle": "Instant Log In",
-    "desktopTitle": "Use instant log in",
-    "desktopSubtitle": "Scan the QR code to login.",
-    "pendingMessage": "Logging in...",
-    "pendingButton": "Cancel",
-    "doneMessage": ""
+  "login-partial" : {
+    "mobileTitle" : "Instant Log In",
+    "desktopTitle" : "Scan this QR with your phone to login.",
+    "desktopSubtitle" : "Scan the QR code to login.",
+    "pendingMessage" : "Logging in...",
+    "pendingButton" : "Cancel",
+    "doneMessage" : ""
   },
-  "register": {
-    "mobileTitle": "Register without a password",
-    "desktopTitle": "Register on mobile",
-    "desktopSubtitle": "Skip the password by scanning this QR with your phone’s camera or an app.",
-    "pendingMessage": "Finish registering on your phone",
-    "pendingButton": "Cancel",
-    "doneMessage": ""
+  "register" : {
+    "mobileTitle" : "Register without a password",
+    "desktopTitle" : "Register on mobile",
+    "desktopSubtitle" : "Skip the password by scanning this QR with your phone’s camera or an app.",
+    "pendingMessage" : "Finish registering on your phone",
+    "pendingButton" : "Cancel",
+    "doneMessage" : ""
   },
-  "register-partial": {
-    "mobileTitle": "Register without a password",
-    "desktopTitle": "Scan this QR with your phone instead of using a password.",
-    "desktopSubtitle": "",
-    "pendingMessage": "Loading...",
-    "pendingButton": "Cancel",
-    "doneMessage": "Skip the password enabled.<br>Finish registering..."
+  "register-partial" : {
+    "mobileTitle" : "Register without a password",
+    "desktopTitle" : "Scan this QR with your phone instead of using a password.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Loading...",
+    "pendingButton" : "Cancel",
+    "doneMessage" : "Skip the password enabled.<br>Finish registering..."
   },
-  "link": {
-    "mobileTitle": "Enable Instant Login",
-    "desktopTitle": "Enable Instant Login",
-    "desktopSubtitle": "Use your phone’s camera or an app to scan the QR.",
-    "pendingMessage": "Linking your account...",
-    "pendingButton": "Cancel",
-    "doneMessage": ""
+  "link" : {
+    "mobileTitle" : "Enable Instant Login",
+    "desktopTitle" : "Enable Instant Login",
+    "desktopSubtitle" : "Use your phone’s camera or an app to scan the QR.",
+    "pendingMessage" : "Linking your account...",
+    "pendingButton" : "Cancel",
+    "doneMessage" : ""
   },
-  "recover": {
-    "mobileTitle": "Enable Instant Login",
-    "desktopTitle": "Enable instant login",
-    "desktopSubtitle": "Skip the password by scanning the QR with your phone’s camera or an app.",
-    "pendingMessage": "Linking your account...",
-    "pendingButton": "Cancel",
-    "doneMessage": ""
+  "recover" : {
+    "mobileTitle" : "Enable Instant Login",
+    "desktopTitle" : "Enable instant login",
+    "desktopSubtitle" : "Skip the password by scanning the QR with your phone’s camera or an app.",
+    "pendingMessage" : "Linking your account...",
+    "pendingButton" : "Cancel",
+    "doneMessage" : ""
   },
-  "recover-partial": {
-    "mobileTitle": "",
-    "desktopTitle": "Scan this QR with your phone to login.",
-    "desktopSubtitle": "",
-    "pendingMessage": "Linking your account...",
-    "pendingButton": "Cancel",
-    "doneMessage": ""
+  "recover-partial" : {
+    "mobileTitle" : "",
+    "desktopTitle" : "Scan this QR with your phone to login.",
+    "desktopSubtitle" : "",
+    "pendingMessage" : "Linking your account...",
+    "pendingButton" : "Cancel",
+    "doneMessage" : ""
   },
-  "verification": {
-    "title": "Verification Code",
-    "message": "Does the code on your device match this one?",
-    "yesButton": "Yes",
-    "noButton": "No"
+  "verification" : {
+    "title" : "Verification Code",
+    "message" : "Does the code on your device match this one?",
+    "yesButton" : "Yes",
+    "noButton" : "No"
   },
-  "errors": {
-    "qr": "You must scan QR code before you proceed",
-    "link": "You must click OwnID button before you proceed"
+  "errors" : {
+    "qr" : "You must scan QR code before you proceed",
+    "link" : "You must click OwnID button before you proceed"
   },
-  "inline": {
-    "message": "Skip the password",
-    "passwordWarn": "Enter your password to confirm your account.",
-    "noAccount": "Account doesn’t exist, create an account to continue.",
-    "info": "Access your account without a password.\nAn encrypted key will be created on your phone and automatically log you in from now on."
+  "inline" : {
+    "message" : "Skip the password",
+    "passwordWarn" : "Enter your password to confirm your account.",
+    "noAccount" : "Account doesn’t exist, create an account to continue.",
+    "info" : "Access your account without a password.\nAn encrypted key will be created on your phone and automatically log you in from now on."
   },
-  "common": {
-    "labelText": "Skip the password",
-    "noteText": "The next time you login, we will recognize your phone and instantly log you in.",
-    "undo": "Undo"
+  "common" : {
+    "labelText" : "Skip the password",
+    "noteText" : "The next time you login, we will recognize your phone and instantly log you in.",
+    "undo" : "Undo"
   }
 }

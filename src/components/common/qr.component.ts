@@ -2,14 +2,15 @@ import QRCode from 'qrcode-generator';
 import BaseCommonComponent from './base-common.component';
 import { validateUrl } from '../../services/helper.service';
 import TranslationService from '../../services/translation.service';
+import { Languages } from '../../interfaces/i-widget.interfaces';
 
 declare type QrOptions = {
   title: string;
   subtitle: string;
   href: string;
   type: string;
-  lang: string;
   tooltip: boolean;
+  language?: Languages;
 };
 
 export default class Qr extends BaseCommonComponent<QrOptions> {
@@ -51,10 +52,10 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
     const onlyTitleFx = title && !subTitle ? '<div class="ownid-title-spacer"></div>' : '';
 
     const pendingTexts = {
-      message: TranslationService.texts[options.lang][options.type].pendingMessage,
-      button: TranslationService.texts[options.lang][options.type].pendingButton,
+      message: TranslationService.instant(options.language)[options.type].pendingMessage,
+      button: TranslationService.instant(options.language)[options.type].pendingButton,
     };
-    const { doneMessage } = TranslationService.texts[options.lang][options.type];
+    const { doneMessage } = TranslationService.instant(options.language)[options.type];
 
     wrapper.innerHTML = `
       <div class="ownid-qr-pane">
@@ -101,10 +102,10 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
     this.securityCheckShown = true;
 
     const pendingTexts = {
-      message: TranslationService.texts[this.options.lang][this.options.type].pendingMessage,
-      button: TranslationService.texts[this.options.lang][this.options.type].pendingButton,
+      message: TranslationService.instant(this.options.language)[this.options.type].pendingMessage,
+      button: TranslationService.instant(this.options.language)[this.options.type].pendingButton,
     };
-    const { title, message, yesButton, noButton } = TranslationService.texts[this.options.lang].verification;
+    const { title, message, yesButton, noButton } = TranslationService.instant(this.options.language).verification;
 
     this.ref.innerHTML = `
       <div class="ownid-security-check">

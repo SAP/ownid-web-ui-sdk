@@ -9,7 +9,7 @@
   },
   "login-partial" : {
     "mobileTitle" : "Instant Log In",
-    "desktopTitle" : "Use instant log in",
+    "desktopTitle" : "Scan this QR with your phone to login.",
     "desktopSubtitle" : "Scan the QR code to login.",
     "pendingMessage" : "Logging in...",
     "pendingButton" : "Cancel",

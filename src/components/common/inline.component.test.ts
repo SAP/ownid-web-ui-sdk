@@ -1,4 +1,5 @@
 import InlineWidget from './inline.component';
+import { Languages } from '../../interfaces/i-widget.interfaces';
 
 describe('InlineWidget Component', () => {
   let parent: HTMLElement;
@@ -17,7 +18,7 @@ describe('InlineWidget Component', () => {
     return new Promise((resolve) => {
       const options = {
         targetElement,
-        lang: 'en',
+        language: Languages.en,
       };
       const inline = new InlineWidget(options);
 
@@ -33,7 +34,7 @@ describe('InlineWidget Component', () => {
     return new Promise((resolve) => {
       const options = {
         targetElement,
-        lang: 'en',
+        language: Languages.en,
       };
       const inline = new InlineWidget(options);
 
