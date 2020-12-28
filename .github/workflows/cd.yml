@@ -16,9 +16,6 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     steps:
-    - name: Debug
-      run: echo ${{ github.ref }}
-      
     - name: Checkout
       uses: actions/checkout@v1
 
@@ -56,11 +53,11 @@ jobs:
       run: bash scripts/deploy.sh ${{ secrets.STAGING_S3_BUCKET }} ${{ secrets.STAGING_CF_DISTRIBUTION }}
 
     - name: Deploy PROD A
-      if: startsWith(github.ref,'ref/heads/release')
+      if: startsWith(github.ref,'refs/heads/release')
       run: bash scripts/deploy.sh ${{ secrets.PROD_S3_BUCKET }} ${{ secrets.PROD_CF_DISTRIBUTION }}
 
     - name: Deploy PROD B
-      if: startsWith(github.ref,'ref/heads/release')
+      if: startsWith(github.ref,'refs/heads/release')
       run: aws s3 sync ./dist ${{ secrets.PROD_B_S3_BUCKET }} --delete
 
     - name: Slack Notification
