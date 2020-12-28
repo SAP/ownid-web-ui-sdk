@@ -53,6 +53,6 @@ export default class TranslationService {
   };
 
   static instant(lang: Languages = ConfigurationService.defaultLanguage): { [p: string]: { [p: string]: string } } {
-    return TranslationService.texts[lang] ?? ConfigurationService.defaultLanguage;
+    return TranslationService.texts[lang] ?? TranslationService.texts[ConfigurationService.defaultLanguage];
   }
 }
