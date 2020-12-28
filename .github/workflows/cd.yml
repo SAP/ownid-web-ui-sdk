@@ -16,6 +16,9 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     steps:
+    - name: Debug
+      run: echo ${{ github.ref }}
+      
     - name: Checkout
       uses: actions/checkout@v1
 
