@@ -140,7 +140,7 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     if (this.config.type === WidgetType.Link && find(this.contexts, ({ context }) => !context)) {
-      this.linked = new LinkedWidget({ href: this.getStartUrl() });
+      this.linked = new LinkedWidget({ href: this.getStartUrl(), language: this.config.language });
       this.addChild(this.linked);
       return;
     }
