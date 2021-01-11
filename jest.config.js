@@ -19,6 +19,7 @@ module.exports = {
     '!src/test/**',
     '!dist/**',
     '!**/*.d.ts',
+    '!src/gigya/*.ts',
   ],
   resolver: 'jest-resolver-tsconfig-paths',
   collectCoverage: true,
@@ -36,10 +37,10 @@ module.exports = {
   ],
   coverageThreshold: {
     global: {
-      branches: 48,
-      functions: 67,
-      lines: 69,
-      statements: 69,
+      statements: 81,
+      branches: 67,
+      lines: 82,
+      functions: 82,
     },
   },
 };

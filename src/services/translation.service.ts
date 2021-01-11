@@ -1,5 +1,5 @@
-// todo: implement in correct way
 import { Languages } from '../interfaces/i-widget.interfaces';
+import ConfigurationService from './configuration.service';
 
 import en from '../i18n/strings.json';
 import ar from '../i18n/strings_ar.json';
@@ -51,4 +51,8 @@ export default class TranslationService {
     [Languages.zhCN]: zhCN,
     [Languages.zhTW]: zhTW,
   };
+
+  static instant(lang: Languages = ConfigurationService.defaultLanguage): { [p: string]: { [p: string]: string } } {
+    return TranslationService.texts[lang] ?? TranslationService.texts[ConfigurationService.defaultLanguage];
+  }
 }
