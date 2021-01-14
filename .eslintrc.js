@@ -46,6 +46,8 @@ module.exports = {
     'unicorn/import-index': 'off',
     'prettier/prettier': 'error',
     'jest/no-done-callback': 'off',
+    'unicorn/prefer-dom-node-append': 'off',
+    'unicorn/prefer-dom-node-remove': 'off'
   },
   settings: {
     'import/parsers': {

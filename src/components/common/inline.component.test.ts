@@ -15,7 +15,7 @@ describe('InlineWidget Component', () => {
   });
 
   it('should add warning message if require a password', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const options = {
         targetElement,
         language: Languages.en,
@@ -31,7 +31,7 @@ describe('InlineWidget Component', () => {
   });
 
   it('should add warning message if no account found', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const options = {
         targetElement,
         language: Languages.en,
