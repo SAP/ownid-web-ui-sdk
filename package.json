@@ -24,7 +24,7 @@
     "test:watch": "jest --coverage --watch",
     "test:prod": "yarn lint && yarn test -- --no-cache",
     "test:ci": "jest --runInBand",
-    "lint": "eslint . --ext .ts --max-warnings=0",
+    "lint": "eslint . --ext .ts --fix --max-warnings=0",
     "verify": "yarn test && yarn lint && yarn build",
     "format": "eslint . --ext .ts --fix",
     "postinstall": "husky install"
@@ -93,7 +93,7 @@
   },
   "lint-staged": {
     "*.ts": [
-      "eslint --fix --max-warnings=0 --no-ignore"
+      "eslint --fix"
     ]
   }
 }

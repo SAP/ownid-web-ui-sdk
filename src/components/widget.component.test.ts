@@ -209,7 +209,7 @@ describe('widget component', () => {
   });
 
   it('should not render in desktop mode when desktopDisabled = true', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       navigator.userAgent =
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
       // eslint-disable-next-line no-shadow
@@ -239,7 +239,7 @@ describe('widget component', () => {
   });
 
   it('should not render in mobile mode when mobileDisabled = true', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       navigator.userAgent =
         'Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36';
       // eslint-disable-next-line no-shadow
@@ -342,7 +342,7 @@ describe('callStatus', () => {
   });
 
   it('should check status automatically for desktop version', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       navigator.userAgent =
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9';
 
@@ -366,7 +366,7 @@ describe('callStatus', () => {
   });
 
   it('should not check status automatically for mobile version', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       navigator.userAgent =
         'Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36';
 
@@ -390,7 +390,7 @@ describe('callStatus', () => {
   });
 
   it('should not schedule status check if we have no contexts to check', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
@@ -413,7 +413,7 @@ describe('callStatus', () => {
   });
 
   it('should schedule new status request if no response has been received', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
@@ -436,7 +436,7 @@ describe('callStatus', () => {
   });
 
   it('should stop regenerating QR code if any context processing started', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
@@ -464,7 +464,7 @@ describe('callStatus', () => {
   });
 
   it('should show pin widget', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
@@ -494,7 +494,7 @@ describe('callStatus', () => {
   });
 
   it('should start status check after clicking on button', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       navigator.userAgent = 'Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36';
 
       const parent = document.createElement('div');
@@ -526,7 +526,7 @@ describe('callStatus', () => {
   });
 
   it('should include context to check status request', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
@@ -552,7 +552,7 @@ describe('callStatus', () => {
   });
 
   it('should call onLogin', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       const onLogin = jest.fn();
 
       requestService.post = jest.fn()
@@ -577,7 +577,7 @@ describe('callStatus', () => {
   });
 
   it('should call onRegister', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       const onRegister = jest.fn();
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
@@ -606,7 +606,7 @@ describe('callStatus', () => {
   });
 
   it('should call onRegister with auth only flow', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       const onRegister = jest.fn();
 
       const toggleElement = document.createElement('input');
@@ -641,7 +641,7 @@ describe('callStatus', () => {
 
 
   it('should call onRegister if type is not set', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       const onRegister = jest.fn();
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
@@ -666,7 +666,7 @@ describe('callStatus', () => {
   });
 
   it('should call onLink', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       const onLink = jest.fn();
 
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -692,7 +692,7 @@ describe('callStatus', () => {
   });
 
   it('should call onRecover', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       const onRecover = jest.fn();
 
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -718,7 +718,7 @@ describe('callStatus', () => {
   });
 
   it('should call setCallStatus', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
@@ -758,7 +758,7 @@ describe('callStatus', () => {
   });
 
   it('should update config', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       const parent = document.createElement('div');
 
       const onRegister = jest.fn();
@@ -790,7 +790,7 @@ describe('callStatus', () => {
 
   describe('reCreateWidget', () => {
     it('should call destroy and render', () => {
-      return new Promise(resolve => {
+      return new Promise<void>(resolve => {
         // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         const sut: any = new WidgetComponent(
           {
@@ -816,7 +816,7 @@ describe('callStatus', () => {
     });
 
     it('should call destroy and render and not setCallStatus on desktop', () => {
-      return new Promise(resolve => {
+      return new Promise<void>(resolve => {
         // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         const sut: any = new WidgetComponent(
           {
@@ -850,7 +850,7 @@ describe('refresh link or qr', () => {
   let requestService: RequestService;
 
   it('log error to console if init fails during link/qr refresh', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
@@ -882,7 +882,7 @@ describe('addOwnIDConnectionOnServer', () => {
     .mockReturnValue(new Promise(resolve => resolve({})));
 
   it('should return error object if finalResponse is null', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
@@ -902,7 +902,7 @@ describe('addOwnIDConnectionOnServer', () => {
   });
 
   it('should call server to add connection', () => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const sut: any = new WidgetComponent(
         {
