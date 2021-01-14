@@ -1,0 +1,72 @@
+name: Web-UI-SDK Deploy
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - 'release/**'
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Setup NodeJS
+      uses: actions/setup-node@v2-beta
+      with:
+        node-version: '12'
+
+    - name: Setup cache
+      uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Install Dependencies
+      run: yarn
+
+    - name: Generate build number
+      uses: einaregilsson/build-number@v3
+      with:
+        token: ${{secrets.github_token}}
+
+    - name: Version update
+      run: bash scripts/set-build-num.sh $BUILD_NUMBER
+
+    - name: Build
+      run: yarn build
+
+    - name: Deploy DEV
+      if: github.ref == 'refs/heads/develop'
+      run: bash scripts/deploy.sh ${{ secrets.DEV_S3_BUCKET }} ${{ secrets.DEV_CF_DISTRIBUTION }}
+
+    - name: Deploy STAGING
+      if: github.ref == 'refs/heads/master'
+      run: bash scripts/deploy.sh ${{ secrets.STAGING_S3_BUCKET }} ${{ secrets.STAGING_CF_DISTRIBUTION }}
+
+    - name: Deploy PROD A
+      if: startsWith(github.ref,'refs/heads/release')
+      run: bash scripts/deploy.sh ${{ secrets.PROD_S3_BUCKET }} ${{ secrets.PROD_CF_DISTRIBUTION }}
+
+    - name: Deploy PROD B
+      if: startsWith(github.ref,'refs/heads/release')
+      run: aws s3 sync ./dist ${{ secrets.PROD_B_S3_BUCKET }} --delete
+
+    - name: Slack Notification
+      uses: rtCamp/action-slack-notify@v2
+      if: failure()
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_ICON: https://ownid.com/images/favicon.png
+        SLACK_COLOR: '#FF0000'
+        SLACK_TITLE: Merge failed
+        SLACK_FOOTER: OwnID by SAP
+        SLACK_USERNAME: SAP/ownid-web-ui-sdk

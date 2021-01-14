@@ -65,6 +65,8 @@ export default class WidgetComponent extends BaseComponent {
 
   protected userHandler: IUserHandler;
 
+  private inlineWidgetInterval: number | undefined;
+
   constructor(
     public config: IFullWidgetConfig,
     protected requestService: RequestService,
@@ -140,7 +142,7 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     if (this.config.type === WidgetType.Link && find(this.contexts, ({ context }) => !context)) {
-      this.linked = new LinkedWidget({ href: this.getStartUrl() });
+      this.linked = new LinkedWidget({ href: this.getStartUrl(), language: this.config.language });
       this.addChild(this.linked);
       return;
     }
@@ -378,6 +380,7 @@ export default class WidgetComponent extends BaseComponent {
     window.removeEventListener('message', this.onMessage);
     clearTimeout(this.statusTimeout);
     clearTimeout(this.refreshLinkTimeout);
+    clearInterval(this.inlineWidgetInterval);
     this.elements.forEach((element) => element.destroy());
   }
 
@@ -688,8 +691,7 @@ export default class WidgetComponent extends BaseComponent {
       }
     });
 
-    window.addEventListener('resize', () => this.recalculatePosition());
-    window.addEventListener('scroll', () => this.recalculatePosition());
+    this.inlineWidgetInterval = window.setInterval(() => this.recalculatePosition(), 10);
   }
 
   private addCallback2GlobalEvent(param: (event: MouseEvent) => void): void {

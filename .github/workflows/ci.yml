@@ -1,0 +1,45 @@
+name: Web-UI-SDK Pull Request Build
+
+on: [pull_request]
+
+jobs:
+  buildAndTest:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '12'
+
+      - name: Setup cache
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install Dependencies
+        run: yarn
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Test
+        run: yarn test:ci
+
+      - name: Build
+        run: yarn build
+
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        if: failure()
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON: https://ownid.com/images/favicon.png
+          SLACK_COLOR: '#FF0000'
+          SLACK_TITLE: PR build failed
+          SLACK_FOOTER: OwnID by SAP
+          SLACK_USERNAME: SAP/ownid-web-ui-sdk
