@@ -497,9 +497,14 @@ export default class WidgetComponent extends BaseComponent {
       return;
     }
 
-    setTimeout(() => {
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    const setBlockDisplay = () => {
       this.config.element.style.display = 'block';
-    });
+    };
+
+    // it should. preventing race condition
+    setBlockDisplay();
+    setTimeout(setBlockDisplay);
 
     let tooltipRefEl: HTMLElement = (this.inline?.ref || this.config.toggleElement) as HTMLElement;
     let [offsetX, offsetY] = [0, 0];

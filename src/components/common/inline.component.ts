@@ -157,7 +157,7 @@ input.ownid-skip-password::-webkit-credentials-auto-fill-button{margin-right:${
   private displayMessage(type: string, message: string): void {
     const typeMap: { [key: string]: string } = {
       info: 'ownid-inline-info',
-      warn: 'ownid-inline-warn'
+      warn: 'ownid-inline-warn',
     };
 
     const warn = document.createElement('div');
