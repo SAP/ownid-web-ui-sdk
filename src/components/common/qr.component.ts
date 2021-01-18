@@ -11,6 +11,9 @@ declare type QrOptions = {
   type: string;
   tooltip: boolean;
   language?: Languages;
+  config?: {
+    magicLink: { sendLinkCallback: (email: string) => Promise<unknown | null> };
+  };
 };
 
 export default class Qr extends BaseCommonComponent<QrOptions> {
@@ -22,6 +25,12 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 
   constructor(private options: QrOptions) {
     super(options);
+
+    if (options.config?.magicLink) {
+      this.ref
+        .querySelector('.ownid-magic-link')
+        ?.addEventListener('click', () => setTimeout(() => this.showMagicLinkPane()));
+    }
   }
 
   protected render(options: QrOptions): HTMLElement {
@@ -59,12 +68,17 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 
     const aboutOwnid = TranslationService.instant(options.language).common.about;
 
+    const magicLink = options.config?.magicLink
+      ? `<div class="ownid-magic-link">${TranslationService.instant(options.language).magicLink.link}</div>`
+      : '';
+
     wrapper.innerHTML = `
       <div class="ownid-qr-pane">
         <div class="ownid-qr-code">${this.generateQRCode(options.href)}</div>
         <div class="ownid-qr-pane--titles">
           ${onlyTitleFx}
           <div>${title}${subTitle}</div>
+          ${magicLink}
           <div class="ownid-qr-pane--about-wrapper">
             <a href="https://ownid.com/" class="ownid-qr-pane--about">
               <span class="ownid-qr-pane--about-text">${aboutOwnid}</span>
@@ -218,6 +232,22 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 .ownid-tooltip-wrapper .ownid-security-check--pane{flex-direction:column;text-align:center}
 .ownid-tooltip-wrapper .ownid-security-check--pane-pin{margin:16px 0}
 .ownid-tooltip-wrapper [ownid-pending]{border-radius:10px}
+
+.ownid-tooltip-wrapper .ownid-magic-link{margin:4px 0 -12px;font-size:10px;line-height:22px;text-align:center;color:#5B738B;cursor:pointer}
+.ownid-tooltip-wrapper .ownid-magic-link--title{margin:15px 0 4px}
+.ownid-tooltip-wrapper .ownid-magic-link--message{margin:0 0 16px}
+.ownid-tooltip-wrapper .ownid-magic-link-done--title{margin:20px 0 4px}
+.ownid-tooltip-wrapper .ownid-magic-link-done--message{margin:0 0 16px}
+.ownid-magic-link--email{margin-bottom:8px}
+.ownid-magic-link--button{margin-bottom:8px}
+.ownid-magic-link--error{display:none}
+.ownid-magic-link-done-icon{margin:28px auto 0;width:48px;height:48px}
+
+.ownid-message{padding:0 16px;font-size:12px;line-height:16px;text-align:center;color:#5B738B}
+.ownid-input{padding:4px 10px;background: #F5F6F7;border:0;border-radius:6px;font-size:14px;line-height:24px;color:#354A5F}
+.ownid-button{font-weight:bold;font-size:12px;line-height:24px;text-align:center;color:#FFFFFF;background:#0070F2;box-shadow:0px 0px 2px rgba(27, 144, 255, 0.16),0px 2px 4px rgba(27, 144, 255, 0.16);border-radius:6px;border:0;padding:4px 15px;cursor:pointer}
+.ownid-error{font-size:11px;line-height:20px;text-align:center;color:#D20A0A}
+.ownid-error-placeholder{height:20px}
 `;
 
     document.head.appendChild(style);
@@ -233,6 +263,59 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
         <div class="ownid-pending--title">${message}</div>
       </div>
       <button ownid-btn="cancel">${button}</button>
+    </div>`;
+  }
+
+  private showMagicLinkPane(): void {
+    this.ref.innerHTML = `<div ownid-magic-link class="ownid-qr-pane">
+      <div class="ownid-title ownid-magic-link--title">${
+        TranslationService.instant(this.options.language).magicLink.title
+      }</div>
+      <div class="ownid-message ownid-magic-link--message">${
+        TranslationService.instant(this.options.language).magicLink.message
+      }</div>
+      <input class="ownid-input ownid-magic-link--email" name="ownid-email-${Math.random()}" type="email" placeholder="${
+      TranslationService.instant(this.options.language).magicLink.emailPlaceholder
+    }">
+      <button class="ownid-button ownid-magic-link--button" type="button">${
+        TranslationService.instant(this.options.language).magicLink.button
+      }</button>
+      <div class="ownid-error-placeholder">
+        <div class="ownid-error ownid-magic-link--error">${
+          TranslationService.instant(this.options.language).magicLink.error
+        }</div>
+      </div>
+    </div>`;
+
+    const emailInput = this.ref.querySelector('.ownid-magic-link--email') as HTMLInputElement;
+    const error = this.ref.querySelector('.ownid-magic-link--error') as HTMLElement;
+
+    this.ref.querySelector('.ownid-magic-link--button')?.addEventListener('click', async () => {
+      error.style.display = 'none';
+
+      const response = await this.options.config!.magicLink.sendLinkCallback(emailInput.value);
+
+      if (!response) {
+        error.style.display = 'block';
+        return;
+      }
+
+      this.showMagicLinkDonePane(emailInput.value);
+    });
+  }
+
+  private showMagicLinkDonePane(email: string): void {
+    const message = TranslationService.instant(this.options.language).magicLinkDone.message.replace(
+      '{email}',
+      `<b>${email}</b>`,
+    );
+
+    this.ref.innerHTML = `<div ownid-magic-link-done class="ownid-qr-pane">
+      <svg class="ownid-done-icon ownid-magic-link-done-icon" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="#5dc122"><path d="M32 0A32 32 0 0 0 9.373 54.627 32 32 0 0 0 64 32c-.01-8.484-3.383-16.618-9.383-22.617A32.04 32.04 0 0 0 32 0zm0 59.43a27.43 27.43 0 0 1-19.395-46.824A27.43 27.43 0 0 1 59.429 32 27.46 27.46 0 0 1 32 59.429zm14.783-40.372L25.36 40.414l-7.592-7.568c-.213-.22-.467-.395-.748-.515a2.32 2.32 0 0 0-.9-.186 2.31 2.31 0 0 0-.893.171 2.32 2.32 0 0 0-.757.502 2.3 2.3 0 0 0-.504.755 2.29 2.29 0 0 0 .016 1.777 2.3 2.3 0 0 0 .517.746l9.222 9.192a2.31 2.31 0 0 0 3.26 0l23.054-22.98c.42-.433.652-1.014.647-1.617a2.29 2.29 0 0 0-.675-1.605 2.31 2.31 0 0 0-3.232-.028z"/></svg>
+      <div class="ownid-title ownid-magic-link-done--title">${
+        TranslationService.instant(this.options.language).magicLinkDone.title
+      }</div>
+      <div class="ownid-message ownid-magic-link-done--message">${message}</div>
     </div>`;
   }
 }

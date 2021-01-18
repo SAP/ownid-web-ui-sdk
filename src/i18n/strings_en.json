@@ -77,5 +77,17 @@
     "noteText" : "The next time you login, we will recognize your phone and instantly log you in.",
     "undo" : "Undo",
     "about" : "What is this?"
+  },
+  "magicLink" : {
+    "link" : "Don’t have your phone?",
+    "title" : "Login with magic link",
+    "message" : "We will send you a link to automatically log you in.",
+    "emailPlaceholder" : "Email",
+    "button" : "Send Magic Link",
+    "error": "Account doesn’t exist"
+  },
+  "magicLinkDone" : {
+    "title" : "Check your email",
+    "message" : "We sent you a link to {email} that will automatically log you in."
   }
 }

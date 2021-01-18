@@ -3,7 +3,7 @@ import { BaseComponent } from './base.component';
 import LinkButton from './common/link-button.component';
 import Qr from './common/qr.component';
 import ConfigurationService from '../services/configuration.service';
-import { IContext, IContextRS } from '../interfaces/i-context.interfaces';
+import { IContext, IContextConfig, IContextRS } from '../interfaces/i-context.interfaces';
 import RequestService from '../services/request.service';
 import {
   IFullWidgetConfig,
@@ -19,6 +19,7 @@ import LinkedWidget from './common/linked.component';
 import { find, findIndex } from '../services/helper.service';
 import InlineWidget, { InlineWidgetOptions } from './common/inline.component';
 import UserHandler from './user-handler';
+import { MagicLinkHandler } from './magic-link-handler';
 
 export default class WidgetComponent extends BaseComponent {
   widgetReady: Promise<void>;
@@ -67,6 +68,8 @@ export default class WidgetComponent extends BaseComponent {
 
   private inlineWidgetInterval: number | undefined;
 
+  private magicLinkHandler = {} as MagicLinkHandler;
+
   constructor(
     public config: IFullWidgetConfig,
     protected requestService: RequestService,
@@ -79,6 +82,20 @@ export default class WidgetComponent extends BaseComponent {
 
     this.widgetReady = this.init(config).then(
       () => {
+        if (this.getConfig()?.magicLink) {
+          this.magicLinkHandler = new MagicLinkHandler(config, this.requestService);
+
+          if (this.config.onMagicLinkLogin) {
+            //  eslint-disable-next-line promise/no-nesting
+            this.magicLinkHandler.tryExchangeMagicToken().then((res) => {
+              if (res) {
+                this.config.onMagicLinkLogin!(res);
+                this.destroy();
+              }
+            });
+          }
+        }
+
         this.render();
 
         this.setRefreshLinkOrQR();
@@ -199,6 +216,15 @@ export default class WidgetComponent extends BaseComponent {
           // @ts-ignore
           [null, false].indexOf(this.config.tooltip) < 0 &&
           !!this.config.toggleElement);
+      const config = {} as {
+        magicLink: { sendLinkCallback: (email: string) => Promise<unknown | null> };
+      };
+      const widgetConfig = this.getConfig();
+      if (widgetConfig?.magicLink && this.config.type === WidgetType.Login) {
+        config.magicLink = {
+          sendLinkCallback: (email: string) => this.magicLinkHandler.sendMagicLink(email, this.config.language),
+        };
+      }
 
       this.qr = new Qr({
         href: this.getStartUrl(),
@@ -207,6 +233,7 @@ export default class WidgetComponent extends BaseComponent {
         type,
         language: this.config.language,
         tooltip: isTooltip,
+        config,
       });
 
       if (isTooltip) {
@@ -214,6 +241,7 @@ export default class WidgetComponent extends BaseComponent {
           if (
             this.config.element.style.display === 'block' &&
             !this.qr!.ref.contains(event.target as Node) &&
+            !this.inline?.ref.contains(event.target as Node) &&
             !this.qr?.securityCheckShown
           ) {
             this.toggleQrTooltip(false);
@@ -229,6 +257,10 @@ export default class WidgetComponent extends BaseComponent {
 
   private getStartUrl(): string {
     return this.contexts[this.contexts.length - 1].url;
+  }
+
+  private getConfig(): IContextConfig {
+    return this.contexts[this.contexts.length - 1].config;
   }
 
   private getUrlPrefix(): string {
@@ -497,14 +529,7 @@ export default class WidgetComponent extends BaseComponent {
       return;
     }
 
-    // eslint-disable-next-line unicorn/consistent-function-scoping
-    const setBlockDisplay = () => {
-      this.config.element.style.display = 'block';
-    };
-
-    // it should. preventing race condition
-    setBlockDisplay();
-    setTimeout(setBlockDisplay);
+    this.config.element.style.display = 'block';
 
     let tooltipRefEl: HTMLElement = (this.inline?.ref || this.config.toggleElement) as HTMLElement;
     let [offsetX, offsetY] = [0, 0];
