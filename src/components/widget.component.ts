@@ -20,6 +20,7 @@ import { find, findIndex } from '../services/helper.service';
 import InlineWidget, { InlineWidgetOptions } from './common/inline.component';
 import UserHandler from './user-handler';
 import { MagicLinkHandler } from './magic-link-handler';
+import LinkButtonWidget from './common/link-button-widget.component';
 
 export default class WidgetComponent extends BaseComponent {
   widgetReady: Promise<void>;
@@ -68,7 +69,11 @@ export default class WidgetComponent extends BaseComponent {
 
   private inlineWidgetInterval: number | undefined;
 
+  private linkButtonInterval: number | undefined;
+
   private magicLinkHandler = {} as MagicLinkHandler;
+
+  private linkButton: LinkButtonWidget | undefined;
 
   constructor(
     public config: IFullWidgetConfig,
@@ -108,7 +113,7 @@ export default class WidgetComponent extends BaseComponent {
           this.addInfoIcon(config.toggleElement);
         }
 
-        if (!this.isMobile() && (config.toggleElement || config.inline)) {
+        if (!this.isMobile() && (config.toggleElement || config.inline || this.linkButton || this.linked)) {
           document.addEventListener('click', (event) =>
             // eslint-disable-next-line promise/no-callback-in-promise
             this.globalEventCallbacks.forEach((callback) => callback(event)),
@@ -159,9 +164,45 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     if (this.config.type === WidgetType.Link && find(this.contexts, ({ context }) => !context)) {
-      this.linked = new LinkedWidget({ href: this.getStartUrl(), language: this.config.language });
+      this.linked = new LinkedWidget({ language: this.config.language });
       this.addChild(this.linked);
+
+      this.addCallback2GlobalEvent((event) => {
+        const el = event.target as HTMLElement;
+        if (!el || !el.classList.contains('ownid-info-tooltip')) {
+          this.linked?.toggleInfoTooltip(false);
+        }
+      });
       return;
+    }
+
+    if (this.config.type === WidgetType.Link && find(this.contexts, ({ context }) => !!context)) {
+      this.linkButton = new LinkButtonWidget({ language: this.config.language });
+      this.insertAfter(this.linkButton);
+
+      if (!this.isMobile()) {
+        this.toggleQrTooltip(false);
+      }
+
+      this.linkButton.attachHandler('click', () => {
+        if (this.finalResponse) {
+          this.callOnSuccess(this.finalResponse, this.metadata);
+          return;
+        }
+
+        if (this.isMobile()) {
+          if (this.config.type === WidgetType.Login) {
+            this.openWebapp();
+            return;
+          }
+
+          this.disabled = false;
+        } else {
+          return this.toggleQrTooltip(true);
+        }
+      });
+
+      this.linkButtonInterval = window.setInterval(() => this.recalculatePosition(), 10);
     }
 
     if (this.config.inline) {
@@ -210,8 +251,9 @@ export default class WidgetComponent extends BaseComponent {
         return;
       }
       const type = this.config.partial || this.config.inline ? `${this.config.type}-partial` : this.config.type;
-      const isTooltip =
+      const isTooltip: boolean =
         !!this.config.inline ||
+        (this.config.type === WidgetType.Link && !!this.config.tooltip) ||
         (!!this.config.partial &&
           // @ts-ignore
           [null, false].indexOf(this.config.tooltip) < 0 &&
@@ -242,6 +284,7 @@ export default class WidgetComponent extends BaseComponent {
             this.config.element.style.display === 'block' &&
             !this.qr!.ref.contains(event.target as Node) &&
             !this.inline?.ref.contains(event.target as Node) &&
+            !this.linkButton?.ref.contains(event.target as Node) &&
             !this.qr?.securityCheckShown
           ) {
             this.toggleQrTooltip(false);
@@ -413,6 +456,7 @@ export default class WidgetComponent extends BaseComponent {
     clearTimeout(this.statusTimeout);
     clearTimeout(this.refreshLinkTimeout);
     clearInterval(this.inlineWidgetInterval);
+    clearInterval(this.linkButtonInterval);
     this.elements.forEach((element) => element.destroy());
   }
 
@@ -531,9 +575,11 @@ export default class WidgetComponent extends BaseComponent {
 
     this.config.element.style.display = 'block';
 
-    let tooltipRefEl: HTMLElement = (this.inline?.ref || this.config.toggleElement) as HTMLElement;
+    let tooltipRefEl: HTMLElement = (this.inline?.ref ||
+      this.config.toggleElement ||
+      this.linkButton?.ref) as HTMLElement;
     let [offsetX, offsetY] = [0, 0];
-    let tooltipPosition = this.inline ? 'left' : 'right';
+    let tooltipPosition = (this.inline || this.linkButton) ? 'left' : 'right';
 
     if (this.config.tooltip && typeof this.config.tooltip === 'object') {
       if (this.config.tooltip.targetEl) {
@@ -579,6 +625,7 @@ export default class WidgetComponent extends BaseComponent {
   private callOnSuccess(finalResponse: any, metadata: string | null): void {
     const isTooltip =
       !!this.config.inline ||
+      (this.config.type === WidgetType.Link && !!this.config.tooltip) ||
       (this.config.partial &&
         // @ts-ignore
         [null, false].indexOf(this.config.tooltip) < 0 &&
@@ -587,6 +634,11 @@ export default class WidgetComponent extends BaseComponent {
     if (isTooltip) {
       this.toggleQrTooltip(false);
       this.setFinishStatus(true);
+    }
+
+    if (this.config.type === WidgetType.Link) {
+      this.reCreateWidget();
+      this.config.element.removeAttribute('style');
     }
 
     this.disabled = false;
@@ -665,6 +717,7 @@ export default class WidgetComponent extends BaseComponent {
   private callOnError(error: string): void {
     const isTooltip =
       !!this.config.inline ||
+      (this.config.type === WidgetType.Link && !!this.config.tooltip) ||
       (this.config.partial &&
         // @ts-ignore
         [null, false].indexOf(this.config.tooltip) < 0 &&

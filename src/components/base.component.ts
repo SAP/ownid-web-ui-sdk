@@ -19,6 +19,11 @@ export abstract class BaseComponent {
     this.elements.push(child);
   }
 
+  protected insertAfter(child: ICommonComponent): void {
+    this.parent.parentNode!.insertBefore(child.ref, this.parent.nextSibling);
+    this.elements.push(child);
+  }
+
   // needs to be placed in utils
   protected isMobile(): boolean {
     return (

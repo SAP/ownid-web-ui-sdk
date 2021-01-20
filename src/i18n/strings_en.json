@@ -33,12 +33,15 @@
   },
   "link" : {
     "mobileTitle" : "Enable Instant Login",
-    "desktopTitle" : "Enable Instant Login",
+    "desktopTitle" : "Scan this QR with your phone to enable skip the password.",
     "desktopSubtitle" : "Use your phone’s camera or an app to scan the QR.",
-    "pendingMessage" : "Linking your account...",
+    "pendingMessage" : "Continue on your phone",
     "pendingButton" : "Cancel",
     "doneMessage" : "",
-    "complete" : "You have instant login enabled by"
+    "complete" : "You have skip the password enabled by OwnID."
+  },
+  "linkButton" : {
+    "button" : "Enable skip the password"
   },
   "recover" : {
     "mobileTitle" : "Enable Instant Login",
