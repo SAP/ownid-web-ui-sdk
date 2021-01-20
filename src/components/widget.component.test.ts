@@ -920,7 +920,7 @@ describe('addOwnIDConnectionOnServer', () => {
       sut.addOwnIDConnectionOnServer('uid').then((result: IWidgetPayload) => {
         expect(result?.error).toBe(undefined);
         expect(result?.message).toBe(undefined);
-        expect(requestService.post).toBeCalledWith('url/connections', {...succeededContext, did: 'uid'});
+        expect(requestService.post).toBeCalledWith('url/connections', {...succeededContext, payload: 'uid'});
         resolve();
       });
     });
