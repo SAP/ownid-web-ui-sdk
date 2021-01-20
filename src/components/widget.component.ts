@@ -579,7 +579,7 @@ export default class WidgetComponent extends BaseComponent {
       this.config.toggleElement ||
       this.linkButton?.ref) as HTMLElement;
     let [offsetX, offsetY] = [0, 0];
-    let tooltipPosition = (this.inline || this.linkButton) ? 'left' : 'right';
+    let tooltipPosition = this.inline || this.linkButton ? 'left' : 'right';
 
     if (this.config.tooltip && typeof this.config.tooltip === 'object') {
       if (this.config.tooltip.targetEl) {
@@ -686,14 +686,14 @@ export default class WidgetComponent extends BaseComponent {
     });
   }
 
-  public async addOwnIDConnectionOnServer(did: string): Promise<IWidgetPayload> {
+  public async addOwnIDConnectionOnServer(payload: string): Promise<IWidgetPayload> {
     if (!this.finalResponse) {
       return { error: true, message: 'Authorization flow is not finished' };
     }
 
     return (await this.requestService.post(this.getAddConnectionUrl(), {
       ...this.succeededContext,
-      did,
+      payload,
     })) as IWidgetPayload;
   }
 
