@@ -113,7 +113,7 @@ export default class WidgetComponent extends BaseComponent {
           this.addInfoIcon(config.toggleElement);
         }
 
-        if (!this.isMobile() && (config.toggleElement || config.inline || this.linkButton || this.linked)) {
+        if (config.toggleElement || config.inline || this.linkButton || this.linked) {
           document.addEventListener('click', (event) =>
             // eslint-disable-next-line promise/no-callback-in-promise
             this.globalEventCallbacks.forEach((callback) => callback(event)),
@@ -180,6 +180,8 @@ export default class WidgetComponent extends BaseComponent {
       this.linkButton = new LinkButtonWidget({ language: this.config.language });
       this.insertAfter(this.linkButton);
 
+      window.document.body.appendChild(this.config.element);
+
       if (!this.isMobile()) {
         this.toggleQrTooltip(false);
       }
@@ -191,14 +193,16 @@ export default class WidgetComponent extends BaseComponent {
         }
 
         if (this.isMobile()) {
-          if (this.config.type === WidgetType.Login) {
-            this.openWebapp();
-            return;
-          }
-
-          this.disabled = false;
+          this.openWebapp();
         } else {
-          return this.toggleQrTooltip(true);
+          this.toggleQrTooltip(true);
+        }
+      });
+
+      this.addCallback2GlobalEvent((event) => {
+        const el = event.target as HTMLElement;
+        if (!el || !el.classList.contains('ownid-info-tooltip')) {
+          this.linkButton?.toggleInfoTooltip(false);
         }
       });
 

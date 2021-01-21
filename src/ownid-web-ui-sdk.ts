@@ -33,7 +33,7 @@ export default class OwnIDUiSdk {
     }
 
     const desktopDisable = config.type === WidgetType.Link;
-    const mobileDisable = !!config.inline;
+    const mobileDisable = !!config.inline || !!config.tooltip;
 
     return new WidgetComponent(
       { ...this.config, ...config },

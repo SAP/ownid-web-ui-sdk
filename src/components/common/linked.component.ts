@@ -57,8 +57,11 @@ export default class LinkedWidget extends BaseCommonComponent<LinkButtonOptions>
     const tooltipRefEl = this.ref.querySelector('svg.ownid-info-icon')!;
     const { top, left, width } = tooltipRefEl.getBoundingClientRect();
     const rect = this.infoTooltipEl!.getBoundingClientRect();
+    const leftPosition = left - rect.width / 2 + width + window.pageXOffset;
+    const clearLeftPosition = Math.min(Math.max(leftPosition, 10), window.document.body.clientWidth - rect.width - 10);
+
     this.infoTooltipEl!.style.top = `${top + window.pageYOffset - 4 - rect.height}px`;
-    this.infoTooltipEl!.style.left = `${left - rect.width / 2 + width + window.pageXOffset}px`;
+    this.infoTooltipEl!.style.left = `${clearLeftPosition}px`;
   }
 
   private addOwnIDStyleTag(id: string): void {
@@ -69,7 +72,7 @@ export default class LinkedWidget extends BaseCommonComponent<LinkButtonOptions>
 .ownid-linked{font-style:normal;font-weight:normal;font-size:14px;line-height:20px;color:#111D29}
 .ownid-linked--link{color:#0070F2;text-decoration:none}
 .ownid-info-icon{margin:0 0 -1px -2px;width:13px;height:13px;cursor:pointer}
-.ownid-info-tooltip{width:280px;display:none;position:absolute;background:#FFF;border-radius:6px;border:1px solid #D5DADD;box-shadow:0px 0px 2px rgba(131,150,168,0.16),0px 4px 8px rgba(131,150,168,0.16);box-sizing: border-box;font-style: normal;font-weight: normal;font-size: 12px;line-height: 18px;padding:12px;}
+.ownid-info-tooltip{width:280px;display:none;position:absolute;background:#FFF;border-radius:6px;border:1px solid #D5DADD;box-shadow:0px 0px 2px rgba(131,150,168,0.16),0px 4px 8px rgba(131,150,168,0.16);box-sizing: border-box;font-style: normal;font-weight: normal;font-size: 12px;line-height: 18px;padding:12px;z-index:1000000001}
 `;
     document.head.appendChild(style);
   }
