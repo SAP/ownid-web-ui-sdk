@@ -225,7 +225,8 @@ export default class WidgetComponent extends BaseComponent {
       }
 
       const type = this.config.partial ? `${this.config.type}-partial` : this.config.type;
-      const mobileTitle = this.config.mobileTitle || TranslationService.instant(this.config.language)[type].mobileTitle;
+      const mobileTitle =
+        this.config.mobileTitle || TranslationService.instant(this.config.language, `${type}.mobileTitle`);
       this.link = new LinkButton({
         href: this.getStartUrl(),
         title: mobileTitle,
@@ -243,7 +244,7 @@ export default class WidgetComponent extends BaseComponent {
       });
 
       this.addChild(this.link);
-      this.returnError = TranslationService.instant(this.config.language).errors.link;
+      this.returnError = TranslationService.instant(this.config.language, 'errors.link');
     } else {
       if (this.disableDesktop) {
         // eslint-disable-next-line no-console
@@ -270,8 +271,9 @@ export default class WidgetComponent extends BaseComponent {
 
       this.qr = new Qr({
         href: this.getStartUrl(),
-        title: this.config.desktopTitle || TranslationService.instant(this.config.language)[type].desktopTitle,
-        subtitle: this.config.desktopSubtitle || TranslationService.instant(this.config.language)[type].desktopSubtitle,
+        title: this.config.desktopTitle || TranslationService.instant(this.config.language, `${type}.desktopTitle`),
+        subtitle:
+          this.config.desktopSubtitle || TranslationService.instant(this.config.language, `${type}.desktopSubtitle`),
         type,
         language: this.config.language,
         tooltip: isTooltip,
@@ -294,7 +296,7 @@ export default class WidgetComponent extends BaseComponent {
 
       this.addChild(this.qr);
 
-      this.returnError = TranslationService.instant(this.config.language).errors.qr;
+      this.returnError = TranslationService.instant(this.config.language, 'errors.qr');
     }
   }
 
@@ -510,7 +512,7 @@ export default class WidgetComponent extends BaseComponent {
     const label = document.createElement('label');
     label.setAttribute('for', checkInput.id);
     label.setAttribute('class', 'ownid-label ownid-toggle');
-    label.textContent = TranslationService.instant(this.config.language).common.labelText;
+    label.textContent = TranslationService.instant(this.config.language, 'common.labelText');
 
     checkInput.parentNode!.insertBefore(label, checkInput.nextSibling);
 
@@ -785,7 +787,7 @@ export default class WidgetComponent extends BaseComponent {
     this.note = document.createElement('div');
     this.note.setAttribute('class', 'ownid-note');
     this.note.style.display = 'none';
-    this.note.textContent = TranslationService.instant(lang).common.noteText;
+    this.note.textContent = TranslationService.instant(lang, 'common.noteText');
 
     if (typeof this.config.note === 'string') {
       this.note.textContent = this.config.note;
@@ -809,7 +811,7 @@ export default class WidgetComponent extends BaseComponent {
       this.note.textContent += ' ';
       const undo = document.createElement('span');
       undo.setAttribute('class', 'ownid-note-undo');
-      undo.textContent = TranslationService.instant(lang).common.undo;
+      undo.textContent = TranslationService.instant(lang, 'common.undo');
 
       undo.addEventListener('click', () => {
         this.note!.style.display = 'none';

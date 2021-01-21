@@ -28,7 +28,8 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
 
     const element = document.createElement('div');
 
-    const { message, info } = TranslationService.instant(options.language).inline;
+    const message = TranslationService.instant(options.language, 'inline.message');
+    const info = TranslationService.instant(options.language, 'inline.info');
 
     element.classList.add('ownid-inline-widget');
 
@@ -147,11 +148,11 @@ input.ownid-skip-password::-webkit-credentials-auto-fill-button{margin-right:${
       this.options.targetElement.classList.toggle('ownid-inline-required', !this.options.targetElement.value),
     );
 
-    this.displayMessage('info', TranslationService.instant(this.options.language).inline.passwordWarn);
+    this.displayMessage('info', TranslationService.instant(this.options.language, 'inline.passwordWarn'));
   }
 
   public noAccount(): void {
-    this.displayMessage('warn', TranslationService.instant(this.options.language).inline.noAccount);
+    this.displayMessage('warn', TranslationService.instant(this.options.language, 'inline.noAccount'));
   }
 
   private displayMessage(type: string, message: string): void {

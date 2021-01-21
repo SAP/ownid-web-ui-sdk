@@ -52,7 +52,24 @@ export default class TranslationService {
     [Languages.zhTW]: zhTW,
   };
 
-  static instant(lang: Languages = ConfigurationService.defaultLanguage): { [p: string]: { [p: string]: string } } {
-    return TranslationService.texts[lang] ?? TranslationService.texts[ConfigurationService.defaultLanguage];
+  static instant(lang: Languages = ConfigurationService.defaultLanguage, path: string): string {
+    return (
+      (TranslationService.texts[lang] && TranslationService.deepFind(TranslationService.texts[lang], path)) ??
+      `${TranslationService.deepFind(TranslationService.texts[ConfigurationService.defaultLanguage], path)}&nbsp;`
+    );
+  }
+
+  static deepFind(obj: { [key: string]: { [key: string]: string } }, translationPath: string): string | undefined {
+    const paths = translationPath.split('.');
+    let current: { [key: string]: { [key: string]: string } } | { [key: string]: string } | string = obj;
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const path of paths) {
+      if (current[path] === undefined) {
+        return;
+      }
+      current = current[path];
+    }
+    return (current as unknown) as string;
   }
 }

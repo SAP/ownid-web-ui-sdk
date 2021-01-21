@@ -61,15 +61,15 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
     const onlyTitleFx = title && !subTitle ? '<div class="ownid-title-spacer"></div>' : '';
 
     const pendingTexts = {
-      message: TranslationService.instant(options.language)[options.type].pendingMessage,
-      button: TranslationService.instant(options.language)[options.type].pendingButton,
+      message: TranslationService.instant(options.language, `${options.type}.pendingMessage`),
+      button: TranslationService.instant(options.language, `${options.type}.pendingButton`),
     };
-    const { doneMessage } = TranslationService.instant(options.language)[options.type];
+    const doneMessage = TranslationService.instant(options.language, `${options.type}.doneMessage`);
 
-    const aboutOwnid = TranslationService.instant(options.language).common.about;
+    const aboutOwnid = TranslationService.instant(options.language, 'common.about');
 
     const magicLink = options.config?.magicLink
-      ? `<div class="ownid-magic-link">${TranslationService.instant(options.language).magicLink.link}</div>`
+      ? `<div class="ownid-magic-link">${TranslationService.instant(options.language, 'magicLink.link')}</div>`
       : '';
 
     wrapper.innerHTML = `
@@ -123,10 +123,13 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
     this.securityCheckShown = true;
 
     const pendingTexts = {
-      message: TranslationService.instant(this.options.language)[this.options.type].pendingMessage,
-      button: TranslationService.instant(this.options.language)[this.options.type].pendingButton,
+      message: TranslationService.instant(this.options.language, `${this.options.type}.pendingMessage`),
+      button: TranslationService.instant(this.options.language, `${this.options.type}.pendingButton`),
     };
-    const { title, message, yesButton, noButton } = TranslationService.instant(this.options.language).verification;
+    const title = TranslationService.instant(this.options.language, 'verification.title');
+    const message = TranslationService.instant(this.options.language, 'verification.message');
+    const yesButton = TranslationService.instant(this.options.language, 'verification.yesButton');
+    const noButton = TranslationService.instant(this.options.language, 'verification.noButton');
 
     this.ref.innerHTML = `
       <div class="ownid-security-check">
@@ -268,22 +271,27 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 
   private showMagicLinkPane(): void {
     this.ref.innerHTML = `<div ownid-magic-link class="ownid-qr-pane">
-      <div class="ownid-title ownid-magic-link--title">${
-        TranslationService.instant(this.options.language).magicLink.title
-      }</div>
-      <div class="ownid-message ownid-magic-link--message">${
-        TranslationService.instant(this.options.language).magicLink.message
-      }</div>
-      <input class="ownid-input ownid-magic-link--email" name="ownid-email-${Math.random()}" type="email" placeholder="${
-      TranslationService.instant(this.options.language).magicLink.emailPlaceholder
-    }">
-      <button class="ownid-button ownid-magic-link--button" type="button">${
-        TranslationService.instant(this.options.language).magicLink.button
-      }</button>
+      <div class="ownid-title ownid-magic-link--title">${TranslationService.instant(
+        this.options.language,
+        'magicLink.title',
+      )}</div>
+      <div class="ownid-message ownid-magic-link--message">${TranslationService.instant(
+        this.options.language,
+        'magicLink.message',
+      )}</div>
+      <input class="ownid-input ownid-magic-link--email" name="ownid-email-${Math.random()}" type="email" placeholder="${TranslationService.instant(
+      this.options.language,
+      'magicLink.emailPlaceholder',
+    )}">
+      <button class="ownid-button ownid-magic-link--button" type="button">${TranslationService.instant(
+        this.options.language,
+        'magicLink.button',
+      )}</button>
       <div class="ownid-error-placeholder">
-        <div class="ownid-error ownid-magic-link--error">${
-          TranslationService.instant(this.options.language).magicLink.error
-        }</div>
+        <div class="ownid-error ownid-magic-link--error">${TranslationService.instant(
+          this.options.language,
+          'magicLink.error',
+        )}</div>
       </div>
     </div>`;
 
@@ -305,16 +313,17 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
   }
 
   private showMagicLinkDonePane(email: string): void {
-    const message = TranslationService.instant(this.options.language).magicLinkDone.message.replace(
+    const message = TranslationService.instant(this.options.language, 'magicLinkDone.message').replace(
       '{email}',
       `<b>${email}</b>`,
     );
 
     this.ref.innerHTML = `<div ownid-magic-link-done class="ownid-qr-pane">
       <svg class="ownid-done-icon ownid-magic-link-done-icon" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="#5dc122"><path d="M32 0A32 32 0 0 0 9.373 54.627 32 32 0 0 0 64 32c-.01-8.484-3.383-16.618-9.383-22.617A32.04 32.04 0 0 0 32 0zm0 59.43a27.43 27.43 0 0 1-19.395-46.824A27.43 27.43 0 0 1 59.429 32 27.46 27.46 0 0 1 32 59.429zm14.783-40.372L25.36 40.414l-7.592-7.568c-.213-.22-.467-.395-.748-.515a2.32 2.32 0 0 0-.9-.186 2.31 2.31 0 0 0-.893.171 2.32 2.32 0 0 0-.757.502 2.3 2.3 0 0 0-.504.755 2.29 2.29 0 0 0 .016 1.777 2.3 2.3 0 0 0 .517.746l9.222 9.192a2.31 2.31 0 0 0 3.26 0l23.054-22.98c.42-.433.652-1.014.647-1.617a2.29 2.29 0 0 0-.675-1.605 2.31 2.31 0 0 0-3.232-.028z"/></svg>
-      <div class="ownid-title ownid-magic-link-done--title">${
-        TranslationService.instant(this.options.language).magicLinkDone.title
-      }</div>
+      <div class="ownid-title ownid-magic-link-done--title">${TranslationService.instant(
+        this.options.language,
+        'magicLinkDone.title',
+      )}</div>
       <div class="ownid-message ownid-magic-link-done--message">${message}</div>
     </div>`;
   }
