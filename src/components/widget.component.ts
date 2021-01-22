@@ -75,6 +75,8 @@ export default class WidgetComponent extends BaseComponent {
 
   private linkButton: LinkButtonWidget | undefined;
 
+  private tooltipPlaceholder: HTMLDivElement | undefined;
+
   constructor(
     public config: IFullWidgetConfig,
     protected requestService: RequestService,
@@ -179,6 +181,10 @@ export default class WidgetComponent extends BaseComponent {
     if (this.config.type === WidgetType.Link && find(this.contexts, ({ context }) => !!context)) {
       this.linkButton = new LinkButtonWidget({ language: this.config.language });
       this.insertAfter(this.linkButton);
+
+      this.tooltipPlaceholder = document.createElement('div');
+
+      this.config.element.parentNode!.insertBefore(this.tooltipPlaceholder, this.config.element.nextSibling);
 
       window.document.body.appendChild(this.config.element);
 
@@ -496,6 +502,8 @@ export default class WidgetComponent extends BaseComponent {
   private reCreateWidget(): void {
     this.contexts = [];
     this.widgetReady = this.init(this.config).then(() => {
+      this.tooltipPlaceholder?.parentNode!.insertBefore(this.config.element, this.tooltipPlaceholder?.nextSibling);
+
       this.destroy();
       this.render();
 
