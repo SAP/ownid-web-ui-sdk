@@ -71,7 +71,7 @@ export default class LinkedWidget extends BaseCommonComponent<LinkButtonOptions>
     style.textContent = `
 .ownid-linked{font-style:normal;font-weight:normal;font-size:14px;line-height:20px;color:#111D29}
 .ownid-linked--link{color:#0070F2;text-decoration:none}
-.ownid-info-icon{margin:0 0 -1px -2px;width:13px;height:13px;cursor:pointer}
+.ownid-info-icon{margin:0 0 -1px -2px;width:13px;height:13px;cursor:pointer;padding:0;fill:#354a5f;}
 .ownid-info-tooltip{width:280px;display:none;position:absolute;background:#FFF;border-radius:6px;border:1px solid #D5DADD;box-shadow:0px 0px 2px rgba(131,150,168,0.16),0px 4px 8px rgba(131,150,168,0.16);box-sizing: border-box;font-style: normal;font-weight: normal;font-size: 12px;line-height: 18px;padding:12px;z-index:1000000001}
 `;
     document.head.appendChild(style);
