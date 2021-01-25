@@ -1,4 +1,4 @@
-import { IInitConfig } from '../interfaces/i-widget.interfaces';
+import { IInitConfig, Languages } from '../interfaces/i-widget.interfaces';
 import RequestService from '../services/request.service';
 import ConfigurationService from '../services/configuration.service';
 import { getCookie, setCookie } from '../services/helper.service';
@@ -7,15 +7,21 @@ export class MagicLinkHandler {
   readonly link: string;
 
   constructor(private config: IInitConfig, private requestService: RequestService) {
-    this.link = this.getMagicLinkEdnpointUrl();
+    this.link = this.getMagicLinkEndpointUrl();
   }
 
-  public async sendMagicLink(email: string): Promise<void> {
-    const response = await this.requestService.get(`${this.link}?email=${email}`);
+  public async sendMagicLink(email: string, language: Languages = Languages.en): Promise<unknown | null> {
+    const headers = {
+      'Accept-Language': language,
+    };
 
-    if (response.checkTokenKey) {
+    const response = await this.requestService.get(`${this.link}?email=${email}`, { headers });
+
+    if (response?.checkTokenKey) {
       setCookie(response.checkTokenKey, response.checkTokenValue, response.checkTokenLifetime);
     }
+
+    return response;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,7 +33,7 @@ export class MagicLinkHandler {
     if (!magicToken && !context) return null;
 
     const checkToken = getCookie(`ownid-mlc-${context}`);
-    const { data } = await this.requestService.post(`${this.getMagicLinkEdnpointUrl()}`, {
+    const { data } = await this.requestService.post(`${this.getMagicLinkEndpointUrl()}`, {
       context,
       magicToken,
       checkToken,
@@ -36,7 +42,7 @@ export class MagicLinkHandler {
     return data;
   }
 
-  private getMagicLinkEdnpointUrl(): string {
+  private getMagicLinkEndpointUrl(): string {
     const prefix = (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
 
     return `${prefix}${ConfigurationService.magicLinkUrl}`;

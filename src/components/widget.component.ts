@@ -3,7 +3,7 @@ import { BaseComponent } from './base.component';
 import LinkButton from './common/link-button.component';
 import Qr from './common/qr.component';
 import ConfigurationService from '../services/configuration.service';
-import { IContext, IContextRS } from '../interfaces/i-context.interfaces';
+import { IContext, IContextConfig, IContextRS } from '../interfaces/i-context.interfaces';
 import RequestService from '../services/request.service';
 import {
   IFullWidgetConfig,
@@ -19,6 +19,8 @@ import LinkedWidget from './common/linked.component';
 import { find, findIndex } from '../services/helper.service';
 import InlineWidget, { InlineWidgetOptions } from './common/inline.component';
 import UserHandler from './user-handler';
+import { MagicLinkHandler } from './magic-link-handler';
+import LinkButtonWidget from './common/link-button-widget.component';
 
 export default class WidgetComponent extends BaseComponent {
   widgetReady: Promise<void>;
@@ -67,6 +69,14 @@ export default class WidgetComponent extends BaseComponent {
 
   private inlineWidgetInterval: number | undefined;
 
+  private linkButtonInterval: number | undefined;
+
+  private magicLinkHandler = {} as MagicLinkHandler;
+
+  private linkButton: LinkButtonWidget | undefined;
+
+  private tooltipPlaceholder: HTMLDivElement | undefined;
+
   constructor(
     public config: IFullWidgetConfig,
     protected requestService: RequestService,
@@ -79,6 +89,20 @@ export default class WidgetComponent extends BaseComponent {
 
     this.widgetReady = this.init(config).then(
       () => {
+        if (this.getConfig()?.magicLink) {
+          this.magicLinkHandler = new MagicLinkHandler(config, this.requestService);
+
+          if (this.config.onMagicLinkLogin) {
+            //  eslint-disable-next-line promise/no-nesting
+            this.magicLinkHandler.tryExchangeMagicToken().then((res) => {
+              if (res) {
+                this.config.onMagicLinkLogin!(res);
+                this.destroy();
+              }
+            });
+          }
+        }
+
         this.render();
 
         this.setRefreshLinkOrQR();
@@ -91,7 +115,7 @@ export default class WidgetComponent extends BaseComponent {
           this.addInfoIcon(config.toggleElement);
         }
 
-        if (!this.isMobile() && (config.toggleElement || config.inline)) {
+        if (config.toggleElement || config.inline || this.linkButton || this.linked) {
           document.addEventListener('click', (event) =>
             // eslint-disable-next-line promise/no-callback-in-promise
             this.globalEventCallbacks.forEach((callback) => callback(event)),
@@ -142,9 +166,53 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     if (this.config.type === WidgetType.Link && find(this.contexts, ({ context }) => !context)) {
-      this.linked = new LinkedWidget({ href: this.getStartUrl(), language: this.config.language });
+      this.linked = new LinkedWidget({ language: this.config.language });
       this.addChild(this.linked);
+
+      this.addCallback2GlobalEvent((event) => {
+        const el = event.target as HTMLElement;
+        if (!el || !el.classList.contains('ownid-info-tooltip')) {
+          this.linked?.toggleInfoTooltip(false);
+        }
+      });
       return;
+    }
+
+    if (this.config.type === WidgetType.Link && find(this.contexts, ({ context }) => !!context)) {
+      this.linkButton = new LinkButtonWidget({ language: this.config.language });
+      this.insertAfter(this.linkButton);
+
+      this.tooltipPlaceholder = document.createElement('div');
+
+      this.config.element.parentNode!.insertBefore(this.tooltipPlaceholder, this.config.element.nextSibling);
+
+      window.document.body.appendChild(this.config.element);
+
+      if (!this.isMobile()) {
+        this.toggleQrTooltip(false);
+      }
+
+      this.linkButton.attachHandler('click', () => {
+        if (this.finalResponse) {
+          this.callOnSuccess(this.finalResponse, this.metadata);
+          return;
+        }
+
+        if (this.isMobile()) {
+          this.openWebapp();
+        } else {
+          this.toggleQrTooltip(true);
+        }
+      });
+
+      this.addCallback2GlobalEvent((event) => {
+        const el = event.target as HTMLElement;
+        if (!el || !el.classList.contains('ownid-info-tooltip')) {
+          this.linkButton?.toggleInfoTooltip(false);
+        }
+      });
+
+      this.linkButtonInterval = window.setInterval(() => this.recalculatePosition(), 10);
     }
 
     if (this.config.inline) {
@@ -167,7 +235,8 @@ export default class WidgetComponent extends BaseComponent {
       }
 
       const type = this.config.partial ? `${this.config.type}-partial` : this.config.type;
-      const mobileTitle = this.config.mobileTitle || TranslationService.instant(this.config.language)[type].mobileTitle;
+      const mobileTitle =
+        this.config.mobileTitle || TranslationService.instant(this.config.language, `${type}.mobileTitle`);
       this.link = new LinkButton({
         href: this.getStartUrl(),
         title: mobileTitle,
@@ -185,7 +254,7 @@ export default class WidgetComponent extends BaseComponent {
       });
 
       this.addChild(this.link);
-      this.returnError = TranslationService.instant(this.config.language).errors.link;
+      this.returnError = TranslationService.instant(this.config.language, 'errors.link');
     } else {
       if (this.disableDesktop) {
         // eslint-disable-next-line no-console
@@ -193,20 +262,32 @@ export default class WidgetComponent extends BaseComponent {
         return;
       }
       const type = this.config.partial || this.config.inline ? `${this.config.type}-partial` : this.config.type;
-      const isTooltip =
+      const isTooltip: boolean =
         !!this.config.inline ||
+        (this.config.type === WidgetType.Link && !!this.config.tooltip) ||
         (!!this.config.partial &&
           // @ts-ignore
           [null, false].indexOf(this.config.tooltip) < 0 &&
           !!this.config.toggleElement);
+      const config = {} as {
+        magicLink: { sendLinkCallback: (email: string) => Promise<unknown | null> };
+      };
+      const widgetConfig = this.getConfig();
+      if (widgetConfig?.magicLink && this.config.type === WidgetType.Login) {
+        config.magicLink = {
+          sendLinkCallback: (email: string) => this.magicLinkHandler.sendMagicLink(email, this.config.language),
+        };
+      }
 
       this.qr = new Qr({
         href: this.getStartUrl(),
-        title: this.config.desktopTitle || TranslationService.instant(this.config.language)[type].desktopTitle,
-        subtitle: this.config.desktopSubtitle || TranslationService.instant(this.config.language)[type].desktopSubtitle,
+        title: this.config.desktopTitle || TranslationService.instant(this.config.language, `${type}.desktopTitle`),
+        subtitle:
+          this.config.desktopSubtitle || TranslationService.instant(this.config.language, `${type}.desktopSubtitle`),
         type,
         language: this.config.language,
         tooltip: isTooltip,
+        config,
       });
 
       if (isTooltip) {
@@ -214,6 +295,8 @@ export default class WidgetComponent extends BaseComponent {
           if (
             this.config.element.style.display === 'block' &&
             !this.qr!.ref.contains(event.target as Node) &&
+            !this.inline?.ref.contains(event.target as Node) &&
+            !this.linkButton?.ref.contains(event.target as Node) &&
             !this.qr?.securityCheckShown
           ) {
             this.toggleQrTooltip(false);
@@ -223,12 +306,16 @@ export default class WidgetComponent extends BaseComponent {
 
       this.addChild(this.qr);
 
-      this.returnError = TranslationService.instant(this.config.language).errors.qr;
+      this.returnError = TranslationService.instant(this.config.language, 'errors.qr');
     }
   }
 
   private getStartUrl(): string {
     return this.contexts[this.contexts.length - 1].url;
+  }
+
+  private getConfig(): IContextConfig {
+    return this.contexts[this.contexts.length - 1].config;
   }
 
   private getUrlPrefix(): string {
@@ -381,6 +468,7 @@ export default class WidgetComponent extends BaseComponent {
     clearTimeout(this.statusTimeout);
     clearTimeout(this.refreshLinkTimeout);
     clearInterval(this.inlineWidgetInterval);
+    clearInterval(this.linkButtonInterval);
     this.elements.forEach((element) => element.destroy());
   }
 
@@ -414,6 +502,8 @@ export default class WidgetComponent extends BaseComponent {
   private reCreateWidget(): void {
     this.contexts = [];
     this.widgetReady = this.init(this.config).then(() => {
+      this.tooltipPlaceholder?.parentNode!.insertBefore(this.config.element, this.tooltipPlaceholder?.nextSibling);
+
       this.destroy();
       this.render();
 
@@ -434,7 +524,7 @@ export default class WidgetComponent extends BaseComponent {
     const label = document.createElement('label');
     label.setAttribute('for', checkInput.id);
     label.setAttribute('class', 'ownid-label ownid-toggle');
-    label.textContent = TranslationService.instant(this.config.language).common.labelText;
+    label.textContent = TranslationService.instant(this.config.language, 'common.labelText');
 
     checkInput.parentNode!.insertBefore(label, checkInput.nextSibling);
 
@@ -497,13 +587,13 @@ export default class WidgetComponent extends BaseComponent {
       return;
     }
 
-    setTimeout(() => {
-      this.config.element.style.display = 'block';
-    });
+    this.config.element.style.display = 'block';
 
-    let tooltipRefEl: HTMLElement = (this.inline?.ref || this.config.toggleElement) as HTMLElement;
+    let tooltipRefEl: HTMLElement = (this.inline?.ref ||
+      this.config.toggleElement ||
+      this.linkButton?.ref) as HTMLElement;
     let [offsetX, offsetY] = [0, 0];
-    let tooltipPosition = this.inline ? 'left' : 'right';
+    let tooltipPosition = this.inline || this.linkButton ? 'left' : 'right';
 
     if (this.config.tooltip && typeof this.config.tooltip === 'object') {
       if (this.config.tooltip.targetEl) {
@@ -549,6 +639,7 @@ export default class WidgetComponent extends BaseComponent {
   private callOnSuccess(finalResponse: any, metadata: string | null): void {
     const isTooltip =
       !!this.config.inline ||
+      (this.config.type === WidgetType.Link && !!this.config.tooltip) ||
       (this.config.partial &&
         // @ts-ignore
         [null, false].indexOf(this.config.tooltip) < 0 &&
@@ -557,6 +648,11 @@ export default class WidgetComponent extends BaseComponent {
     if (isTooltip) {
       this.toggleQrTooltip(false);
       this.setFinishStatus(true);
+    }
+
+    if (this.config.type === WidgetType.Link) {
+      this.reCreateWidget();
+      this.config.element.removeAttribute('style');
     }
 
     this.disabled = false;
@@ -604,14 +700,14 @@ export default class WidgetComponent extends BaseComponent {
     });
   }
 
-  public async addOwnIDConnectionOnServer(did: string): Promise<IWidgetPayload> {
+  public async addOwnIDConnectionOnServer(payload: string): Promise<IWidgetPayload> {
     if (!this.finalResponse) {
       return { error: true, message: 'Authorization flow is not finished' };
     }
 
     return (await this.requestService.post(this.getAddConnectionUrl(), {
       ...this.succeededContext,
-      did,
+      payload,
     })) as IWidgetPayload;
   }
 
@@ -635,6 +731,7 @@ export default class WidgetComponent extends BaseComponent {
   private callOnError(error: string): void {
     const isTooltip =
       !!this.config.inline ||
+      (this.config.type === WidgetType.Link && !!this.config.tooltip) ||
       (this.config.partial &&
         // @ts-ignore
         [null, false].indexOf(this.config.tooltip) < 0 &&
@@ -702,7 +799,7 @@ export default class WidgetComponent extends BaseComponent {
     this.note = document.createElement('div');
     this.note.setAttribute('class', 'ownid-note');
     this.note.style.display = 'none';
-    this.note.textContent = TranslationService.instant(lang).common.noteText;
+    this.note.textContent = TranslationService.instant(lang, 'common.noteText');
 
     if (typeof this.config.note === 'string') {
       this.note.textContent = this.config.note;
@@ -726,7 +823,7 @@ export default class WidgetComponent extends BaseComponent {
       this.note.textContent += ' ';
       const undo = document.createElement('span');
       undo.setAttribute('class', 'ownid-note-undo');
-      undo.textContent = TranslationService.instant(lang).common.undo;
+      undo.textContent = TranslationService.instant(lang, 'common.undo');
 
       undo.addEventListener('click', () => {
         this.note!.style.display = 'none';

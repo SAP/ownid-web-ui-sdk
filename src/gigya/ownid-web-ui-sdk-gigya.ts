@@ -13,7 +13,7 @@ export default class OwnIDUiSdkGigya extends OwnIDUiSdk {
     }
 
     const desktopDisable = false;
-    const mobileDisable = !!config.inline;
+    const mobileDisable = !!config.inline || !!config.tooltip;
 
     return new GigyaWidgetComponent(
       { ...this.config, ...config },

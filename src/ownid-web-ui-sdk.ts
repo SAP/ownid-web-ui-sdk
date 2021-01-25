@@ -3,7 +3,6 @@ import RequestService from './services/request.service';
 import { IInitConfig, IWidgetConfig, IWidgetPayload, WidgetType } from './interfaces/i-widget.interfaces';
 import LoggerDecorator from './services/logger.service';
 import { LogLevel } from './interfaces/i-logger.interfaces';
-import { MagicLinkHandler } from './components/magic-link-handler';
 
 const possibleChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -13,10 +12,6 @@ export default class OwnIDUiSdk {
   version = '${APP_VERSION}';
 
   config = {} as IInitConfig;
-
-  isGigyaAdded = false;
-
-  private magicLinkHandler = {} as MagicLinkHandler;
 
   init(config: IInitConfig = {}): void {
     this.config = config;
@@ -28,16 +23,6 @@ export default class OwnIDUiSdk {
 
       this.config.logger = new LoggerDecorator(config.logger, logLevel);
     }
-
-    this.magicLinkHandler = new MagicLinkHandler(this.config, new RequestService(this.config.logger));
-
-    if (this.config.onMagicLinkLogin) {
-      this.magicLinkHandler.tryExchangeMagicToken().then((res) => {
-        if (!res) return;
-
-        this.config.onMagicLinkLogin!(res);
-      });
-    }
   }
 
   render(config: IWidgetConfig): WidgetComponent | null {
@@ -48,7 +33,7 @@ export default class OwnIDUiSdk {
     }
 
     const desktopDisable = config.type === WidgetType.Link;
-    const mobileDisable = !!config.inline;
+    const mobileDisable = !!config.inline || !!config.tooltip;
 
     return new WidgetComponent(
       { ...this.config, ...config },
@@ -94,9 +79,5 @@ export default class OwnIDUiSdk {
     ownIDWidget.destroy();
 
     return this.render(ownIDWidget.config);
-  }
-
-  sendMagicLink(email: string): Promise<void> {
-    return this.magicLinkHandler.sendMagicLink(email);
   }
 }
