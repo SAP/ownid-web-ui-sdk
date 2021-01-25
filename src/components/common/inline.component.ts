@@ -28,7 +28,8 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
 
     const element = document.createElement('div');
 
-    const { message, info } = TranslationService.instant(options.language).inline;
+    const message = TranslationService.instant(options.language, 'inline.message');
+    const info = TranslationService.instant(options.language, 'inline.info');
 
     element.classList.add('ownid-inline-widget');
 
@@ -95,16 +96,17 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
 
     const style = document.createElement('style');
     style.id = id;
-    style.textContent = `.ownid-inline-widget{color:#0070F2;cursor:pointer;position:absolute;display:flex;align-items:center;font-size:14px;padding:0 10px}
-.ownid-inline-widget .ownid-info-icon{fill:#0070F2;padding:10px 10px 10px 5px;margin:0 -10px 0 -5px}
+    style.textContent = `.ownid-inline-widget{color:#0070F2;cursor:pointer;position:absolute;display:flex;align-items:center;font-size:14px;padding:0 10px;z-index:1000000001}
+.ownid-info-icon{fill:#0070F2;padding:10px 10px 10px 5px;margin:0 -10px 0 -5px}
 .ownid-inline-widget--finished{color:#000;margin-left:-25px;pointer-events:none;opacity:1}
 .ownid-inline-widget--finished .ownid-info-icon{fill:#000;pointer-events:initial;opacity:1;cursor:pointer;}
 .ownid-inline-widget--finished:before{content:'';opacity:1;width:25px;height:16px;display:block;background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOC43MDcgNy4yOTNhMSAxIDAgMCAxIDAgMS40MTRsLTggOGExIDEgMCAwIDEtMS40MTQgMGwtMy0zYTEgMSAwIDAgMSAxLjQxNC0xLjQxNEwxMCAxNC41ODZsNy4yOTMtNy4yOTNhMSAxIDAgMCAxIDEuNDE0IDB6IiBmaWxsPSIjMzZhNDFkIi8+PC9zdmc+) repeat center center}
 .ownid-inline-disabled{opacity:0.3;pointer-events:none}
 .ownid-note-undo{color:#0070F2;cursor:pointer}
-.ownid-inline-required{border-color:#D20A0A}
+.ownid-inline-required{border-color:#0070F2 !important}
+.ownid-inline-info{color:#0070F2}
 .ownid-inline-warn{color:#D20A0A}
-.ownid-info-tooltip{width:280px;display:none;position:absolute;background:#FFF;border-radius:6px;border:1px solid #D5DADD;box-shadow:0px 0px 2px rgba(131,150,168,0.16),0px 4px 8px rgba(131,150,168,0.16);box-sizing: border-box;font-style: normal;font-weight: normal;font-size: 12px;line-height: 18px;padding:12px;}
+.ownid-info-tooltip{width:280px;display:none;position:absolute;background:#FFF;border-radius:6px;border:1px solid #D5DADD;box-shadow:0px 0px 2px rgba(131,150,168,0.16),0px 4px 8px rgba(131,150,168,0.16);box-sizing: border-box;font-style: normal;font-weight: normal;font-size: 12px;line-height: 18px;padding:12px;z-index:1000000001}
 
 input.ownid-skip-password::-webkit-strong-password-auto-fill-button{display:none!important;opacity:0}
 input.ownid-skip-password::-webkit-credentials-auto-fill-button{margin-right:${
@@ -146,16 +148,21 @@ input.ownid-skip-password::-webkit-credentials-auto-fill-button{margin-right:${
       this.options.targetElement.classList.toggle('ownid-inline-required', !this.options.targetElement.value),
     );
 
-    this.displayWarn(TranslationService.instant(this.options.language).inline.passwordWarn);
+    this.displayMessage('info', TranslationService.instant(this.options.language, 'inline.passwordWarn'));
   }
 
   public noAccount(): void {
-    this.displayWarn(TranslationService.instant(this.options.language).inline.noAccount);
+    this.displayMessage('warn', TranslationService.instant(this.options.language, 'inline.noAccount'));
   }
 
-  private displayWarn(message: string): void {
+  private displayMessage(type: string, message: string): void {
+    const typeMap: { [key: string]: string } = {
+      info: 'ownid-inline-info',
+      warn: 'ownid-inline-warn',
+    };
+
     const warn = document.createElement('div');
-    warn.classList.add('ownid-inline-warn');
+    warn.classList.add(typeMap[type] ?? 'ownid-inline-warn');
     warn.textContent = message;
 
     this.options.targetElement.parentNode!.insertBefore(warn, this.options.targetElement.nextSibling);

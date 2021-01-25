@@ -29,7 +29,7 @@ export default class RequestService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async get(url: string): Promise<any> {
+  public async get(url: string, options?: { headers: { [key: string]: string } }): Promise<any | null> {
     this.logger?.logInfo(`request: ${url}`);
 
     const response = await fetch(url, {
@@ -38,6 +38,7 @@ export default class RequestService {
       cache: 'no-cache',
       redirect: 'follow',
       referrerPolicy: 'no-referrer',
+      ...options,
     });
 
     if (response.status === 200) {

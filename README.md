@@ -79,9 +79,11 @@ function onRegister() {
       if (ownidPayload.data) {
           password = window.ownid.generateOwnIDPassword(12);
           data = {
-              ownIdConnections: [
+              ownId: {
+                connections: [
                   ownidPayload.data,
-              ],
+                ],
+              }
           };
       }
 
@@ -191,13 +193,15 @@ function onLogin() {
                     window.gigya.accounts.getAccountInfo({
                         include: 'data',
                         callback: function (userData) {
-                            var ownIdConnections = userData.data.ownIdConnections || [];
+                            var ownIdConnections = userData.data.ownId.connections || [];
     
                             ownIdConnections.push(statusRS.data);
     
                             window.gigya.accounts.setAccountInfo({
                                 data: {
-                                    ownIdConnections: ownIdConnections
+                                    ownId: {
+                                      connections: ownIdConnections
+                                    }
                                 },
                                 callback: function () {
                                     window.location = '/account.html';

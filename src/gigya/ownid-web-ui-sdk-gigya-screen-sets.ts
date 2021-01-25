@@ -245,7 +245,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
         // eslint-disable-next-line no-param-reassign
         event.formModel.data = event.formModel.data || {};
         // eslint-disable-next-line no-param-reassign
-        event.formModel.data.ownIdConnections = [{ ...data }];
+        event.formModel.data.ownId.connections = [{ ...data }];
       }
     }
     return event;
@@ -263,13 +263,13 @@ export default class OwnIDUiSdkGigyaScreenSets {
           if (data?.pubKey) {
             window.gigya.accounts.getAccountInfo({
               include: 'data',
-              callback: (userData: { data: { ownIdConnections: IOwnIdDataRS[] } }) => {
+              callback: (userData: { data: { ownId: { connections: IOwnIdDataRS[]}}}) => {
                 const userDataObj = userData.data || {};
-                const ownIdConnections = userDataObj.ownIdConnections || [];
+                const ownIdConnections = userDataObj.ownId.connections || [];
 
                 ownIdConnections.push(data);
 
-                window.gigya.accounts.setAccountInfo({ data: { ownIdConnections } });
+                window.gigya.accounts.setAccountInfo({ data: {  ownId: { connections: ownIdConnections} } });
               },
             });
           }

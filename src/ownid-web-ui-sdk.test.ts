@@ -185,22 +185,4 @@ describe('OwnIDUiSdk instances test', () => {
       expect(sdk.render).not.toHaveBeenCalled();
     });
   });
-
-  describe('sendMagicLink', () => {
-    it('should call magicLinkHandler.sendMagicLink', async () => {
-      const sut = sdk as any;
-
-      const onMagicLinkLoginStub = jest.fn();
-
-      sdk.init({
-        onMagicLinkLogin: onMagicLinkLoginStub,
-      });
-
-      sut.magicLinkHandler.sendMagicLink = jest.fn();
-
-      sdk.sendMagicLink('email');
-
-      expect(sut.magicLinkHandler.sendMagicLink).toHaveBeenCalledWith('email');
-    });
-  });
 });
