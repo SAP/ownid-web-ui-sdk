@@ -464,6 +464,7 @@ export default class WidgetComponent extends BaseComponent {
 
   public destroy(): void {
     this.isDestroyed = true;
+    this.globalEventCallbacks = [];
     window.removeEventListener('message', this.onMessage);
     clearTimeout(this.statusTimeout);
     clearTimeout(this.refreshLinkTimeout);

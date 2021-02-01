@@ -215,7 +215,7 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 .ownid-pending--svg{-webkit-animation:ownid-spin 1.77s ease infinite;-moz-animation:ownid-spin 1.77s ease infinite;animation:ownid-spin 1.77s ease infinite;}
 .ownid-pending--title{font-weight:bold}
 
-.ownid-wrapper.ownid-tooltip-wrapper{position:absolute;background:#FFF;border-radius:6px;border:1px solid #D5DADD;box-shadow:0px 0px 2px rgba(131,150,168,0.16),0px 4px 8px rgba(131,150,168,0.16);transform:translateY(-50%);z-index:1000000001}
+.ownid-wrapper.ownid-tooltip-wrapper{position:absolute;background:#FFF;border-radius:6px;border:1px solid #D5DADD;box-shadow:0px 0px 2px rgba(131,150,168,0.16),0px 4px 8px rgba(131,150,168,0.16);transform:translateY(-50%);z-index:10000000001}
 .ownid-tooltip-wrapper:before,.ownid-tooltip-wrapper:after{content:'';position:absolute;display:block;width:0;height:0;border-style:solid;border-width:12px 10px;border-color:transparent #D5DADD transparent transparent;left:-20px;top:calc(50% - 12px)}
 .ownid-tooltip-wrapper.ownid-tooltip-wrapper-left:before,.ownid-tooltip-wrapper.ownid-tooltip-wrapper-left:after{border-color:transparent transparent transparent #D5DADD;right:-20px;top:calc(50% - 12px);left:auto}
 .ownid-tooltip-wrapper:after{border-color:transparent #FFF transparent transparent;left:-19px}
