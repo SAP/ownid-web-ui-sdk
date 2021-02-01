@@ -9,7 +9,7 @@
   },
   "login-partial" : {
     "mobileTitle" : "즉시 로그인",
-    "desktopTitle" : "즉시 로그인 사용",
+    "desktopTitle" : "로그인하려면 전화기로 이 QR을 스캔하십시오.",
     "desktopSubtitle" : "로그인하려면 QR 코드를 스캔하십시오.",
     "pendingMessage" : "로그인하는 중...",
     "pendingButton" : "취소",
@@ -33,11 +33,15 @@
   },
   "link" : {
     "mobileTitle" : "즉시 로그인 사용",
-    "desktopTitle" : "즉시 로그인 사용",
+    "desktopTitle" : "비밀번호를 스킵하려면 전화기로 이 QR을 스캔하십시오.",
     "desktopSubtitle" : "전화기의 카메라 또는 앱을 사용하여 QR을 스캔하십시오.",
-    "pendingMessage" : "계정 연결 중...",
+    "pendingMessage" : "전화기에서 계속",
     "pendingButton" : "취소",
-    "doneMessage" : ""
+    "doneMessage" : "",
+    "complete" : "OwnID에서 사용할 수 있는 비밀번호를 스킵했습니다."
+  },
+  "linkButton" : {
+    "button" : "비밀번호 스킵 사용"
   },
   "recover" : {
     "mobileTitle" : "즉시 로그인 사용",
@@ -74,6 +78,19 @@
   "common" : {
     "labelText" : "비밀번호 스킵",
     "noteText" : "다음번에 로그인할 때는 전화기를 인식하여 즉시 로그인합니다.",
-    "undo" : "실행 취소"
+    "undo" : "실행 취소",
+    "about" : "이것은 무엇입니까?"
+  },
+  "magicLink" : {
+    "link" : "전화기가 없으십니까?",
+    "title" : "매직 링크로 로그인",
+    "message" : "자동으로 로그인할 수 있는 링크를 보내드리겠습니다.",
+    "emailPlaceholder" : "전자메일",
+    "button" : "매직 링크 보내기",
+    "error" : "계정이 없습니다."
+  },
+  "magicLinkDone" : {
+    "title" : "전자메일 확인",
+    "message" : "자동으로 로그인할 수 있는 {email} 링크를 보냈습니다."
   }
 }

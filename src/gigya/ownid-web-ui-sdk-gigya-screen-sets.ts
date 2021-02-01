@@ -245,6 +245,8 @@ export default class OwnIDUiSdkGigyaScreenSets {
         // eslint-disable-next-line no-param-reassign
         event.formModel.data = event.formModel.data || {};
         // eslint-disable-next-line no-param-reassign
+        event.formModel.data.ownId = event.formModel.data.ownId || {};
+        // eslint-disable-next-line no-param-reassign
         event.formModel.data.ownId.connections = [{ ...data }];
       }
     }

@@ -9,7 +9,7 @@
   },
   "login-partial" : {
     "mobileTitle" : "インスタントログイン",
-    "desktopTitle" : "インスタントログインを使用",
+    "desktopTitle" : "この QR コードを電話でスキャンしてログインします。",
     "desktopSubtitle" : "QR コードをスキャンしてログインします。",
     "pendingMessage" : "ログイン中...",
     "pendingButton" : "キャンセル",
@@ -33,11 +33,15 @@
   },
   "link" : {
     "mobileTitle" : "インスタントログインを有効化",
-    "desktopTitle" : "インスタントログインを有効化",
+    "desktopTitle" : "この QR コードを電話でスキャンして、パスワードのスキップを有効にします。",
     "desktopSubtitle" : "電話のカメラまたはアプリを使用して QR コードをスキャンします。",
-    "pendingMessage" : "アカウントをリンクしています...",
+    "pendingMessage" : "電話で続行",
     "pendingButton" : "キャンセル",
-    "doneMessage" : ""
+    "doneMessage" : "",
+    "complete" : "OwnID によるパスワードのスキップが有効化されました。"
+  },
+  "linkButton" : {
+    "button" : "パスワードスキップを有効化"
   },
   "recover" : {
     "mobileTitle" : "インスタントログインを有効化",
@@ -74,6 +78,19 @@
   "common" : {
     "labelText" : "パスワードをスキップ",
     "noteText" : "次にログインするときには、電話を認識してインスタントログイン操作が実行されます。",
-    "undo" : "元に戻す"
+    "undo" : "元に戻す",
+    "about" : "詳細"
+  },
+  "magicLink" : {
+    "link" : "電話がない場合",
+    "title" : "リンクでログイン",
+    "message" : "自動的にログインするためのリンクを送信します。",
+    "emailPlaceholder" : "メール",
+    "button" : "リンクを送信",
+    "error" : "アカウントが存在しません"
+  },
+  "magicLinkDone" : {
+    "title" : "メールをチェック",
+    "message" : "自動的にログインするためのリンクを {email} に送信しました。"
   }
 }

@@ -9,7 +9,7 @@
   },
   "login-partial" : {
     "mobileTitle" : "Inicio de sesión instantáneo",
-    "desktopTitle" : "Uso del inicio de sesión instantáneo",
+    "desktopTitle" : "Escanee este QR con su teléfono para iniciar sesión.",
     "desktopSubtitle" : "Escanee el código QR para iniciar sesión.",
     "pendingMessage" : "Iniciando sesión...",
     "pendingButton" : "Cancelar",
@@ -33,11 +33,15 @@
   },
   "link" : {
     "mobileTitle" : "Habilitar el inicio de sesión instantáneo",
-    "desktopTitle" : "Habilitar el inicio de sesión instantáneo",
+    "desktopTitle" : "Escanee este QR con su teléfono para permitir que se omita la contraseña.",
     "desktopSubtitle" : "Use la cámara de su teléfono o una aplicación para escanear el QR.",
-    "pendingMessage" : "Vinculando su cuenta...",
+    "pendingMessage" : "Continuar en su teléfono",
     "pendingButton" : "Cancelar",
-    "doneMessage" : ""
+    "doneMessage" : "",
+    "complete" : "Omitió la contraseña admitida por OwnID."
+  },
+  "linkButton" : {
+    "button" : "Habilitar función de omitir la contraseña"
   },
   "recover" : {
     "mobileTitle" : "Habilitar el inicio de sesión instantáneo",
@@ -74,6 +78,19 @@
   "common" : {
     "labelText" : "Omitir la contraseña",
     "noteText" : "La próxima vez que inicie sesión, reconoceremos su teléfono y lo conectaremos instantáneamente. ",
-    "undo" : "Deshacer"
+    "undo" : "Deshacer",
+    "about" : "¿Qué es esto?"
+  },
+  "magicLink" : {
+    "link" : "¿No tiene su teléfono?",
+    "title" : "Iniciar sesión con \"enlace mágico\"",
+    "message" : "Le enviaremos un enlace para que inicie sesión automáticamente.",
+    "emailPlaceholder" : "Correo electrónico",
+    "button" : "Enviar \"enlace mágico\"",
+    "error" : "La cuenta no existe"
+  },
+  "magicLinkDone" : {
+    "title" : "Verifique su correo electrónico",
+    "message" : "Le enviamos un enlace a {email} que le permitirá iniciar sesión automáticamente."
   }
 }

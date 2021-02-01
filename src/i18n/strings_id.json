@@ -9,7 +9,7 @@
   },
   "login-partial" : {
     "mobileTitle" : "Log In Instan",
-    "desktopTitle" : "Gunakan log in instan",
+    "desktopTitle" : "Pindai QR ini dengan telepon Anda untuk masuk.",
     "desktopSubtitle" : "Pindai kode QR untuk masuk.",
     "pendingMessage" : "Masuk...",
     "pendingButton" : "Batalkan",
@@ -33,11 +33,15 @@
   },
   "link" : {
     "mobileTitle" : "Aktifkan Login Instan",
-    "desktopTitle" : "Aktifkan Login Instan",
+    "desktopTitle" : "Pindai QR ini dengan telepon Anda untuk mengaktifkan lewati kata sandi.",
     "desktopSubtitle" : "Gunakan kamera telepon Anda atau aplikasi untuk memindai QR.",
-    "pendingMessage" : "Menautkan akun Anda...",
+    "pendingMessage" : "Lanjutkan di telepon Anda",
     "pendingButton" : "Batalkan",
-    "doneMessage" : ""
+    "doneMessage" : "",
+    "complete" : "Anda telah mengaktifkan lewati kata sandi dengan OwnID."
+  },
+  "linkButton" : {
+    "button" : "Aktifkan lewati kata sandi"
   },
   "recover" : {
     "mobileTitle" : "Aktifkan Login Instan",
@@ -74,6 +78,19 @@
   "common" : {
     "labelText" : "Lewati kata sandi",
     "noteText" : "Saat Anda masuk lagi, kami akan mengenali telepon Anda dan Anda akan dapat langsung masuk.",
-    "undo" : "Batalkan"
+    "undo" : "Batalkan",
+    "about" : "Apa ini?"
+  },
+  "magicLink" : {
+    "link" : "Apakah ponsel Anda berada di dekat Anda?",
+    "title" : "Masuk dengan tautan ajaib",
+    "message" : "Kami akan mengirimkan tautan kepada Anda agar Anda dapat masuk secara otomatis.",
+    "emailPlaceholder" : "Email",
+    "button" : "Kirimkan Tautan Ajaib",
+    "error" : "Akun tidak ada"
+  },
+  "magicLinkDone" : {
+    "title" : "Periksa email Anda",
+    "message" : "Kami mengirimkan tautan ke {email} agar Anda dapat masuk secara otomatis."
   }
 }

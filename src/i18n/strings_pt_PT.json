@@ -9,7 +9,7 @@
   },
   "login-partial" : {
     "mobileTitle" : "Início de sessão instantâneo",
-    "desktopTitle" : "Utilizar o início de sessão instantâneo",
+    "desktopTitle" : "Digitalizar este QR com o telefone para iniciar a sessão.",
     "desktopSubtitle" : "Digitalizar o código QR para iniciar a sessão.",
     "pendingMessage" : "A iniciar a sessão...",
     "pendingButton" : "Cancelar",
@@ -33,11 +33,15 @@
   },
   "link" : {
     "mobileTitle" : "Ativar início de sessão instantâneo",
-    "desktopTitle" : "Ativar início de sessão instantâneo",
+    "desktopTitle" : "Digitalizar este QR com o telefone para ativar Ignorar a palavra-passe.",
     "desktopSubtitle" : "Utilizar a câmara do telefone ou uma aplicação para digitalizar o QR.",
-    "pendingMessage" : "A ligar a sua conta...",
+    "pendingMessage" : "Continuar no seu telefone",
     "pendingButton" : "Cancelar",
-    "doneMessage" : ""
+    "doneMessage" : "",
+    "complete" : "Ignorou a palavra-passe ativada por OwnID."
+  },
+  "linkButton" : {
+    "button" : "Ativar \"ignorar a palavra-passe\""
   },
   "recover" : {
     "mobileTitle" : "Ativar início de sessão instantâneo",
@@ -74,6 +78,19 @@
   "common" : {
     "labelText" : "Ignorar a palavra-passe",
     "noteText" : "A próxima vez que iniciar a sessão, iremos reconhecer o seu telefone e iniciar a sessão instantaneamente.",
-    "undo" : "Anular"
+    "undo" : "Anular",
+    "about" : "O que é isto?"
+  },
+  "magicLink" : {
+    "link" : "Não tem o seu telefone?",
+    "title" : "Iniciar sessão com a ligação mágica",
+    "message" : "Enviaremos uma ligação para iniciar sessão automaticamente.",
+    "emailPlaceholder" : "E-mail",
+    "button" : "Enviar ligação mágica",
+    "error" : "A conta não existe"
+  },
+  "magicLinkDone" : {
+    "title" : "Verificar o e-mail",
+    "message" : "Enviaremos uma ligação para {email} que iniciará a sessão automaticamente."
   }
 }
