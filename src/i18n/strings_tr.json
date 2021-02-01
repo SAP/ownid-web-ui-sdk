@@ -9,7 +9,7 @@
   },
   "login-partial" : {
     "mobileTitle" : "Anında oturum açma",
-    "desktopTitle" : "Anında oturum açmayı kullan",
+    "desktopTitle" : "Oturum açmak için telefonunuzla bu QR kodunu tarayın.",
     "desktopSubtitle" : "Oturum açmak için QR kodunu tarayın.",
     "pendingMessage" : "Oturum açılıyor...",
     "pendingButton" : "İptal",
@@ -33,11 +33,15 @@
   },
   "link" : {
     "mobileTitle" : "Anında oturum açmayı etkinleştir",
-    "desktopTitle" : "Anında oturum açmayı etkinleştir",
+    "desktopTitle" : "Parolayı atlamayı etkinleştirmek için telefonunuzla bu QR kodunu tarayın.",
     "desktopSubtitle" : "QR kodu taramak için telefonunuzun kamerasını veya bir uygulamayı kullanın.",
-    "pendingMessage" : "Hesabınız bağlanıyor...",
+    "pendingMessage" : "Telefonunuzda devam edin",
     "pendingButton" : "İptal",
-    "doneMessage" : ""
+    "doneMessage" : "",
+    "complete" : "OwnID tarafından etkinleştirilen parolayı atlamaya sahipsiniz."
+  },
+  "linkButton" : {
+    "button" : "Parolayı atlamayı etkinleştir"
   },
   "recover" : {
     "mobileTitle" : "Anında oturum açmayı etkinleştir",
@@ -74,6 +78,19 @@
   "common" : {
     "labelText" : "Parolayı atla",
     "noteText" : "Bir sonraki oturum açma işleminizde telefonunuzu tanıyacağız ve anında oturum açmanızı sağlayacağız.",
-    "undo" : "Geri al"
+    "undo" : "Geri al",
+    "about" : "Bu nedir?"
+  },
+  "magicLink" : {
+    "link" : "Telefonunuz sizde değil mi?",
+    "title" : "Sihirli bağlantıyla oturum açın",
+    "message" : "Oturumunuzu otomatik olarak açmak için size bir bağlantı göndereceğiz.",
+    "emailPlaceholder" : "E-posta",
+    "button" : "Sihirli bağlantıyı gönder",
+    "error" : "Hesap mevcut değil"
+  },
+  "magicLinkDone" : {
+    "title" : "E-postanızı kontrol edin",
+    "message" : "{email} adresine, oturumunuzu otomatik olarak açacak bir bağlantı gönderdik."
   }
 }

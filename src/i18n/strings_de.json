@@ -9,7 +9,7 @@
   },
   "login-partial" : {
     "mobileTitle" : "Direkt-Login",
-    "desktopTitle" : "Direkt-Login verwenden",
+    "desktopTitle" : "Scannen Sie diesen QR-Code mit Ihrem Telefon, um sich anzumelden.",
     "desktopSubtitle" : "Scannen Sie den QR-Code, um sich anzumelden.",
     "pendingMessage" : "Anmeldung läuft ...",
     "pendingButton" : "Abbrechen",
@@ -33,11 +33,15 @@
   },
   "link" : {
     "mobileTitle" : "Direkt-Login aktivieren",
-    "desktopTitle" : "Direkt-Login aktivieren",
+    "desktopTitle" : "Scannen Sie diesen QR-Code mit Ihrem Telefon, um das Überspringen des Kennworts zu aktivieren.",
     "desktopSubtitle" : "Scannen Sie den QR-Code mit der Kamera Ihres Telefons oder einer App.",
-    "pendingMessage" : "Ihr Konto wird verknüpft ...",
+    "pendingMessage" : "Folgen Sie den Anweisungen auf Ihrem Telefon",
     "pendingButton" : "Abbrechen",
-    "doneMessage" : ""
+    "doneMessage" : "",
+    "complete" : "Sie haben das Überspringen des Kennworts über OwnID aktiviert."
+  },
+  "linkButton" : {
+    "button" : "Überspringen des Kennworts aktivieren"
   },
   "recover" : {
     "mobileTitle" : "Direkt-Login aktivieren",
@@ -74,6 +78,19 @@
   "common" : {
     "labelText" : "Kennwort überspringen",
     "noteText" : "Wenn Sie sich das nächste Mal anmelden, wird Ihr Telefon erkannt, und Sie werden direkt angemeldet.",
-    "undo" : "Rückgängig machen"
+    "undo" : "Rückgängig machen",
+    "about" : "Was nun?"
+  },
+  "magicLink" : {
+    "link" : "Sie haben Ihr Telefon nicht zur Hand?",
+    "title" : "Melden Sie sich mit dem Zauberlink an",
+    "message" : "Wir senden Ihnen einen Link zur automatischen Anmeldung.",
+    "emailPlaceholder" : "E-Mail",
+    "button" : "Zauberlink senden",
+    "error" : "Konto ist nicht vorhanden"
+  },
+  "magicLinkDone" : {
+    "title" : "Prüfen Sie Ihre E-Mails",
+    "message" : "Wir haben Ihnen einen Link an {E-Mail} gesendet, über den Sie automatisch angemeldet werden."
   }
 }

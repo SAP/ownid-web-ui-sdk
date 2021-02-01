@@ -9,7 +9,7 @@
   },
   "login-partial" : {
     "mobileTitle" : "Log Masuk Segera",
-    "desktopTitle" : "Gunakan log masuk segera",
+    "desktopTitle" : "Imbas QR ini dengan telefon anda untuk log masuk.",
     "desktopSubtitle" : "Imbas kod QR untuk log masuk.",
     "pendingMessage" : "Log masuk...",
     "pendingButton" : "Batal",
@@ -33,11 +33,15 @@
   },
   "link" : {
     "mobileTitle" : "Dayakan Log Masuk Segera",
-    "desktopTitle" : "Dayakan Log Masuk Segera",
+    "desktopTitle" : "Imbas QR ini dengan telefon anda untuk melangkau kata laluan.",
     "desktopSubtitle" : "Gunakan kamera telefon atau aplikasi anda untuk mengimbas QR.",
-    "pendingMessage" : "Memautkan akaun anda...",
+    "pendingMessage" : "Teruskan di telefon anda",
     "pendingButton" : "Batal",
-    "doneMessage" : ""
+    "doneMessage" : "",
+    "complete" : "Anda mempunyai pilihan langkau kata laluan yang didayakan oleh OwnID."
+  },
+  "linkButton" : {
+    "button" : "Dayakan langkauan kata laluan"
   },
   "recover" : {
     "mobileTitle" : "Dayakan Log Masuk Segera",
@@ -74,6 +78,19 @@
   "common" : {
     "labelText" : "Langkau kata laluan",
     "noteText" : "Jika anda log masuk selepas ini, kami akan memperakui telefon anda dan anda dilog masuk dengan segera.",
-    "undo" : "Buat Asal"
+    "undo" : "Buat Asal",
+    "about" : "Apakah ini?"
+  },
+  "magicLink" : {
+    "link" : "Tiada telefon anda?",
+    "title" : "Log masuk dengan pautan ajaib",
+    "message" : "Kami akan menghantar pautan kepada anda untuk anda log masuk secara automatik.",
+    "emailPlaceholder" : "E-mel",
+    "button" : "Hantar Pautan Ajaib",
+    "error" : "Akaun tiada"
+  },
+  "magicLinkDone" : {
+    "title" : "Semak e-mel anda",
+    "message" : "Kami telah menghantar pautan kepada anda {e-mel} yang membolehkan anda log masuk secara automatik."
   }
 }

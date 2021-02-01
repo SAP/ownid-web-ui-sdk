@@ -9,7 +9,7 @@
   },
   "login-partial" : {
     "mobileTitle" : "Đăng nhập nhanh",
-    "desktopTitle" : "Sử dụng đăng nhập nhanh",
+    "desktopTitle" : "Quét QR bằng điện thoại để đăng nhập.",
     "desktopSubtitle" : "Quét mã QR để đăng nhập.",
     "pendingMessage" : "Đang đăng nhập...",
     "pendingButton" : "Hủy",
@@ -33,11 +33,15 @@
   },
   "link" : {
     "mobileTitle" : "Kích hoạt đăng nhập nhanh",
-    "desktopTitle" : "Kích hoạt đăng nhập nhanh",
+    "desktopTitle" : "Quét mã QR này bằng điện thoại của bạn để cho phép bỏ qua mật khẩu.",
     "desktopSubtitle" : "Sử dụng camera điện thoại hoặc ứng dụng để quét QR.",
-    "pendingMessage" : "Đang liên kết tài khoản của bạn...",
+    "pendingMessage" : "Tiếp tục trên điện thoại của bạn",
     "pendingButton" : "Hủy",
-    "doneMessage" : ""
+    "doneMessage" : "",
+    "complete" : "Bạn đã bỏ qua mật khẩu được OwnID kích hoạt."
+  },
+  "linkButton" : {
+    "button" : "Kích hoạt bỏ qua mật khẩu"
   },
   "recover" : {
     "mobileTitle" : "Kích hoạt đăng nhập nhanh",
@@ -74,6 +78,19 @@
   "common" : {
     "labelText" : "Bỏ qua mật khẩu",
     "noteText" : "Lần tới khi bạn đăng nhập, chúng tôi sẽ nhận diện điện thoại của bạn và ngay lập duyệt đăng nhập cho bạn.",
-    "undo" : "Hoàn tác"
+    "undo" : "Hoàn tác",
+    "about" : "Điều này là gì?"
+  },
+  "magicLink" : {
+    "link" : "Không có điện thoại?",
+    "title" : "Đăng nhập bằng magic link",
+    "message" : "Chúng tôi sẽ gửi cho bạn liên kết để bạn tự động đăng nhập.",
+    "emailPlaceholder" : "Email",
+    "button" : "Gửi magic link",
+    "error" : "Tài khoản không tồn tại"
+  },
+  "magicLinkDone" : {
+    "title" : "Kiểm tra email của bạn",
+    "message" : "Chúng tôi sẽ gửi cho bạn liên kết đến {email} để bạn tự động đăng nhập."
   }
 }
