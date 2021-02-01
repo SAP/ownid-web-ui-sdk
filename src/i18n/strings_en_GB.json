@@ -9,7 +9,7 @@
   },
   "login-partial" : {
     "mobileTitle" : "Instant Login",
-    "desktopTitle" : "Use instant login",
+    "desktopTitle" : "Scan this QR with your phone to log in.",
     "desktopSubtitle" : "Scan the QR code to log in.",
     "pendingMessage" : "Logging in...",
     "pendingButton" : "Cancel",
@@ -33,11 +33,15 @@
   },
   "link" : {
     "mobileTitle" : "Enable Instant Login",
-    "desktopTitle" : "Enable Instant Login",
+    "desktopTitle" : "Scan this QR with your phone to enable “Skip the password”.",
     "desktopSubtitle" : "Use your phone’s camera or an app to scan the QR.",
-    "pendingMessage" : "Linking your account...",
+    "pendingMessage" : "Continue on your phone",
     "pendingButton" : "Cancel",
-    "doneMessage" : ""
+    "doneMessage" : "",
+    "complete" : "You have “Skip the password” enabled by OwnID."
+  },
+  "linkButton" : {
+    "button" : "Enable “Skip the password”"
   },
   "recover" : {
     "mobileTitle" : "Enable Instant Login",
@@ -74,6 +78,19 @@
   "common" : {
     "labelText" : "Skip the password",
     "noteText" : "The next time you log in, we will recognise your phone and instantly log you in.",
-    "undo" : "Undo"
+    "undo" : "Undo",
+    "about" : "What is this?"
+  },
+  "magicLink" : {
+    "link" : "Don’t have your phone?",
+    "title" : "Log in with magic link",
+    "message" : "We will send you a link to automatically log you in.",
+    "emailPlaceholder" : "Email",
+    "button" : "Send Magic Link",
+    "error" : "Account doesn’t exist"
+  },
+  "magicLinkDone" : {
+    "title" : "Check your email",
+    "message" : "We sent you a link to {email} that will automatically log you in."
   }
 }

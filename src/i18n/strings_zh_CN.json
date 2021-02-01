@@ -9,7 +9,7 @@
   },
   "login-partial" : {
     "mobileTitle" : "即时登录",
-    "desktopTitle" : "使用即时登录",
+    "desktopTitle" : "使用手机扫描此二维码进行登录。",
     "desktopSubtitle" : "扫描二维码进行登录。",
     "pendingMessage" : "正在登录...",
     "pendingButton" : "取消",
@@ -33,11 +33,15 @@
   },
   "link" : {
     "mobileTitle" : "启用即时登录",
-    "desktopTitle" : "启用即时登录",
+    "desktopTitle" : "使用手机扫描此二维码以启用跳过密码。",
     "desktopSubtitle" : "使用手机的照相机或应用扫描二维码。",
-    "pendingMessage" : "正在链接账户...",
+    "pendingMessage" : "在手机上继续",
     "pendingButton" : "取消",
-    "doneMessage" : ""
+    "doneMessage" : "",
+    "complete" : "已通过 OwnID 启用跳过密码。"
+  },
+  "linkButton" : {
+    "button" : "启用跳过密码"
   },
   "recover" : {
     "mobileTitle" : "启用即时登录",
@@ -74,6 +78,19 @@
   "common" : {
     "labelText" : "跳过密码",
     "noteText" : "下次登录时，将会识别手机并立即登录。",
-    "undo" : "撤消"
+    "undo" : "撤消",
+    "about" : "这是什么？"
+  },
+  "magicLink" : {
+    "link" : "没带手机吗？",
+    "title" : "使用智慧链接登录",
+    "message" : "将会给您发送一个链接，自动让您登录。",
+    "emailPlaceholder" : "电子邮件",
+    "button" : "发送智慧链接",
+    "error" : "账户不存在"
+  },
+  "magicLinkDone" : {
+    "title" : "检查您的电子邮件",
+    "message" : "已给您发送了一个链接到 {email}，它将自动让您登录。"
   }
 }

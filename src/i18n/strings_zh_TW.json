@@ -9,7 +9,7 @@
   },
   "login-partial" : {
     "mobileTitle" : "立即登入",
-    "desktopTitle" : "使用立即登入",
+    "desktopTitle" : "使用手機掃描此 QR 以登入。",
     "desktopSubtitle" : "掃描 QR 代碼以登入。",
     "pendingMessage" : "登入中...",
     "pendingButton" : "取消",
@@ -33,11 +33,15 @@
   },
   "link" : {
     "mobileTitle" : "啟用即時登入",
-    "desktopTitle" : "啟用即時登入",
+    "desktopTitle" : "使用手機掃描此 QR 可跳過密碼。",
     "desktopSubtitle" : "使用手機相機或應用程式掃描 QR。",
-    "pendingMessage" : "正在連結您的帳戶...",
+    "pendingMessage" : "繼續使用您的手機",
     "pendingButton" : "取消",
-    "doneMessage" : ""
+    "doneMessage" : "",
+    "complete" : "您已透過 OwnID 跳過密碼。"
+  },
+  "linkButton" : {
+    "button" : "啟用跳過密碼"
   },
   "recover" : {
     "mobileTitle" : "啟用即時登入",
@@ -74,6 +78,19 @@
   "common" : {
     "labelText" : "跳過密碼",
     "noteText" : "下一次登入時，我們會識別您的手機並立即將您登入。",
-    "undo" : "復原"
+    "undo" : "復原",
+    "about" : "這是甚麼？"
+  },
+  "magicLink" : {
+    "link" : "您沒有手機嗎？",
+    "title" : "使用 Magic Link 登入",
+    "message" : "我們將傳送連結給您以便自動登入。",
+    "emailPlaceholder" : "電子郵件",
+    "button" : "傳送 Magic Link",
+    "error" : "帳戶不存在"
+  },
+  "magicLinkDone" : {
+    "title" : "檢查電子郵件",
+    "message" : "我們將傳送連結給 {email} 以便自動登入。"
   }
 }

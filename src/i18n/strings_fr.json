@@ -9,7 +9,7 @@
   },
   "login-partial" : {
     "mobileTitle" : "Connexion instantanée",
-    "desktopTitle" : "Utiliser la connexion instantanée",
+    "desktopTitle" : "Pour vous connecter, scannez ce code QR avec votre téléphone.",
     "desktopSubtitle" : "Scannez le code QR pour vous connecter.",
     "pendingMessage" : "Connexion en cours...",
     "pendingButton" : "Annuler",
@@ -29,15 +29,19 @@
     "desktopSubtitle" : "",
     "pendingMessage" : "Chargement en cours...",
     "pendingButton" : "Annuler",
-    "doneMessage" : "Ignorer le mot de passe : activé.<br>Fin de l'enregistrement..."
+    "doneMessage" : "Ignorer le mot de passe : activé.<br> Fin de l'enregistrement..."
   },
   "link" : {
     "mobileTitle" : "Activer la connexion instantanée",
-    "desktopTitle" : "Activer la connexion instantanée",
+    "desktopTitle" : "Scannez ce code QR avec votre téléphone pour pouvoir contourner la saisie du mot de passe.",
     "desktopSubtitle" : "Utilisez l'appareil photo de votre téléphone ou une application pour scanner le code QR.",
-    "pendingMessage" : "Association de votre compte...",
+    "pendingMessage" : "Continuer sur votre téléphone",
     "pendingButton" : "Annuler",
-    "doneMessage" : ""
+    "doneMessage" : "",
+    "complete" : "OwnID a activé l'option 'Ignorer le mot de passe' pour vous."
+  },
+  "linkButton" : {
+    "button" : "Activer Ignorer le mot de passe"
   },
   "recover" : {
     "mobileTitle" : "Activer la connexion instantanée",
@@ -74,6 +78,19 @@
   "common" : {
     "labelText" : "Ignorer le mot de passe",
     "noteText" : "À la prochaine connexion, votre téléphone sera reconnu et vous serez instantanément connecté.",
-    "undo" : "Annuler"
+    "undo" : "Annuler",
+    "about" : "?"
+  },
+  "magicLink" : {
+    "link" : "Vous n'avez pas votre téléphone sous la main ?",
+    "title" : "Connectez-vous à l'aide du lien de téléchargement",
+    "message" : "Nous allons vous envoyer un lien pour vous connecter automatiquement.",
+    "emailPlaceholder" : "E-mail",
+    "button" : "Envoyer le lien de téléchargement",
+    "error" : "Le compte n'existe pas."
+  },
+  "magicLinkDone" : {
+    "title" : "Vérifiez vos e-mails.",
+    "message" : "Nous vous avons envoyé un lien à {email} pour vous connecter automatiquement."
   }
 }

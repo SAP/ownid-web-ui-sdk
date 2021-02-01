@@ -9,7 +9,7 @@
   },
   "login-partial" : {
     "mobileTitle" : "Logon instantâneo",
-    "desktopTitle" : "Usar logon instantâneo",
+    "desktopTitle" : "Escanear este QR com seu telefone para efetuar logon.",
     "desktopSubtitle" : "Escanear o código QR para efetuar logon.",
     "pendingMessage" : "Efetuando logon...",
     "pendingButton" : "Cancelar",
@@ -33,11 +33,15 @@
   },
   "link" : {
     "mobileTitle" : "Ativar logon instantâneo",
-    "desktopTitle" : "Ativar logon instantâneo",
+    "desktopTitle" : "Escanear este QR com seu telefone para ativar ignorar a senha.",
     "desktopSubtitle" : "Usar sua câmara do telefone ou um app para escanear o QR.",
-    "pendingMessage" : "Ligando sua conta...",
+    "pendingMessage" : "Continuar em seu telefone",
     "pendingButton" : "Cancelar",
-    "doneMessage" : ""
+    "doneMessage" : "",
+    "complete" : "Você ignorou a senha ativada por OwnID."
+  },
+  "linkButton" : {
+    "button" : "Ativar Ignorar a senha"
   },
   "recover" : {
     "mobileTitle" : "Ativar logon instantâneo",
@@ -74,6 +78,19 @@
   "common" : {
     "labelText" : "Ignore a senha",
     "noteText" : "A próxima vez que você efetuar logon, nós iremos reconhecer seu telefone e você ficará com logon efetuado instantaneamente.",
-    "undo" : "Desfazer"
+    "undo" : "Desfazer",
+    "about" : "O que é isto?"
+  },
+  "magicLink" : {
+    "link" : "Não tem seu telefone?",
+    "title" : "Logon com link mágico",
+    "message" : "Nós enviaremos um link para você efetuar logon automaticamente.",
+    "emailPlaceholder" : "E-mail",
+    "button" : "Enviar link mágico",
+    "error" : "A conta não existe"
+  },
+  "magicLinkDone" : {
+    "title" : "Verificar seu e-mail",
+    "message" : "Nós enviamos um link para {e-mail} que efetuará o logon automaticamente."
   }
 }
