@@ -237,6 +237,7 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 .ownid-tooltip-wrapper [ownid-pending]{border-radius:10px}
 
 .ownid-tooltip-wrapper .ownid-magic-link{margin:4px 0 -12px;font-size:10px;line-height:22px;text-align:center;color:#5B738B;cursor:pointer}
+.ownid-tooltip-wrapper .ownid-magic-link:hover{transition:color .2s ease-out;color:#0070F2;text-decoration:underline}
 .ownid-tooltip-wrapper .ownid-magic-link--title{margin:15px 0 4px}
 .ownid-tooltip-wrapper .ownid-magic-link--message{margin:0 0 16px}
 .ownid-tooltip-wrapper .ownid-magic-link-done--title{margin:20px 0 4px}
