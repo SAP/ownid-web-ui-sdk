@@ -18,6 +18,7 @@ export default class OwnIDUiSdkGigya extends OwnIDUiSdk {
     return new GigyaWidgetComponent(
       { ...this.config, ...config },
       new RequestService(this.config.logger),
+      this.magicLinkHandler,
       desktopDisable,
       mobileDisable,
     );

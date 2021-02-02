@@ -71,8 +71,6 @@ export default class WidgetComponent extends BaseComponent {
 
   private linkButtonInterval: number | undefined;
 
-  private magicLinkHandler = {} as MagicLinkHandler;
-
   private linkButton: LinkButtonWidget | undefined;
 
   private tooltipPlaceholder: HTMLDivElement | undefined;
@@ -80,6 +78,7 @@ export default class WidgetComponent extends BaseComponent {
   constructor(
     public config: IFullWidgetConfig,
     protected requestService: RequestService,
+    protected magicLinkHandler?: MagicLinkHandler,
     protected disableDesktop: boolean = false,
     protected disableMobile: boolean = false,
   ) {
@@ -89,18 +88,13 @@ export default class WidgetComponent extends BaseComponent {
 
     this.widgetReady = this.init(config).then(
       () => {
-        if (this.getConfig()?.magicLink) {
-          this.magicLinkHandler = new MagicLinkHandler(config, this.requestService);
+        if (this.getConfig()?.magicLink && this.magicLinkHandler) {
+          //  eslint-disable-next-line promise/no-nesting
+          this.magicLinkHandler.tryExchangeMagicToken().then((res) => {
+            if (!res) return;
 
-          if (this.config.onMagicLinkLogin) {
-            //  eslint-disable-next-line promise/no-nesting
-            this.magicLinkHandler.tryExchangeMagicToken().then((res) => {
-              if (res) {
-                this.config.onMagicLinkLogin!(res);
-                this.destroy();
-              }
-            });
-          }
+            this.destroy();
+          });
         }
 
         this.render();
@@ -273,9 +267,9 @@ export default class WidgetComponent extends BaseComponent {
         magicLink: { sendLinkCallback: (email: string) => Promise<unknown | null> };
       };
       const widgetConfig = this.getConfig();
-      if (widgetConfig?.magicLink && this.config.type === WidgetType.Login) {
+      if (widgetConfig?.magicLink && this.config.type === WidgetType.Login && this.magicLinkHandler) {
         config.magicLink = {
-          sendLinkCallback: (email: string) => this.magicLinkHandler.sendMagicLink(email, this.config.language),
+          sendLinkCallback: (email: string) => this.magicLinkHandler!.sendMagicLink(email, this.config.language),
         };
       }
 
@@ -418,7 +412,7 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     // remove expired items from contexts array
-    for (let i = this.contexts.length; i--; ) {
+    for (let i = this.contexts.length; i--;) {
       const item = this.contexts[i];
       if (findIndex(statusResponse, (x: StatusResponse) => x.context === item.context) < 0) {
         this.contexts.splice(i, 1);

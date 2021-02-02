@@ -3,6 +3,7 @@ import WidgetComponent from '../../components/widget.component';
 import RequestService from '../../services/request.service';
 import GigyaUserHandler from './gigya-user-handler';
 import ConfigurationService from '../../services/configuration.service';
+import { MagicLinkHandler } from '../../components/magic-link-handler';
 
 interface IGetJwtResponse {
   errorCode: number;
@@ -14,10 +15,11 @@ export default class GigyaWidgetComponent extends WidgetComponent {
   constructor(
     public config: IFullWidgetConfig,
     protected requestService: RequestService,
+    protected magicLinkHandler?: MagicLinkHandler,
     protected disableDesktop: boolean = false,
     protected disableMobile: boolean = false,
   ) {
-    super(config, requestService, disableDesktop, disableMobile);
+    super(config, requestService, magicLinkHandler, disableDesktop, disableMobile);
 
     if (!config.userHandler) {
       this.userHandler = new GigyaUserHandler(config.logger);
