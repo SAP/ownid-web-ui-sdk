@@ -412,7 +412,7 @@ export default class WidgetComponent extends BaseComponent {
     }
 
     // remove expired items from contexts array
-    for (let i = this.contexts.length; i--;) {
+    for (let i = this.contexts.length; i--; ) {
       const item = this.contexts[i];
       if (findIndex(statusResponse, (x: StatusResponse) => x.context === item.context) < 0) {
         this.contexts.splice(i, 1);
@@ -607,12 +607,31 @@ export default class WidgetComponent extends BaseComponent {
 
     const { left, top, right, height } = tooltipRefEl.getBoundingClientRect();
 
-    this.qr!.ref.style.top = `${top + (offsetX || height / 2) + window.pageYOffset}px`;
+    this.qr!.ref.style.top = `${top + (offsetY || height / 2) + window.pageYOffset}px`;
 
     if (tooltipPosition === 'right') {
-      this.qr!.ref.style.left = `${right + offsetY + window.pageXOffset + 10}px`; // 10px is arrow width
+      this.qr!.ref.style.left = `${right + offsetX + window.pageXOffset + 10}px`; // 10px is arrow width
     } else {
-      this.qr!.ref.style.right = `${window.innerWidth - left + offsetY + window.pageXOffset + 10}px`; // 10px is arrow width
+      this.qr!.ref.style.right = `${window.innerWidth - left + offsetX + window.pageXOffset + 10}px`; // 10px is arrow width
+    }
+
+    const elementBoundingClientRect = this.qr!.ref.getBoundingClientRect();
+
+    const qrTop = elementBoundingClientRect.top + elementBoundingClientRect.height / 2 - (offsetY || height / 2);
+
+    if (qrTop !== top) {
+      const offsetYY = top - qrTop;
+      this.qr!.ref.style.top = `${top + offsetYY + (offsetY || height / 2) + window.pageYOffset}px`;
+    }
+
+    if (tooltipPosition === 'right') {
+      if (elementBoundingClientRect.left + 10 !== right) {
+        const offsetXX = right - elementBoundingClientRect.left + 10;
+        this.qr!.ref.style.left = `${right + offsetXX + offsetX + window.pageXOffset + 10}px`; // 10px is arrow width
+      }
+    } else if (elementBoundingClientRect.right !== left - 10) {
+      const offsetXX = elementBoundingClientRect.right - left + 10;
+      this.qr!.ref.style.right = `${window.innerWidth - left + offsetXX + window.pageXOffset + 10}px`; // 10px is arrow width
     }
   }
 

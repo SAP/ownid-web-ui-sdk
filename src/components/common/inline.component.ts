@@ -89,6 +89,20 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
     const rect = this.infoTooltipEl!.getBoundingClientRect();
     this.infoTooltipEl!.style.top = `${top + window.pageYOffset - 4 - rect.height}px`;
     this.infoTooltipEl!.style.left = `${left - rect.width + width + window.pageXOffset}px`;
+
+    const elementBoundingClientRect = this.infoTooltipEl!.getBoundingClientRect();
+    const infoTop = elementBoundingClientRect.top + elementBoundingClientRect.height + 4;
+    const infoLeft = elementBoundingClientRect.left + elementBoundingClientRect.width - width;
+
+    if (infoTop !== top) {
+      const offsetYY = top - infoTop;
+      this.infoTooltipEl!.style.top = `${top + offsetYY + window.pageYOffset - 4 - rect.height}px`;
+    }
+
+    if (infoLeft !== left) {
+      const offsetXX = left - infoLeft;
+      this.infoTooltipEl!.style.left = `${left + offsetXX - rect.width + width + window.pageXOffset}px`;
+    }
   }
 
   private addOwnIDStyleTag(id: string, options: InlineWidgetOptions): void {
@@ -96,7 +110,7 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
 
     const style = document.createElement('style');
     style.id = id;
-    style.textContent = `.ownid-inline-widget{color:#0070F2;cursor:pointer;position:absolute;display:flex;align-items:center;font-size:14px;padding:0 10px;z-index:1000000001}
+    style.textContent = `.ownid-inline-widget{color:#0070F2;cursor:pointer;position:absolute;display:flex;align-items:center;font-size:14px;padding:0 10px;z-index:1000000001;white-space:nowrap}
 .ownid-info-icon{fill:#0070F2;padding:10px 10px 10px 5px;margin:0 -10px 0 -5px}
 .ownid-inline-widget--finished{color:#000;margin-left:-25px;pointer-events:none;opacity:1}
 .ownid-inline-widget--finished .ownid-info-icon{fill:#000;pointer-events:initial;opacity:1;cursor:pointer;}
@@ -131,9 +145,27 @@ input.ownid-skip-password::-webkit-credentials-auto-fill-button{margin-right:${
     // eslint-disable-next-line no-param-reassign
     element.style.left = `${right + offsetX - width + window.pageXOffset + 10}px`; // 10 px padding
 
+    const elementBoundingClientRect = element.getBoundingClientRect();
+
+    if (elementBoundingClientRect.top !== top) {
+      const offsetYY = top - elementBoundingClientRect.top;
+      // eslint-disable-next-line no-param-reassign
+      element.style.top = `${top + offsetYY + offsetY + targetHeight / 2 - height / 2 + window.pageYOffset}px`;
+    }
+
+    if (elementBoundingClientRect.right !== right) {
+      const offsetXX = right - elementBoundingClientRect.right;
+      // eslint-disable-next-line no-param-reassign
+      element.style.left = `${right + offsetXX + offsetX - width + window.pageXOffset + 10}px`; // 10 px padding
+    }
+
     if (offsetX < 0) {
       // eslint-disable-next-line no-param-reassign
       element.style.paddingRight = `${-offsetX}px`;
+    }
+
+    if (this.showInfo) {
+      this.toggleInfoTooltip(true);
     }
   }
 
