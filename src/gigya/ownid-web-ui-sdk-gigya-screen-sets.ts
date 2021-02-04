@@ -266,8 +266,7 @@ export default class OwnIDUiSdkGigyaScreenSets {
             window.gigya.accounts.getAccountInfo({
               include: 'data',
               callback: (userData: { data: { ownId: { connections: IOwnIdDataRS[] } } }) => {
-                const userDataObj = userData.data || {};
-                const ownIdConnections = userDataObj.ownId.connections || [];
+                const ownIdConnections = userData.data?.ownId?.connections || [];
 
                 ownIdConnections.push(data);
 
