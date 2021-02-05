@@ -152,10 +152,24 @@ describe('OwnIDUiSdk instances test', () => {
   });
 
   describe('generateOwnIDPassword', () => {
-    it('should create random string with defined length', () => {
-      const res = sdk.generateOwnIDPassword(10);
+    it('should create random string with defined length and all groups', () => {
+      const res = sdk.generateOwnIDPassword(100, 5, 10, 5);
+      expect(/^[a-zA-Z0-9@$%*&^\-+!#_=]{100}$/.test(res)).toEqual(true);
+    });
 
-      expect(res.length).toEqual(10);
+    it('should create random string with defined length and 1 group', () => {
+      const res = sdk.generateOwnIDPassword(100, 0, 0, 0);
+      expect(/^[a-z]{100}$/.test(res)).toEqual(true);
+    });
+
+    it('should create random string with defined length and 2 groups', () => {
+      const res = sdk.generateOwnIDPassword(100, 1, 0, 0);
+      expect(/^[a-zA-Z]{100}$/.test(res)).toEqual(true);
+    });
+
+    it('should create random string with defined length and 3 groups', () => {
+      const res = sdk.generateOwnIDPassword(100, 3, 3, 0);
+      expect(/^[a-zA-Z0-9]{100}$/.test(res)).toEqual(true);
     });
   });
 
