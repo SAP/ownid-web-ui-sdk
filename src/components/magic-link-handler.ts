@@ -15,7 +15,10 @@ export class MagicLinkHandler {
       'Accept-Language': language,
     };
 
-    const response = await this.requestService.get(`${this.link}?email=${email}`, { headers });
+    const fixedEmail = encodeURIComponent(email).replace(/[!'()*]/g, (c) => `%${c.charCodeAt(0).toString(16)}`);
+
+    // for RFC 3986 https://tools.ietf.org/html/rfc3986
+    const response = await this.requestService.get(`${this.link}?email=${fixedEmail}`, { headers });
 
     if (response?.checkTokenKey) {
       setCookie(response.checkTokenKey, response.checkTokenValue, response.checkTokenLifetime);
