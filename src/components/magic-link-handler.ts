@@ -6,6 +6,9 @@ import { getCookie, setCookie } from '../services/helper.service';
 export class MagicLinkHandler {
   readonly link: string;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private tryExchangeMagicTokenPromise: Promise<any> | undefined;
+
   constructor(private config: IInitConfig, private requestService: RequestService) {
     this.link = this.getMagicLinkEndpointUrl();
   }
@@ -29,20 +32,29 @@ export class MagicLinkHandler {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async tryExchangeMagicToken(): Promise<any> {
-    const urlParams = new URLSearchParams(window.location.search);
-    const magicToken = urlParams.get('ownid-mtkn');
-    const context = urlParams.get('ownid-ctxt');
+    if (this.tryExchangeMagicTokenPromise) {
+      return this.tryExchangeMagicTokenPromise;
+    }
 
-    if (!magicToken && !context) return null;
+    this.tryExchangeMagicTokenPromise = new Promise((resolve, reject) => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const magicToken = urlParams.get('ownid-mtkn');
+      const context = urlParams.get('ownid-ctxt');
 
-    const checkToken = getCookie(`ownid-mlc-${context}`);
-    const { data } = await this.requestService.post(`${this.getMagicLinkEndpointUrl()}`, {
-      context,
-      magicToken,
-      checkToken,
+      if (!magicToken && !context) reject(new Error('Missing required params'));
+
+      const checkToken = getCookie(`ownid-mlc-${context}`);
+      this.requestService
+        .post(`${this.getMagicLinkEndpointUrl()}`, {
+          context,
+          magicToken,
+          checkToken,
+        })
+        .then(({ data }) => resolve(data))
+        .catch(() => reject(new Error('Error while receiving login data')));
     });
 
-    return data;
+    return this.tryExchangeMagicTokenPromise;
   }
 
   private getMagicLinkEndpointUrl(): string {
