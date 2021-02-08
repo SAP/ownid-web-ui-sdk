@@ -265,13 +265,12 @@ export default class OwnIDUiSdkGigyaScreenSets {
           if (data?.pubKey) {
             window.gigya.accounts.getAccountInfo({
               include: 'data',
-              callback: (userData: { data: { ownId: { connections: IOwnIdDataRS[]}}}) => {
-                const userDataObj = userData.data || {};
-                const ownIdConnections = userDataObj.ownId.connections || [];
+              callback: (userData: { data: { ownId: { connections: IOwnIdDataRS[] } } }) => {
+                const ownIdConnections = userData.data?.ownId?.connections || [];
 
                 ownIdConnections.push(data);
 
-                window.gigya.accounts.setAccountInfo({ data: {  ownId: { connections: ownIdConnections} } });
+                window.gigya.accounts.setAccountInfo({ data: { ownId: { connections: ownIdConnections } } });
               },
             });
           }

@@ -71,8 +71,6 @@ export default class WidgetComponent extends BaseComponent {
 
   private linkButtonInterval: number | undefined;
 
-  private magicLinkHandler = {} as MagicLinkHandler;
-
   private linkButton: LinkButtonWidget | undefined;
 
   private tooltipPlaceholder: HTMLDivElement | undefined;
@@ -80,6 +78,7 @@ export default class WidgetComponent extends BaseComponent {
   constructor(
     public config: IFullWidgetConfig,
     protected requestService: RequestService,
+    protected magicLinkHandler?: MagicLinkHandler,
     protected disableDesktop: boolean = false,
     protected disableMobile: boolean = false,
   ) {
@@ -89,18 +88,13 @@ export default class WidgetComponent extends BaseComponent {
 
     this.widgetReady = this.init(config).then(
       () => {
-        if (this.getConfig()?.magicLink) {
-          this.magicLinkHandler = new MagicLinkHandler(config, this.requestService);
+        if (this.getConfig()?.magicLink && this.magicLinkHandler) {
+          //  eslint-disable-next-line promise/no-nesting
+          this.magicLinkHandler.tryExchangeMagicToken().then((res) => {
+            if (!res) return;
 
-          if (this.config.onMagicLinkLogin) {
-            //  eslint-disable-next-line promise/no-nesting
-            this.magicLinkHandler.tryExchangeMagicToken().then((res) => {
-              if (res) {
-                this.config.onMagicLinkLogin!(res);
-                this.destroy();
-              }
-            });
-          }
+            this.destroy();
+          });
         }
 
         this.render();
@@ -273,9 +267,9 @@ export default class WidgetComponent extends BaseComponent {
         magicLink: { sendLinkCallback: (email: string) => Promise<unknown | null> };
       };
       const widgetConfig = this.getConfig();
-      if (widgetConfig?.magicLink && this.config.type === WidgetType.Login) {
+      if (widgetConfig?.magicLink && this.config.type === WidgetType.Login && this.magicLinkHandler) {
         config.magicLink = {
-          sendLinkCallback: (email: string) => this.magicLinkHandler.sendMagicLink(email, this.config.language),
+          sendLinkCallback: (email: string) => this.magicLinkHandler!.sendMagicLink(email, this.config.language),
         };
       }
 
@@ -613,12 +607,31 @@ export default class WidgetComponent extends BaseComponent {
 
     const { left, top, right, height } = tooltipRefEl.getBoundingClientRect();
 
-    this.qr!.ref.style.top = `${top + (offsetX || height / 2) + window.pageYOffset}px`;
+    this.qr!.ref.style.top = `${top + (offsetY || height / 2) + window.pageYOffset}px`;
 
     if (tooltipPosition === 'right') {
-      this.qr!.ref.style.left = `${right + offsetY + window.pageXOffset + 10}px`; // 10px is arrow width
+      this.qr!.ref.style.left = `${right + offsetX + window.pageXOffset + 10}px`; // 10px is arrow width
     } else {
-      this.qr!.ref.style.right = `${window.innerWidth - left + offsetY + window.pageXOffset + 10}px`; // 10px is arrow width
+      this.qr!.ref.style.right = `${window.innerWidth - left + offsetX + window.pageXOffset + 10}px`; // 10px is arrow width
+    }
+
+    const elementBoundingClientRect = this.qr!.ref.getBoundingClientRect();
+
+    const qrTop = elementBoundingClientRect.top + elementBoundingClientRect.height / 2 - (offsetY || height / 2);
+
+    if (qrTop !== top) {
+      const offsetYY = top - qrTop;
+      this.qr!.ref.style.top = `${top + offsetYY + (offsetY || height / 2) + window.pageYOffset}px`;
+    }
+
+    if (tooltipPosition === 'right') {
+      if (elementBoundingClientRect.left + 10 !== right) {
+        const offsetXX = right - elementBoundingClientRect.left + 10;
+        this.qr!.ref.style.left = `${right + offsetXX + offsetX + window.pageXOffset + 10}px`; // 10px is arrow width
+      }
+    } else if (elementBoundingClientRect.right !== left - 10) {
+      const offsetXX = elementBoundingClientRect.right - left + 10;
+      this.qr!.ref.style.right = `${window.innerWidth - left + offsetXX + window.pageXOffset + 10}px`; // 10px is arrow width
     }
   }
 

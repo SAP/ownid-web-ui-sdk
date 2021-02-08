@@ -3,8 +3,28 @@ import RequestService from './services/request.service';
 import { IInitConfig, IWidgetConfig, IWidgetPayload, WidgetType } from './interfaces/i-widget.interfaces';
 import LoggerDecorator from './services/logger.service';
 import { LogLevel } from './interfaces/i-logger.interfaces';
+import { MagicLinkHandler } from './components/magic-link-handler';
 
-const possibleChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+function addGroup(arr: string[], length: number, possibleChars: string, number = 1) {
+  for (let i = Math.floor(Math.random() * (length / 4 - number) + number); i--; ) {
+    const char = possibleChars[Math.floor(Math.random() * possibleChars.length)];
+    arr.push(char);
+  }
+
+  return arr;
+}
+
+function shuffle(arr: string[]) {
+  for (let i = arr.length - 1; i--; ) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const x = arr[i];
+    // eslint-disable-next-line no-param-reassign
+    arr[i] = arr[j];
+    // eslint-disable-next-line no-param-reassign
+    arr[j] = x;
+  }
+  return arr;
+}
 
 export default class OwnIDUiSdk {
   // don't change version placeholder
@@ -12,6 +32,8 @@ export default class OwnIDUiSdk {
   version = '${APP_VERSION}';
 
   config = {} as IInitConfig;
+
+  protected magicLinkHandler: MagicLinkHandler | undefined;
 
   init(config: IInitConfig = {}): void {
     this.config = config;
@@ -22,6 +44,16 @@ export default class OwnIDUiSdk {
       const logLevel = config.logLevel ? LogLevel[config.logLevel as keyof typeof LogLevel] : LogLevel.error;
 
       this.config.logger = new LoggerDecorator(config.logger, logLevel);
+    }
+
+    if (this.config.onMagicLinkLogin) {
+      this.magicLinkHandler = new MagicLinkHandler(this.config, new RequestService(this.config.logger));
+
+      this.magicLinkHandler.tryExchangeMagicToken().then((res) => {
+        if (!res) return;
+
+        this.config.onMagicLinkLogin!(res);
+      });
     }
   }
 
@@ -38,6 +70,7 @@ export default class OwnIDUiSdk {
     return new WidgetComponent(
       { ...this.config, ...config },
       new RequestService(this.config.logger),
+      this.magicLinkHandler,
       desktopDisable,
       mobileDisable,
     );
@@ -63,12 +96,33 @@ export default class OwnIDUiSdk {
     return widget.addOwnIDConnectionOnServer(did);
   }
 
-  generateOwnIDPassword(length: number): string {
-    let result = '';
-    for (let i = length; i--; ) {
-      result += possibleChars[Math.floor(Math.random() * possibleChars.length)];
+  generateOwnIDPassword(length: number, numberCapitalised = 1, numberNumbers = 1, numberSpecial = 1): string {
+    const possibleRegularChars = 'abcdefghijklmnopqrstuvwxyz';
+    const possibleCapitalChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const possibleNumberChars = '0123456789';
+    const possibleSpecialChars = '@$%*&^-+!#_=';
+
+    let resArr: string[] = [];
+
+    if (numberCapitalised) {
+      resArr = addGroup(resArr, length, possibleCapitalChars, numberCapitalised);
     }
-    return result;
+    if (numberNumbers) {
+      resArr = addGroup(resArr, length, possibleNumberChars, numberNumbers);
+    }
+    if (numberSpecial) {
+      resArr = addGroup(resArr, length, possibleSpecialChars, numberSpecial);
+    }
+
+    const arrLength = resArr.length;
+
+    for (let i = length; i > arrLength; i--) {
+      resArr.push(possibleRegularChars[Math.floor(Math.random() * possibleRegularChars.length)]);
+    }
+
+    resArr = shuffle(resArr);
+
+    return resArr.join('');
   }
 
   reRenderWidget(ownIDWidget: WidgetComponent | null): WidgetComponent | null {

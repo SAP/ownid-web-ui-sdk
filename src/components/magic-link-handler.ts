@@ -6,6 +6,9 @@ import { getCookie, setCookie } from '../services/helper.service';
 export class MagicLinkHandler {
   readonly link: string;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private static tryExchangeMagicTokenPromise: Promise<any> | undefined;
+
   constructor(private config: IInitConfig, private requestService: RequestService) {
     this.link = this.getMagicLinkEndpointUrl();
   }
@@ -15,7 +18,10 @@ export class MagicLinkHandler {
       'Accept-Language': language,
     };
 
-    const response = await this.requestService.get(`${this.link}?email=${email}`, { headers });
+    const fixedEmail = encodeURIComponent(email).replace(/[!'()*]/g, (c) => `%${c.charCodeAt(0).toString(16)}`);
+
+    // for RFC 3986 https://tools.ietf.org/html/rfc3986
+    const response = await this.requestService.get(`${this.link}?email=${fixedEmail}`, { headers });
 
     if (response?.checkTokenKey) {
       setCookie(response.checkTokenKey, response.checkTokenValue, response.checkTokenLifetime);
@@ -25,21 +31,33 @@ export class MagicLinkHandler {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async tryExchangeMagicToken(): Promise<any> {
-    const urlParams = new URLSearchParams(window.location.search);
-    const magicToken = urlParams.get('ownid-mtkn');
-    const context = urlParams.get('ownid-ctxt');
+  public tryExchangeMagicToken(): Promise<any> {
+    if (MagicLinkHandler.tryExchangeMagicTokenPromise) {
+      return MagicLinkHandler.tryExchangeMagicTokenPromise;
+    }
 
-    if (!magicToken && !context) return null;
+    MagicLinkHandler.tryExchangeMagicTokenPromise = new Promise((resolve, reject) => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const magicToken = urlParams.get('ownid-mtkn');
+      const context = urlParams.get('ownid-ctxt');
 
-    const checkToken = getCookie(`ownid-mlc-${context}`);
-    const { data } = await this.requestService.post(`${this.getMagicLinkEndpointUrl()}`, {
-      context,
-      magicToken,
-      checkToken,
+      if (!magicToken && !context) {
+        resolve(null);
+        return;
+      }
+
+      const checkToken = getCookie(`ownid-mlc-${context}`);
+      this.requestService
+        .post(`${this.getMagicLinkEndpointUrl()}`, {
+          context,
+          magicToken,
+          checkToken,
+        })
+        .then(({ data }) => resolve(data))
+        .catch(() => reject(new Error('Error while receiving login data')));
     });
 
-    return data;
+    return MagicLinkHandler.tryExchangeMagicTokenPromise;
   }
 
   private getMagicLinkEndpointUrl(): string {

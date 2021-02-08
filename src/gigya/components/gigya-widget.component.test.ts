@@ -82,7 +82,7 @@ describe('Gigya widget', () => {
       };
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const sut = new GigyaWidgetComponent(config, requestService, true, true) as any;
+      const sut = new GigyaWidgetComponent(config, requestService, undefined, true, true) as any;
 
       sut.getContext = jest.fn().mockResolvedValue(true);
 

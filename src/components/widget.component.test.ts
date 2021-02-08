@@ -228,6 +228,7 @@ describe('widget component', () => {
           URLPrefix: 'url',
         },
         requestService,
+        undefined,
         true
       );
       sut.widgetReady.then(() => {
@@ -259,6 +260,7 @@ describe('widget component', () => {
           URLPrefix: 'url',
         },
         requestService,
+        undefined,
         false,
         true
       );
