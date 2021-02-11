@@ -37,6 +37,7 @@ export interface IInitConfig {
   logger?: ILogger;
   logLevel?: keyof typeof LogLevel;
   onMagicLinkLogin?: (response: unknown) => void;
+  onMagicLinkError?: (errorMessage: string) => void;
 }
 
 export interface IWidgetConfig {
