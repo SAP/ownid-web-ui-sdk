@@ -62,7 +62,8 @@ export class MagicLinkHandler {
           resolve(data);
         })
         // eslint-disable-next-line no-console
-        .catch((error: Error) => console.error('Error while receiving login data:', error));
+        .catch((error: Error) => console.error('Error while receiving login data:', error))
+        .finally(() => delete MagicLinkHandler.tryExchangeMagicTokenPromise);
     });
 
     return MagicLinkHandler.tryExchangeMagicTokenPromise;
