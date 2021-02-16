@@ -27,9 +27,10 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
     super(options);
 
     if (options.config?.magicLink) {
-      this.ref
-        .querySelector('.ownid-magic-link')
-        ?.addEventListener('click', () => setTimeout(() => this.showMagicLinkPane()));
+      this.ref.querySelector('.ownid-magic-link')?.addEventListener('click', (e: Event) => {
+        e.stopPropagation();
+        this.showMagicLinkPane();
+      });
     }
   }
 
@@ -246,6 +247,8 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 .ownid-magic-link--button{margin-bottom:8px}
 .ownid-magic-link--error{display:none}
 .ownid-magic-link-done-icon{margin:28px auto 0;width:48px;height:48px}
+.ownid-magic-link--back{font-size:12px;line-height:14px;color:#0070F2;cursor:pointer;display:flex;align-items:center;margin-top:-10px}
+.ownid-magic-link--back:before{content:'';opacity:1;width:6px;height:14px;display:block;margin-right:7px;background:url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNiIgaGVpZ2h0PSIxMCIgdmlld0JveD0iMCAwIDYgMTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNNS43MDcxMSAwLjI5Mjg5M0M2LjA5NzYzIDAuNjgzNDE3IDYuMDk3NjMgMS4zMTY1OCA1LjcwNzExIDEuNzA3MTFMMi40MTQyMSA1TDUuNzA3MTEgOC4yOTI4OUM2LjA5NzYzIDguNjgzNDIgNi4wOTc2MyA5LjMxNjU4IDUuNzA3MTEgOS43MDcxMUM1LjMxNjU4IDEwLjA5NzYgNC42ODM0MiAxMC4wOTc2IDQuMjkyODkgOS43MDcxMUwwLjI5Mjg5MyA1LjcwNzExQy0wLjA5NzYzMTEgNS4zMTY1OCAtMC4wOTc2MzExIDQuNjgzNDIgMC4yOTI4OTMgNC4yOTI4OUw0LjI5Mjg5IDAuMjkyODkzQzQuNjgzNDIgLTAuMDk3NjMxMSA1LjMxNjU4IC0wLjA5NzYzMTEgNS43MDcxMSAwLjI5Mjg5M1oiIGZpbGw9IiMwMDcwRjIiLz4KPC9zdmc+Cg==) no-repeat center center}
 
 .ownid-message{padding:0 16px;font-size:12px;line-height:16px;text-align:center;color:#5B738B}
 .ownid-input{padding:4px 10px;background: #F5F6F7;border:0;border-radius:6px;font-size:14px;line-height:24px;color:#354A5F}
@@ -272,6 +275,7 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
 
   private showMagicLinkPane(): void {
     this.ref.innerHTML = `<div ownid-magic-link class="ownid-qr-pane">
+      <div class="ownid-magic-link--back">${TranslationService.instant(this.options.language, 'magicLink.back')}</div>
       <div class="ownid-title ownid-magic-link--title">${TranslationService.instant(
         this.options.language,
         'magicLink.title',
@@ -310,6 +314,15 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
       }
 
       this.showMagicLinkDonePane(emailInput.value);
+    });
+
+    this.ref.querySelector('.ownid-magic-link--back')?.addEventListener('click', (event: Event) => {
+      event.stopPropagation();
+      this.ref.innerHTML = this.render(this.options).innerHTML;
+      this.ref.querySelector('.ownid-magic-link')?.addEventListener('click', (e: Event) => {
+        e.stopPropagation();
+        this.showMagicLinkPane();
+      });
     });
   }
 

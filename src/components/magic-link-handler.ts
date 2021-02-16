@@ -53,8 +53,17 @@ export class MagicLinkHandler {
           magicToken,
           checkToken,
         })
-        .then(({ data }) => resolve(data))
-        .catch(() => reject(new Error('Error while receiving login data')));
+        .then(({ data, error }) => {
+          if (error) {
+            reject(error);
+            return;
+          }
+
+          resolve(data);
+        })
+        // eslint-disable-next-line no-console
+        .catch((error: Error) => console.error('Error while receiving login data:', error))
+        .finally(() => delete MagicLinkHandler.tryExchangeMagicTokenPromise);
     });
 
     return MagicLinkHandler.tryExchangeMagicTokenPromise;

@@ -87,6 +87,7 @@
     "message" : "We will send you a link to automatically log you in.",
     "emailPlaceholder" : "Email",
     "button" : "Send Magic Link",
+    "back" : "Back",
     "error": "Account doesn’t exist"
   },
   "magicLinkDone" : {

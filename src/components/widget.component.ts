@@ -90,11 +90,14 @@ export default class WidgetComponent extends BaseComponent {
       () => {
         if (this.getConfig()?.magicLink && this.magicLinkHandler) {
           //  eslint-disable-next-line promise/no-nesting
-          this.magicLinkHandler.tryExchangeMagicToken().then((res) => {
-            if (!res) return;
+          this.magicLinkHandler
+            .tryExchangeMagicToken()
+            .then((res) => {
+              if (!res) return;
 
-            this.destroy();
-          });
+              this.destroy();
+            })
+            .catch(() => {});
         }
 
         this.render();

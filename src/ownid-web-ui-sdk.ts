@@ -49,11 +49,18 @@ export default class OwnIDUiSdk {
     if (this.config.onMagicLinkLogin) {
       this.magicLinkHandler = new MagicLinkHandler(this.config, new RequestService(this.config.logger));
 
-      this.magicLinkHandler.tryExchangeMagicToken().then((res) => {
-        if (!res) return;
+      this.magicLinkHandler
+        .tryExchangeMagicToken()
+        .then((res) => {
+          if (!res) return;
 
-        this.config.onMagicLinkLogin!(res);
-      });
+          this.config.onMagicLinkLogin!(res);
+        })
+        .catch((error) => {
+          if (!error || !this.config.onMagicLinkError) return;
+
+          this.config.onMagicLinkError(error);
+        });
     }
   }
 

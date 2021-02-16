@@ -115,6 +115,8 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
 .ownid-inline-widget--finished{color:#000;margin-left:-25px;pointer-events:none;opacity:1}
 .ownid-inline-widget--finished.ownid-inline-widget .ownid-info-icon{fill:#000;pointer-events:initial;opacity:1;cursor:pointer;}
 .ownid-inline-widget--finished:before{content:'';opacity:1;width:25px;height:16px;display:block;background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOC43MDcgNy4yOTNhMSAxIDAgMCAxIDAgMS40MTRsLTggOGExIDEgMCAwIDEtMS40MTQgMGwtMy0zYTEgMSAwIDAgMSAxLjQxNC0xLjQxNEwxMCAxNC41ODZsNy4yOTMtNy4yOTNhMSAxIDAgMCAxIDEuNDE0IDB6IiBmaWxsPSIjMzZhNDFkIi8+PC9zdmc+) repeat center center}
+.ownid-inline-widget--finished-with-error{color:#A9B4BE;margin-left:-25px;pointer-events:none;opacity:1}
+.ownid-inline-widget--finished-with-error.ownid-inline-widget .ownid-info-icon{fill:#A9B4BE;pointer-events:initial;opacity:1;cursor:pointer;}
 .ownid-inline-disabled{opacity:0.3;pointer-events:none}
 .ownid-note-undo{color:#0070F2;cursor:pointer}
 .ownid-inline-required{border-color:#0070F2 !important}
@@ -184,6 +186,9 @@ input.ownid-skip-password::-webkit-credentials-auto-fill-button{margin-right:${
   }
 
   public noAccount(): void {
+    this.ref.classList.remove('ownid-inline-widget--finished');
+    this.ref.classList.add('ownid-inline-widget--finished-with-error');
+
     this.displayMessage('warn', TranslationService.instant(this.options.language, 'inline.noAccount'));
   }
 
