@@ -30,7 +30,7 @@ describe('OwnIDUiSdk instances test', () => {
         URLPrefix: 'url',
         logger: {
           externalLogger: {},
-          logLevel: 3,
+          logLevel: 4,
         },
       });
     });
@@ -39,14 +39,14 @@ describe('OwnIDUiSdk instances test', () => {
       const params = {
         URLPrefix: 'url',
         logger: {} as ILogger,
-        logLevel: 'info' as const,
+        logLevel: 'information' as const,
       };
 
       sdk.init(params);
 
       expect(sdk.config).toEqual({
         URLPrefix: 'url',
-        logLevel: 'info',
+        logLevel: 'information',
         logger: {
           externalLogger: {},
           logLevel: 2,
@@ -57,7 +57,12 @@ describe('OwnIDUiSdk instances test', () => {
     it('should set config to {}', () => {
       sdk.init();
 
-      expect(sdk.config).toEqual({});
+      expect(sdk.config).toEqual({
+        logger: {
+          URLPrefix: '',
+          logLevel: 4,
+        },
+      });
     });
   });
 

@@ -3,23 +3,31 @@ import { LogLevel, ILogger } from '../interfaces/i-logger.interfaces';
 export default class LoggerDecorator implements ILogger {
   constructor(private externalLogger: ILogger, private logLevel: LogLevel) {}
 
-  logDebug(message: string): void {
+  logDebug<T>(message: string, data: T): void {
     if (this.logLevel > LogLevel.debug) {
       return;
     }
 
-    this.externalLogger.logDebug(message);
+    this.externalLogger.logDebug(message, data);
   }
 
-  logInfo(message: string): void {
-    if (this.logLevel > LogLevel.info) {
+  logInfo<T>(message: string, data: T): void {
+    if (this.logLevel > LogLevel.information) {
       return;
     }
 
-    this.externalLogger.logInfo(message);
+    this.externalLogger.logInfo(message, data);
   }
 
-  logError(message: string): void {
-    this.externalLogger.logError(message);
+  logWarning<T>(message: string, data: T): void {
+    if (this.logLevel > LogLevel.warning) {
+      return;
+    }
+
+    this.externalLogger.logInfo(message, data);
+  }
+
+  logError<T>(message: string, data: T): void {
+    this.externalLogger.logError(message, data);
   }
 }

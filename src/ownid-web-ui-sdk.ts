@@ -4,6 +4,7 @@ import { IInitConfig, IWidgetConfig, IWidgetPayload, WidgetType } from './interf
 import LoggerDecorator from './services/logger.service';
 import { LogLevel } from './interfaces/i-logger.interfaces';
 import { MagicLinkHandler } from './components/magic-link-handler';
+import BackendLogger from './services/backendLogger.service';
 
 function addGroup(arr: string[], length: number, possibleChars: string, number = 1) {
   for (let i = Math.floor(Math.random() * (length / 4 - number) + number); i--; ) {
@@ -44,6 +45,9 @@ export default class OwnIDUiSdk {
       const logLevel = config.logLevel ? LogLevel[config.logLevel as keyof typeof LogLevel] : LogLevel.error;
 
       this.config.logger = new LoggerDecorator(config.logger, logLevel);
+    }
+    else {
+      this.config.logger = new BackendLogger(LogLevel.error, config.URLPrefix || '');
     }
 
     if (this.config.onMagicLinkLogin) {

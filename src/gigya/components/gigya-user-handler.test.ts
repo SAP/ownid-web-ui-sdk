@@ -62,6 +62,7 @@ describe('GigyaUserHandler', () => {
     };
     const logger = {
       logError: jest.fn(),
+      logWarning: jest.fn(),
       logDebug: jest.fn(),
       logInfo: jest.fn(),
     } as ILogger;

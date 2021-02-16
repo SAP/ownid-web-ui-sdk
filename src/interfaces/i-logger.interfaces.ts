@@ -1,11 +1,17 @@
 export enum LogLevel {
-  debug = 1,
-  info = 2,
-  error = 3,
+  trace,
+  debug,
+  information,
+  warning,
+  error,
+  critical,
+  none,
 }
 
 export interface ILogger {
-  logDebug(message: string): void;
-  logInfo(message: string): void;
-  logError(message: string): void;
+  logDebug<T>(message: string, data: T): void;
+  logInfo<T>(message: string, data: T): void;
+  logWarning<T>(message: string, data: T): void;
+  logError<T>(message: string, data: T): void;
+  setLogLevel?(logLevel: number): void
 }

@@ -81,6 +81,7 @@ describe('RequestService', () => {
       const logger = {
         logDebug: () => {},
         logInfo: () => {},
+        logWarning: () => {},
         logError: () => {},
       };
       logger.logInfo = jest.fn();
@@ -136,6 +137,7 @@ describe('RequestService', () => {
       const logger = {
         logDebug: () => {},
         logInfo: () => {},
+        logWarning: () => {},
         logError: () => {},
       };
       logger.logInfo = jest.fn();

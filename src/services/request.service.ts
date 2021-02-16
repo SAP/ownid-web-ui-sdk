@@ -6,7 +6,7 @@ export default class RequestService {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async post(url: string, data = {}): Promise<any> {
-    this.logger?.logInfo(`request: ${url}`);
+    this.logger?.logDebug(`request: ${url}`, data);
 
     const response = await fetch(url, {
       method: 'POST',
@@ -22,15 +22,18 @@ export default class RequestService {
     });
 
     if (response.status === 200) {
-      return response.json();
-    }
+      const result = response.json();
+
+      this.logger?.logDebug(`response: ${url}`, result);
+
+      return result;    }
 
     return null;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async get(url: string, options?: { headers: { [key: string]: string } }): Promise<any | null> {
-    this.logger?.logInfo(`request: ${url}`);
+    this.logger?.logDebug(`request: ${url}`, {});
 
     const response = await fetch(url, {
       method: 'GET',
@@ -42,7 +45,11 @@ export default class RequestService {
     });
 
     if (response.status === 200) {
-      return response.json();
+      const result = response.json();
+
+      this.logger?.logDebug(`response: ${url}`, result);
+
+      return result;
     }
 
     return null;

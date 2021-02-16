@@ -6,6 +6,7 @@ describe('LoggerDecorator', () => {
     return {
       logDebug: () => {},
       logInfo: () => {},
+      logWarning: () => {},
       logError: () => {}
     };
   }
@@ -16,17 +17,17 @@ describe('LoggerDecorator', () => {
       externalLogger.logDebug = jest.fn();
       const logDecorator = new LoggerDecorator(externalLogger, LogLevel.debug);
 
-      logDecorator.logDebug('debug');
+      logDecorator.logDebug('debug', 'data');
 
-      expect(externalLogger.logDebug).toBeCalledWith('debug');
+      expect(externalLogger.logDebug).toBeCalledWith('debug', 'data');
     });
 
     it('does not log debug if log level is info', async() =>{
       const externalLogger = getExternalLog();
       externalLogger.logDebug = jest.fn();
-      const logDecorator = new LoggerDecorator(externalLogger, LogLevel.info);
+      const logDecorator = new LoggerDecorator(externalLogger, LogLevel.information);
 
-      logDecorator.logDebug('debug');
+      logDecorator.logDebug('debug', 'data');
 
       expect(externalLogger.logDebug).toBeCalledTimes(0);
     });
@@ -36,7 +37,7 @@ describe('LoggerDecorator', () => {
       externalLogger.logDebug = jest.fn();
       const logDecorator = new LoggerDecorator(externalLogger, LogLevel.error);
 
-      logDecorator.logDebug('debug');
+      logDecorator.logDebug('debug', 'data');
 
       expect(externalLogger.logDebug).toBeCalledTimes(0);
     });
@@ -48,19 +49,19 @@ describe('LoggerDecorator', () => {
       externalLogger.logInfo = jest.fn();
       const logDecorator = new LoggerDecorator(externalLogger, LogLevel.debug);
 
-      logDecorator.logInfo('info');
+      logDecorator.logInfo('info', 'data');
 
-      expect(externalLogger.logInfo).toBeCalledWith('info');
+      expect(externalLogger.logInfo).toBeCalledWith('info', 'data');
     });
 
     it('log info if log level debug info', async() =>{
       const externalLogger = getExternalLog();
       externalLogger.logInfo = jest.fn();
-      const logDecorator = new LoggerDecorator(externalLogger, LogLevel.info);
+      const logDecorator = new LoggerDecorator(externalLogger, LogLevel.information);
 
-      logDecorator.logInfo('info');
+      logDecorator.logInfo('info', 'data');
 
-      expect(externalLogger.logInfo).toBeCalledWith('info');
+      expect(externalLogger.logInfo).toBeCalledWith('info', 'data');
     });
 
     it('does not log info if log level is error', async() =>{
@@ -68,7 +69,7 @@ describe('LoggerDecorator', () => {
       externalLogger.logInfo = jest.fn();
       const logDecorator = new LoggerDecorator(externalLogger, LogLevel.error);
 
-      logDecorator.logInfo('info');
+      logDecorator.logInfo('info', 'data');
 
       expect(externalLogger.logInfo).toBeCalledTimes(0);
     });
@@ -80,19 +81,19 @@ describe('LoggerDecorator', () => {
       externalLogger.logError = jest.fn();
       const logDecorator = new LoggerDecorator(externalLogger, LogLevel.debug);
 
-      logDecorator.logError('error');
+      logDecorator.logError('error', 'data');
 
-      expect(externalLogger.logError).toBeCalledWith('error');
+      expect(externalLogger.logError).toBeCalledWith('error', 'data');
     });
 
     it('log error if log level info', async() =>{
       const externalLogger = getExternalLog();
       externalLogger.logError = jest.fn();
-      const logDecorator = new LoggerDecorator(externalLogger, LogLevel.info);
+      const logDecorator = new LoggerDecorator(externalLogger, LogLevel.information);
 
-      logDecorator.logError('error');
+      logDecorator.logError('error', 'data');
 
-      expect(externalLogger.logError).toBeCalledWith('error');
+      expect(externalLogger.logError).toBeCalledWith('error', 'data');
     });
 
     it('log error if log level error', async() =>{
@@ -100,9 +101,9 @@ describe('LoggerDecorator', () => {
       externalLogger.logError = jest.fn();
       const logDecorator = new LoggerDecorator(externalLogger, LogLevel.error);
 
-      logDecorator.logError('error');
+      logDecorator.logError('error', 'data');
 
-      expect(externalLogger.logError).toBeCalledWith('error');
+      expect(externalLogger.logError).toBeCalledWith('error', 'data');
     });
   });
 });

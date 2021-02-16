@@ -13,9 +13,11 @@ export default class GigyaUserHandler implements IUserHandler {
         callback: (response: IIsAvailableLoginIDResponse) => {
           if (response.errorCode !== 0) {
             const errorText = `Gigya.isAvailableLoginID -> ${response.errorCode}: ${response.errorMessage}`;
-            this.logger?.logError(errorText);
+            this.logger?.logError(errorText, response);
             reject(new Error(errorText));
           }
+
+          this.logger?.logDebug('Gigya.isAvailableLoginID', response);
 
           resolve(!response.isAvailable);
         },

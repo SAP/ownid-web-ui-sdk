@@ -100,6 +100,10 @@ export default class WidgetComponent extends BaseComponent {
             .catch(() => {});
         }
 
+        if (this.getConfig()?.logLevel !== undefined && config.logger?.setLogLevel) {
+          config.logger.setLogLevel(this.getConfig().logLevel);
+        }
+
         this.render();
 
         this.setRefreshLinkOrQR();
