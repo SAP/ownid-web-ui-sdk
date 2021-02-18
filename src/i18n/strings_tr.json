@@ -87,6 +87,7 @@
     "message" : "Oturumunuzu otomatik olarak açmak için size bir bağlantı göndereceğiz.",
     "emailPlaceholder" : "E-posta",
     "button" : "Sihirli bağlantıyı gönder",
+    "back" : "Geriye",
     "error" : "Hesap mevcut değil"
   },
   "magicLinkDone" : {

@@ -87,6 +87,7 @@
     "message" : "Kami akan menghantar pautan kepada anda untuk anda log masuk secara automatik.",
     "emailPlaceholder" : "E-mel",
     "button" : "Hantar Pautan Ajaib",
+    "back" : "Kembali",
     "error" : "Akaun tiada"
   },
   "magicLinkDone" : {

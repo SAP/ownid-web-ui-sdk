@@ -87,6 +87,7 @@
     "message" : "자동으로 로그인할 수 있는 링크를 보내드리겠습니다.",
     "emailPlaceholder" : "전자메일",
     "button" : "매직 링크 보내기",
+    "back" : "이전",
     "error" : "계정이 없습니다."
   },
   "magicLinkDone" : {

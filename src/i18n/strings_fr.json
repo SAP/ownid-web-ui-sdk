@@ -87,6 +87,7 @@
     "message" : "Nous allons vous envoyer un lien pour vous connecter automatiquement.",
     "emailPlaceholder" : "E-mail",
     "button" : "Envoyer le lien de téléchargement",
+    "back" : "Retour",
     "error" : "Le compte n'existe pas."
   },
   "magicLinkDone" : {

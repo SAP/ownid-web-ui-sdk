@@ -87,6 +87,7 @@
     "message" : "Chúng tôi sẽ gửi cho bạn liên kết để bạn tự động đăng nhập.",
     "emailPlaceholder" : "Email",
     "button" : "Gửi magic link",
+    "back" : "Quay lại",
     "error" : "Tài khoản không tồn tại"
   },
   "magicLinkDone" : {
