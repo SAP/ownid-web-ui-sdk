@@ -87,6 +87,7 @@
     "message" : "我們將傳送連結給您以便自動登入。",
     "emailPlaceholder" : "電子郵件",
     "button" : "傳送 Magic Link",
+    "back" : "返回",
     "error" : "帳戶不存在"
   },
   "magicLinkDone" : {

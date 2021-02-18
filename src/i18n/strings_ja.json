@@ -87,6 +87,7 @@
     "message" : "自動的にログインするためのリンクを送信します。",
     "emailPlaceholder" : "メール",
     "button" : "リンクを送信",
+    "back" : "戻る",
     "error" : "アカウントが存在しません"
   },
   "magicLinkDone" : {

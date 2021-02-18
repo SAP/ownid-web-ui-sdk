@@ -87,6 +87,7 @@
     "message" : "Kami akan mengirimkan tautan kepada Anda agar Anda dapat masuk secara otomatis.",
     "emailPlaceholder" : "Email",
     "button" : "Kirimkan Tautan Ajaib",
+    "back" : "Kembali",
     "error" : "Akun tidak ada"
   },
   "magicLinkDone" : {

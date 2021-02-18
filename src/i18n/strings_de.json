@@ -87,6 +87,7 @@
     "message" : "Wir senden Ihnen einen Link zur automatischen Anmeldung.",
     "emailPlaceholder" : "E-Mail",
     "button" : "Zauberlink senden",
+    "back" : "Zurück",
     "error" : "Konto ist nicht vorhanden"
   },
   "magicLinkDone" : {

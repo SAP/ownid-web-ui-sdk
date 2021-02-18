@@ -87,6 +87,7 @@
     "message" : "เราจะส่งลิงก์ให้คุณเพื่อนำคุณเข้าสู่ระบบโดยอัตโนมัติ",
     "emailPlaceholder" : "อีเมล์",
     "button" : "ส่ง Magic Link",
+    "back" : "ย้อนกลับ",
     "error" : "ไม่มีบัญชี"
   },
   "magicLinkDone" : {
