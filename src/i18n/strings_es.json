@@ -87,6 +87,7 @@
     "message" : "Le enviaremos un enlace para que pueda iniciar sesión automáticamente.",
     "emailPlaceholder" : "Correo electrónico",
     "button" : "Enviar enlace mágico",
+    "back" : "Atrás",
     "error" : "La cuenta no existe"
   },
   "magicLinkDone" : {

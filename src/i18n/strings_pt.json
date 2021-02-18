@@ -87,6 +87,7 @@
     "message" : "Nós enviaremos um link para você efetuar logon automaticamente.",
     "emailPlaceholder" : "E-mail",
     "button" : "Enviar link mágico",
+    "back" : "Voltar",
     "error" : "A conta não existe"
   },
   "magicLinkDone" : {

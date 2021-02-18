@@ -87,6 +87,7 @@
     "message" : "将会给您发送一个链接，自动让您登录。",
     "emailPlaceholder" : "电子邮件",
     "button" : "发送智慧链接",
+    "back" : "返回",
     "error" : "账户不存在"
   },
   "magicLinkDone" : {
