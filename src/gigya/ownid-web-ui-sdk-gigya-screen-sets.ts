@@ -175,6 +175,9 @@ export default class OwnIDUiSdkGigyaScreenSets {
         additionalElements: [repeatPass],
         offset: [-10, 0],
       },
+      data: {
+        pwrt: this.getURLParam('pwrt'),
+      },
       ...config,
       type: WidgetType.Recover,
       onRecover: (statusRS: IOwnIdDataRS, metadata: string | null) => {
@@ -284,5 +287,18 @@ export default class OwnIDUiSdkGigyaScreenSets {
     const language = cultureLang ? `${lang}_${cultureLang.toUpperCase()}` : lang;
 
     return language in Languages ? (language as Languages) : ConfigurationService.defaultLanguage;
+  }
+
+  getURLParam(paramName: string): string | undefined {
+    const url = window.document.location.search.replace('?', '');
+    const urlParts = url.split('&');
+    const paramsList = {} as { [key: string]: string };
+
+    urlParts.forEach((urlPart) => {
+      const [key, value] = urlPart.split('=');
+      paramsList[key] = value;
+    });
+
+    return paramsList[paramName];
   }
 }
