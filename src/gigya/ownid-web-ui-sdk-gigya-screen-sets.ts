@@ -266,14 +266,11 @@ export default class OwnIDUiSdkGigyaScreenSets {
         if (!event.newUser && this.ownIDWidget) {
           const { data }: IWidgetPayload = await window.ownid.getOwnIDPayload(this.ownIDWidget);
           if (data?.pubKey) {
-            window.gigya.accounts.getAccountInfo({
-              include: 'data',
-              callback: (userData: { data: { ownId: { connections: IOwnIdDataRS[] } } }) => {
-                const ownIdConnections = userData.data?.ownId?.connections || [];
+            window.gigya.accounts.getJWT({
+              callback: (jwtData: { id_token: string }) => {
+                const payload = JSON.stringify({ jwt: jwtData?.id_token });
 
-                ownIdConnections.push(data);
-
-                window.gigya.accounts.setAccountInfo({ data: { ownId: { connections: ownIdConnections } } });
+                window.ownid.addOwnIDConnectionOnServer(this.ownIDWidget!, payload)
               },
             });
           }
