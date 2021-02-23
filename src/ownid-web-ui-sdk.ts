@@ -4,6 +4,8 @@ import { IInitConfig, IWidgetConfig, IWidgetPayload, WidgetType } from './interf
 import LoggerDecorator from './services/logger.service';
 import { LogLevel } from './interfaces/i-logger.interfaces';
 import { MagicLinkHandler } from './components/magic-link-handler';
+import ConfigurationService from './services/configuration.service';
+import { IContext } from './interfaces/i-context.interfaces';
 
 function addGroup(arr: string[], length: number, possibleChars: string, number = 1) {
   for (let i = Math.floor(Math.random() * (length / 4 - number) + number); i--; ) {
@@ -99,8 +101,19 @@ export default class OwnIDUiSdk {
     return widget.openWebapp();
   }
 
-  async addOwnIDConnectionOnServer(widget: WidgetComponent, did: string): Promise<IWidgetPayload> {
-    return widget.addOwnIDConnectionOnServer(did);
+  async addOwnIDConnectionOnServer(succeededContext: IContext, payload: string): Promise<IWidgetPayload> {
+    return (await new RequestService(this.config.logger).post(this.getAddConnectionUrl(), {
+      ...succeededContext,
+      payload,
+    })) as IWidgetPayload;
+  }
+
+  private getUrlPrefix(): string {
+    return (this.config.URLPrefix || ConfigurationService.URLPrefix).replace(/\/+$/, '');
+  }
+
+  private getAddConnectionUrl(): string {
+    return `${this.getUrlPrefix()}${ConfigurationService.connectionUrl}`;
   }
 
   generateOwnIDPassword(length: number, numberCapitalised = 1, numberNumbers = 1, numberSpecial = 1): string {
