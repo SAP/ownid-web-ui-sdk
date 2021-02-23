@@ -18,7 +18,7 @@
   "register" : {
     "mobileTitle" : "Register without a password",
     "desktopTitle" : "Register on mobile",
-    "desktopSubtitle" : "Skip the password by scanning this QR with your phone’s camera or an app.",
+    "desktopSubtitle" : "Skip the password by scanning this QR with your phone's camera or an app.",
     "pendingMessage" : "Finish registering on your phone",
     "pendingButton" : "Cancel",
     "doneMessage" : ""
@@ -34,7 +34,7 @@
   "link" : {
     "mobileTitle" : "Enable Instant Login",
     "desktopTitle" : "Scan this QR with your phone to enable “Skip the password”.",
-    "desktopSubtitle" : "Use your phone’s camera or an app to scan the QR.",
+    "desktopSubtitle" : "Use your phone's camera or an app to scan the QR.",
     "pendingMessage" : "Continue on your phone",
     "pendingButton" : "Cancel",
     "doneMessage" : "",
@@ -46,7 +46,7 @@
   "recover" : {
     "mobileTitle" : "Enable Instant Login",
     "desktopTitle" : "Enable instant login",
-    "desktopSubtitle" : "Skip the password by scanning the QR with your phone’s camera or an app.",
+    "desktopSubtitle" : "Skip the password by scanning the QR with your phone's camera or an app.",
     "pendingMessage" : "Linking your account...",
     "pendingButton" : "Cancel",
     "doneMessage" : ""
@@ -72,7 +72,7 @@
   "inline" : {
     "message" : "Skip the password",
     "passwordWarn" : "Enter your password to confirm your account.",
-    "noAccount" : "Account doesn’t exist, create an account to continue.",
+    "noAccount" : "Account doesn't exist, create an account to continue.",
     "info" : "Access your account without a password.\nAn encrypted key will be created on your phone and automatically log you in from now on."
   },
   "common" : {
@@ -82,13 +82,13 @@
     "about" : "What is this?"
   },
   "magicLink" : {
-    "link" : "Don’t have your phone?",
+    "link" : "Don't have your phone?",
     "title" : "Log in with magic link",
     "message" : "We will send you a link to automatically log you in.",
     "emailPlaceholder" : "Email",
     "button" : "Send Magic Link",
     "back" : "Back",
-    "error" : "Account doesn’t exist"
+    "error" : "Account doesn't exist"
   },
   "magicLinkDone" : {
     "title" : "Check your email",
