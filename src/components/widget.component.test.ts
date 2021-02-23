@@ -1,6 +1,6 @@
 import WidgetComponent from './widget.component';
 import RequestService from '../services/request.service';
-import {IWidgetPayload, Languages, WidgetType} from '../interfaces/i-widget.interfaces';
+import { Languages, WidgetType } from '../interfaces/i-widget.interfaces';
 import { IContext } from '../interfaces/i-context.interfaces';
 import { ContextStatus } from './status-response';
 
@@ -875,57 +875,3 @@ describe('refresh link or qr', () => {
     });
   });
 });
-
-describe('addOwnIDConnectionOnServer', () => {
-  const requestService = {} as RequestService;
-  // eslint-disable-next-line no-shadow
-  requestService.post = jest
-    .fn()
-    .mockReturnValue(new Promise(resolve => resolve({})));
-
-  it('should return error object if finalResponse is null', () => {
-    return new Promise<void>(resolve => {
-      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      const sut: any = new WidgetComponent(
-        {
-          element: document.createElement('div'),
-          URLPrefix: 'url',
-          // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-        } as any,
-        requestService,
-      );
-
-      sut.addOwnIDConnectionOnServer('uid').then((result: IWidgetPayload) => {
-        expect(result?.error).toBe(true);
-        expect(result?.message).not.toBeNull();
-        resolve();
-      });
-    });
-  });
-
-  it('should call server to add connection', () => {
-    return new Promise<void>(resolve => {
-      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      const sut: any = new WidgetComponent(
-        {
-          element: document.createElement('div'),
-          URLPrefix: 'url',
-          // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-        } as any,
-        requestService,
-      );
-
-      const succeededContext = {context: '1context', nonce: '2nonce'} as IContext;
-      sut.succeededContext = succeededContext;
-      sut.finalResponse = {};
-
-      sut.addOwnIDConnectionOnServer('uid').then((result: IWidgetPayload) => {
-        expect(result?.error).toBe(undefined);
-        expect(result?.message).toBe(undefined);
-        expect(requestService.post).toBeCalledWith('url/connections', {...succeededContext, payload: 'uid'});
-        resolve();
-      });
-    });
-  });
-});
-

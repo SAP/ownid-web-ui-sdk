@@ -110,7 +110,7 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
 
     const style = document.createElement('style');
     style.id = id;
-    style.textContent = `.ownid-inline-widget{color:#0070F2;cursor:pointer;position:absolute;display:flex;align-items:center;font-size:14px;padding:0 10px;z-index:1000000001;white-space:nowrap}
+    style.textContent = `.ownid-inline-widget{color:#0070F2;cursor:pointer;position:absolute;display:flex;align-items:center;font-size:14px;padding:0 10px;z-index:10000000001;white-space:nowrap}
 .ownid-inline-widget .ownid-info-icon{fill:#0070F2;padding:10px 10px 10px 5px;margin:0 -10px 0 -5px;box-sizing:content-box}
 .ownid-inline-widget--finished{color:#000;margin-left:-25px;pointer-events:none;opacity:1}
 .ownid-inline-widget--finished.ownid-inline-widget .ownid-info-icon{fill:#000;pointer-events:initial;opacity:1;cursor:pointer;}

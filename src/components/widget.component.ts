@@ -34,6 +34,8 @@ export default class WidgetComponent extends BaseComponent {
 
   disabled = true;
 
+  succeededContext: IContext | undefined;
+
   private statusTimeout: number | undefined;
 
   private refreshLinkTimeout: number | undefined;
@@ -47,8 +49,6 @@ export default class WidgetComponent extends BaseComponent {
   private cacheExpiration: number | undefined;
 
   private contexts: IContextRS[] = [];
-
-  private succeededContext: IContext | undefined;
 
   private postMessagesHandlerAttached = false;
 
@@ -325,10 +325,6 @@ export default class WidgetComponent extends BaseComponent {
 
   private getApproveUrl(context: string): string {
     return `${this.getUrlPrefix()}${ConfigurationService.approveUrl.replace(':context', context)}`;
-  }
-
-  private getAddConnectionUrl(): string {
-    return `${this.getUrlPrefix()}${ConfigurationService.connectionUrl}`;
   }
 
   private setCallStatus(): void {
@@ -715,17 +711,6 @@ export default class WidgetComponent extends BaseComponent {
     return new Promise((resolve) => {
       this.webappResolver = resolve;
     });
-  }
-
-  public async addOwnIDConnectionOnServer(payload: string): Promise<IWidgetPayload> {
-    if (!this.finalResponse) {
-      return { error: true, message: 'Authorization flow is not finished' };
-    }
-
-    return (await this.requestService.post(this.getAddConnectionUrl(), {
-      ...this.succeededContext,
-      payload,
-    })) as IWidgetPayload;
   }
 
   private addOwnIDStyleTag(id: string): void {
