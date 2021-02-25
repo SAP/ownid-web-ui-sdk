@@ -38,6 +38,8 @@ export default class InlineWidget extends BaseCommonComponent<InlineWidgetOption
     element.style.height = `${options.targetElement.offsetHeight}px`;
 
     options.targetElement.classList.add('ownid-skip-password');
+    // eslint-disable-next-line no-param-reassign
+    options.targetElement.autocomplete = 'one-time-code';
 
     options.targetElement.addEventListener('input', (e) => {
       if ((e as InputEvent).inputType) {
