@@ -47,6 +47,39 @@ describe('ctor -> Render', () => {
 
     sut.destroy();
   });
+
+  it('should create qr element with magicLink', () => {
+    const options = {
+      href: 'http://test-url',
+      title: 'title',
+      subtitle: 'subtitle',
+      language: Languages.en,
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
+      config: {
+        magicLink: {
+          sendLinkCallback: jest.fn().mockResolvedValue(true),
+        }
+      },
+    };
+    const sut = new Qr(options);
+
+    // @ts-ignore
+    sut.showMagicLinkPane = jest.fn();
+
+    const mlEl = sut.ref.querySelector('.ownid-magic-link')
+    const clickEvent = new Event('click', {
+      bubbles: true,
+      cancelable: true,
+    });
+
+    mlEl!.dispatchEvent(clickEvent);
+    // @ts-ignore
+    expect(sut.showMagicLinkPane).toBeCalled();
+
+    sut.destroy();
+  });
 });
 
 describe('update', () => {
@@ -199,7 +232,8 @@ describe('showPending', () => {
     qr.showSecurityCheck(1234, yesCb, noCb);
 
     qr.showPending();
-    qr.showPending(() => {});
+    qr.showPending(() => {
+    });
 
     const el: HTMLElement | null = qr.ref.querySelector('[ownid-pending]')
 
@@ -264,12 +298,123 @@ describe('showDone', () => {
     const qr = new Qr(options);
     qr.appendToParent(parent);
 
-    qr.showSecurityCheck(1234, () => {}, () => {});
+    qr.showSecurityCheck(1234, () => {
+    }, () => {
+    });
 
     qr.showDone();
 
     const el: HTMLElement | null = qr.ref.querySelector('[ownid-done]')
 
     expect(el).toEqual(null);
+  });
+});
+
+describe('showMagicLinkPane', () => {
+  it('should call buttons', () => {
+    const options = {
+      href: 'http://test-url',
+      title: 'title',
+      subtitle: 'subtitle',
+      language: Languages.en,
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
+      config: {
+        magicLink: {
+          sendLinkCallback: jest.fn().mockResolvedValue(true),
+        }
+      },
+    };
+    const qr = new Qr(options);
+    qr.appendToParent(parent);
+
+    // @ts-ignore
+    qr.showMagicLinkPane();
+
+    const clickEvent = new Event('click', {
+      bubbles: true,
+      cancelable: true,
+    });
+
+    // @ts-ignore
+    qr.showMagicLinkPane = jest.fn();
+
+    const mlButton = qr.ref.querySelector('.ownid-magic-link--button');
+    const mlBackButton = qr.ref.querySelector('.ownid-magic-link--back');
+
+
+    mlButton!.dispatchEvent(clickEvent);
+    mlBackButton!.dispatchEvent(clickEvent);
+
+    const mlink = qr.ref.querySelector('.ownid-magic-link');
+    mlink!.dispatchEvent(clickEvent);
+
+    // @ts-ignore
+    expect(qr.showMagicLinkPane).toBeCalled();
+    expect(options.config.magicLink.sendLinkCallback).toBeCalled();
+  });
+
+  it('should call buttons (show error)', (done) => {
+    const options = {
+      href: 'http://test-url',
+      title: 'title',
+      subtitle: 'subtitle',
+      language: Languages.en,
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
+      config: {
+        magicLink: {
+          sendLinkCallback: jest.fn().mockResolvedValue(false),
+        }
+      },
+    };
+    const qr = new Qr(options);
+    qr.appendToParent(parent);
+
+    // @ts-ignore
+    qr.showMagicLinkPane();
+
+    const clickEvent = new Event('click', {
+      bubbles: true,
+      cancelable: true,
+    });
+
+    const mlButton = qr.ref.querySelector('.ownid-magic-link--button');
+
+    mlButton!.dispatchEvent(clickEvent);
+
+    setTimeout(() => {
+      // @ts-ignore
+      expect(qr.ref.querySelector('.ownid-magic-link--error')!.style.display).toEqual('block');
+      done();
+    });
+  });
+
+  it('should not call buttons', () => {
+    const options = {
+      href: 'http://test-url',
+      title: 'title',
+      subtitle: 'subtitle',
+      language: Languages.en,
+      type: WidgetType.Register,
+      tooltip: false,
+      tooltipTargetEl: null,
+      config: {
+        magicLink: {
+          sendLinkCallback: jest.fn().mockResolvedValue(true),
+        }
+      },
+    };
+    const qr = new Qr(options);
+    qr.appendToParent(parent);
+
+    qr.ref.querySelector = jest.fn();
+
+    // @ts-ignore
+    qr.showMagicLinkPane();
+
+    expect(options.config.magicLink.sendLinkCallback).not.toBeCalled();
   });
 });

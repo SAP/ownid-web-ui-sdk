@@ -264,14 +264,14 @@ export default class OwnIDUiSdkGigyaScreenSets {
     window.gigya.accounts.addEventHandlers({
       onLogin: async (event: { newUser: boolean }) => {
         if (!event.newUser && this.ownIDWidget) {
-          const succeededContext = this.ownIDWidget.succeededContext;
+          const { succeededContext } = this.ownIDWidget;
           const { data }: IWidgetPayload = await window.ownid.getOwnIDPayload(this.ownIDWidget);
           if (data?.pubKey && succeededContext) {
             window.gigya.accounts.getJWT({
               callback: (jwtData: { id_token: string }) => {
                 const payload = JSON.stringify({ jwt: jwtData?.id_token });
 
-                window.ownid.addOwnIDConnectionOnServer(succeededContext, payload)
+                window.ownid.addOwnIDConnectionOnServer(succeededContext, payload);
               },
             });
           }

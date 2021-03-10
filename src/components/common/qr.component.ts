@@ -27,7 +27,7 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
     super(options);
 
     if (options.config?.magicLink) {
-      this.ref.querySelector('.ownid-magic-link')?.addEventListener('click', (e: Event) => {
+      this.ref.querySelector('.ownid-magic-link')!.addEventListener('click', (e: Event) => {
         e.stopPropagation();
         this.showMagicLinkPane();
       });
@@ -319,7 +319,7 @@ export default class Qr extends BaseCommonComponent<QrOptions> {
     this.ref.querySelector('.ownid-magic-link--back')?.addEventListener('click', (event: Event) => {
       event.stopPropagation();
       this.ref.innerHTML = this.render(this.options).innerHTML;
-      this.ref.querySelector('.ownid-magic-link')?.addEventListener('click', (e: Event) => {
+      this.ref.querySelector('.ownid-magic-link')!.addEventListener('click', (e: Event) => {
         e.stopPropagation();
         this.showMagicLinkPane();
       });

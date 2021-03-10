@@ -2,7 +2,7 @@ import BaseCommonComponent from './base-common.component';
 import { Languages } from '../../interfaces/i-widget.interfaces';
 import TranslationService from '../../services/translation.service';
 
-declare type LinkButtonWidgetOptions = {
+export declare type LinkButtonWidgetOptions = {
   language?: Languages;
 };
 
